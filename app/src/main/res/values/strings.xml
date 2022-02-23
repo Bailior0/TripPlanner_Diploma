@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TripPlanner</string>
+
+    <string name="title_username">Username</string>
+    <string name="title_password">Password</string>
+    <string name="signin">Sign in</string>
+    <string name="empty_user_or_password">Üres felhasználónév vagy jelszó!</string>
 </resources>
