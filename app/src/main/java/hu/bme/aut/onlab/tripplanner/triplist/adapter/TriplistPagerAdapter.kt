@@ -1,8 +1,9 @@
-package hu.bme.aut.onlab.tripplanner.triplist
+package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import hu.bme.aut.onlab.tripplanner.triplist.fragment.*
 
 class TriplistPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
 

@@ -1,4 +1,4 @@
-package hu.bme.aut.onlab.tripplanner.triplist
+package hu.bme.aut.onlab.tripplanner.triplist.fragment
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -11,7 +11,7 @@
         android:theme="@style/Theme.TripPlanner">
         <activity
             android:name=".triplist.TriplistActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
