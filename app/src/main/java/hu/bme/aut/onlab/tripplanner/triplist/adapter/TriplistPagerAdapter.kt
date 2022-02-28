@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import hu.bme.aut.onlab.tripplanner.triplist.fragment.*
 
-class TriplistPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity) {
+class TriplistPagerAdapter(fragmentActivity: FragmentActivity, private val tripsFragment: TripsFragment, private val calendarFragment: CalendarFragment, private val mapFragment: MapFragment) : FragmentStateAdapter(fragmentActivity) {
 
     companion object {
         private const val NUM_PAGES: Int = 3
@@ -13,10 +13,10 @@ class TriplistPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAd
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> TripsFragment()
-            1 -> CalendarFragment()
-            2 -> MapFragment()
-            else -> TripsFragment()
+            0 -> tripsFragment
+            1 -> calendarFragment
+            2 -> mapFragment
+            else -> tripsFragment
         }
     }
 

@@ -20,6 +20,7 @@
     <string name="button_ok">OK</string>
     <string name="button_cancel">Cancel</string>
     <string name="new_triplist_item">New Triplist Item</string>
+    <string name="edit_triplist_item">Edit Triplist Item</string>
 
     <string-array name="category_items">
         <item>Outdoors</item>

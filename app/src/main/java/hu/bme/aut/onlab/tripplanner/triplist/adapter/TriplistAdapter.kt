@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,10 @@ import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.TriplistItem
 import hu.bme.aut.onlab.tripplanner.databinding.ItemTriplistListBinding
 
-class TriplistAdapter(private val listener: TriplistItemClickListener) :
-    RecyclerView.Adapter<TriplistAdapter.TriplistViewHolder>() {
+class TriplistAdapter(private val listener: TriplistItemClickListener) : RecyclerView.Adapter<TriplistAdapter.TriplistViewHolder>() {
 
     private val items = mutableListOf<TriplistItem>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TriplistViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_triplist_list, parent, false)
         return TriplistViewHolder(view)
@@ -33,8 +34,8 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) :
             listener.onItemChanged(triplistItem)
         }
 
-        holder.binding.ibRemove.setOnClickListener {
-            //listener.onItemChanged(triplistItem)
+        holder.binding.ibEdit.setOnClickListener {
+            listener.onItemEdited(triplistItem)
         }
 
         holder.binding.ibRemove.setOnClickListener {
@@ -57,10 +58,10 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) :
 
     fun addItem(item: TriplistItem) {
         items.add(item)
-        notifyItemInserted(items.size - 1)
+        notifyItemInserted(items.lastIndex)
     }
 
-    fun update(triplistItems: List<TriplistItem>) {
+    fun updateItem(triplistItems: List<TriplistItem>) {
         items.clear()
         items.addAll(triplistItems)
         notifyDataSetChanged()
@@ -72,11 +73,19 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) :
         notifyItemRemoved(pos)
     }
 
+    fun editItem(item: TriplistItem) {
+        /*val position = items.indexOf(item)
+        items.removeAt(position)
+        items.add(position, item)
+        notifyItemChanged(position)*/
+    }
+
     override fun getItemCount(): Int = items.size
 
     interface TriplistItemClickListener {
         fun onItemChanged(item: TriplistItem)
         fun onItemRemoved(item: TriplistItem)
+        fun onItemEdited(item: TriplistItem)
         fun onTripSelected(country: String?, place: String?)
     }
 

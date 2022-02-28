@@ -2,6 +2,7 @@ package hu.bme.aut.onlab.tripplanner.triplist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.tabs.TabLayoutMediator
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.*
@@ -14,12 +15,19 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
     private lateinit var binding: ActivityTriplistBinding
 
     private lateinit var database: TriplistDatabase
-    private lateinit var adapter: TriplistAdapter
+    private lateinit var triplistPagerAdapter: TriplistPagerAdapter
+    private lateinit var tripsFragment: TripsFragment
+    private lateinit var calendarFragment: CalendarFragment
+    private lateinit var mapFragment: MapFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTriplistBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        tripsFragment = TripsFragment()
+        calendarFragment = CalendarFragment()
+        mapFragment = MapFragment()
+        triplistPagerAdapter = TriplistPagerAdapter(this, tripsFragment, calendarFragment, mapFragment)
 
         database = TriplistDatabase.getDatabase(applicationContext)
 
@@ -33,7 +41,6 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
 
     override fun onResume() {
         super.onResume()
-        val triplistPagerAdapter = TriplistPagerAdapter(this)
         binding.mainViewPager.adapter = triplistPagerAdapter
 
         TabLayoutMediator(binding.tabLayout, binding.mainViewPager) {
@@ -48,10 +55,23 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
 
     override fun onTriplistItemCreated(newItem: TriplistItem) {
         thread {
-            database.triplistItemDao().insert(newItem)
+            val newId = database.triplistItemDao().insert(newItem)
+            val newTripItem = newItem.copy(
+                id = newId
+            )
 
             runOnUiThread {
-                adapter.addItem(newItem)
+                tripsFragment.triplistItemCreated(newTripItem)
+            }
+        }
+    }
+
+    override fun onTriplistItemEdited(item: TriplistItem) {
+        thread {
+            database.triplistItemDao().update(item)
+
+            runOnUiThread {
+                tripsFragment.triplistItemEdited(item)
             }
         }
     }
