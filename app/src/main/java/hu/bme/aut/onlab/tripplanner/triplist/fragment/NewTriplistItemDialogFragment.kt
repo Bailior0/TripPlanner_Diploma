@@ -10,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.TriplistItem
 import hu.bme.aut.onlab.tripplanner.databinding.*
-import java.sql.Date
+import java.util.*
 
 class NewTriplistItemDialogFragment : DialogFragment() {
     interface NewTriplistItemDialogListener {
@@ -52,8 +52,11 @@ class NewTriplistItemDialogFragment : DialogFragment() {
     private fun getTriplistItem() = TriplistItem(
         place = binding.etPlace.text.toString(),
         country = binding.etCountry.text.toString(),
-        date = binding.etDate.toString(),
-        category = TriplistItem.Category.getByOrdinal(binding.spCategory.selectedItemPosition) ?: TriplistItem.Category.BEACHES,
+        date = String.format(
+            Locale.getDefault(), "%04d.%02d.%02d.",
+            binding.etDate.year, binding.etDate.month + 1, binding.etDate.dayOfMonth
+        ),
+        category = TriplistItem.Category.getByOrdinal(binding.spCategory.selectedItemPosition) ?: TriplistItem.Category.SIGHTSEEING,
         visited = binding.cbAlreadyVisited.isChecked
     )
 

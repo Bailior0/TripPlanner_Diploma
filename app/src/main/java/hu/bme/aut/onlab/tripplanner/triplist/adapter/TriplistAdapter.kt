@@ -34,6 +34,10 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) :
         }
 
         holder.binding.ibRemove.setOnClickListener {
+            //listener.onItemChanged(triplistItem)
+        }
+
+        holder.binding.ibRemove.setOnClickListener {
             listener.onItemRemoved(triplistItem)
         }
 

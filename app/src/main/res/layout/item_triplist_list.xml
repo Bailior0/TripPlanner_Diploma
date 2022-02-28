@@ -18,10 +18,11 @@
 
     <ImageView
         android:id="@+id/ivIcon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginLeft="8dp"
-        tools:src="@drawable/beaches" />
+        android:layout_gravity="center_vertical"
+        tools:src="@drawable/sightseeing" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -34,19 +35,19 @@
             android:id="@+id/tvCountry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Hungary" />
+            tools:text="Spain" />
 
         <TextView
             android:id="@+id/tvPlace"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Budapest" />
+            tools:text="Barcelona" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="2001.02.26." />
+            tools:text="2022.06.26." />
 
         <TextView
             android:id="@+id/tvCategory"
@@ -56,10 +57,19 @@
     </LinearLayout>
 
     <ImageButton
+        android:id="@+id/ibEdit"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_vertical"
+        android:scaleType="fitXY"
+        android:src="@drawable/ic_pencil_grey600_48dp" />
+
+    <ImageButton
         android:id="@+id/ibRemove"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_gravity="center_vertical"
         android:scaleType="fitXY"
         android:src="@drawable/ic_delete_grey600_48dp" />
