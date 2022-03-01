@@ -1,6 +1,5 @@
 package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +26,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         holder.binding.tvCountry.text = triplistItem.country
         holder.binding.tvPlace.text = triplistItem.place
         holder.binding.tvDate.text = triplistItem.date
+
         holder.binding.tvCategory.text = triplistItem.category.name
 
         holder.binding.cbVisited.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -74,10 +74,10 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
     }
 
     fun editItem(item: TriplistItem) {
-        /*val position = items.indexOf(item)
+        val position = items.indexOf(items.find { it.id == item.id })
         items.removeAt(position)
         items.add(position, item)
-        notifyItemChanged(position)*/
+        notifyItemChanged(position)
     }
 
     override fun getItemCount(): Int = items.size

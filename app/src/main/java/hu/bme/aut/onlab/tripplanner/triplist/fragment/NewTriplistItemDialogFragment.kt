@@ -22,11 +22,11 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
     private lateinit var listener: NewTriplistItemDialogListener
     private lateinit var binding: FragmentNewTriplistItemDialogBinding
 
-    /*private lateinit var placeEditText: EditText
+    private lateinit var placeEditText: EditText
     private lateinit var countryEditText: EditText
     private lateinit var dateDatePicker: DatePicker
     private lateinit var categorySpinner: Spinner
-    private lateinit var alreadyVisitedCheckBox: CheckBox*/
+    private lateinit var alreadyVisitedCheckBox: CheckBox
 
     private var item: TriplistItem? = null
     private var type: CreateOrEdit = CreateOrEdit.CREATE
@@ -47,10 +47,11 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        var title: Int = when (type) {
+        val title: Int = when (type) {
             CreateOrEdit.CREATE -> R.string.new_triplist_item
             CreateOrEdit.EDIT -> R.string.edit_triplist_item
         }
+
         binding = FragmentNewTriplistItemDialogBinding.inflate(LayoutInflater.from(context))
         binding.spCategory.adapter = ArrayAdapter(
             requireContext(),
@@ -58,24 +59,37 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
             resources.getStringArray(R.array.category_items)
         )
 
-        return AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setView(binding.root)
-            .setPositiveButton(R.string.button_ok) { dialogInterface, i ->
-                if (isValid()) {
-                    if (type == CreateOrEdit.CREATE)
+        if(item == null) {
+            return AlertDialog.Builder(requireContext())
+                .setTitle(title)
+                .setView(binding.root)
+                .setPositiveButton(R.string.button_ok) { _, _ ->
+                    if (isValidCreate())
                         listener.onTriplistItemCreated(getTriplistItem())
-                    else if (type == CreateOrEdit.EDIT)
-                        listener.onTriplistItemEdited(getTriplistItem());
                 }
-            }
-            .setNegativeButton(R.string.button_cancel, null)
-            .create()
+                .setNegativeButton(R.string.button_cancel, null)
+                .create()
+        }
+
+        else {
+            return AlertDialog.Builder(requireContext())
+                .setTitle(title)
+                .setView(getContentView())
+                .setPositiveButton(R.string.button_ok) { _, _ ->
+                    if (isValidEdit()){
+                        setEditedItem()
+                        listener.onTriplistItemEdited(item!!)
+                    }
+                }
+                .setNegativeButton(R.string.button_cancel, null)
+                .create()
+        }
     }
 
-    private fun isValid() = binding.etPlace.text.isNotEmpty()
+    private fun isValidCreate() = binding.etPlace.text.isNotEmpty()
+    private fun isValidEdit() = placeEditText.text.isNotEmpty()
 
-    /*private fun getContentView(): View {
+    private fun getContentView(): View {
         val contentView = LayoutInflater.from(context).inflate(R.layout.fragment_new_triplist_item_dialog, null)
         placeEditText = contentView.findViewById(R.id.etPlace)
         countryEditText = contentView.findViewById(R.id.etCountry)
@@ -93,13 +107,17 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
         return contentView
     }
 
-    fun setFields() {
+    private fun setFields() {
+        val day = item!!.date.substring(8, 10).toInt()
+        val month = item!!.date.substring(5, 7).toInt()-1
+        val year = item!!.date.substring(0, 4).toInt()
+
         placeEditText.setText(item!!.place)
         countryEditText.setText(item!!.country)
-        dateDatePicker.updateDate(2022, 0,2)
+        dateDatePicker.updateDate(year, month, day)
         categorySpinner.setSelection(item!!.category.ordinal)
         alreadyVisitedCheckBox.isChecked = item!!.visited
-    }*/
+    }
 
     private fun getTriplistItem() = TriplistItem(
         place = binding.etPlace.text.toString(),
@@ -111,6 +129,18 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
         category = TriplistItem.Category.getByOrdinal(binding.spCategory.selectedItemPosition) ?: TriplistItem.Category.SIGHTSEEING,
         visited = binding.cbAlreadyVisited.isChecked
     )
+
+    private fun setEditedItem() {
+        item!!.place = placeEditText.text.toString()
+        item!!.country = countryEditText.text.toString()
+        item!!.date = String.format(
+            Locale.getDefault(), "%04d.%02d.%02d.",
+            dateDatePicker.year, dateDatePicker.month + 1, dateDatePicker.dayOfMonth
+        )
+        item!!.category = TriplistItem.Category.getByOrdinal(categorySpinner.selectedItemPosition)
+            ?: TriplistItem.Category.SIGHTSEEING
+        item!!.visited = alreadyVisitedCheckBox.isChecked
+    }
 
     companion object {
         const val TAG = "NewTriplistItemDialogFragment"

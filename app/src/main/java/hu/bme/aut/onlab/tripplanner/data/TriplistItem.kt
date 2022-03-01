@@ -1,9 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.data
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
+import androidx.room.*
 
 @Entity(tableName = "triplistitem")
 data class TriplistItem(

@@ -2,7 +2,6 @@ package hu.bme.aut.onlab.tripplanner.triplist
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import com.google.android.material.tabs.TabLayoutMediator
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.*

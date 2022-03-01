@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import hu.bme.aut.onlab.tripplanner.data.TriplistDatabase
 import hu.bme.aut.onlab.tripplanner.data.TriplistItem
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentTripsBinding
-import hu.bme.aut.onlab.tripplanner.triplist.TriplistActivity
 import hu.bme.aut.onlab.tripplanner.triplist.adapter.TriplistAdapter
 import kotlin.concurrent.thread
 
@@ -64,7 +63,7 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
 
     override fun onItemEdited(editItem: TriplistItem) {
         NewTriplistItemDialogFragment(editItem).show(
-            getParentFragmentManager(),
+            getChildFragmentManager(),
             NewTriplistItemDialogFragment.TAG
         )
     }
@@ -83,9 +82,9 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
         }
     }
 
-    fun triplistItemEdited(newItem: TriplistItem) {
+    fun triplistItemEdited(item: TriplistItem) {
         requireActivity().runOnUiThread {
-            adapter.editItem(newItem)
+            adapter.editItem(item)
         }
     }
 }
