@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,11 +60,15 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
     fun addItem(item: TriplistItem) {
         items.add(item)
         notifyItemInserted(items.lastIndex)
+        items.sortBy { it.date }
+        notifyDataSetChanged()
     }
 
     fun updateItem(triplistItems: List<TriplistItem>) {
         items.clear()
         items.addAll(triplistItems)
+        notifyDataSetChanged()
+        items.sortBy { it.date }
         notifyDataSetChanged()
     }
 
@@ -78,6 +83,8 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         items.removeAt(position)
         items.add(position, item)
         notifyItemChanged(position)
+        items.sortBy { it.date }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = items.size
