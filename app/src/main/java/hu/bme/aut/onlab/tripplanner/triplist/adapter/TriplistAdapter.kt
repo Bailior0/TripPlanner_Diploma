@@ -1,6 +1,5 @@
 package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +42,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
             listener.onItemRemoved(triplistItem)
         }
 
-        holder.bind(triplistItem.country, triplistItem.place)
+        holder.bind(triplistItem.country, triplistItem.place, triplistItem.description)
     }
 
     @DrawableRes()
@@ -93,22 +92,25 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         fun onItemChanged(item: TriplistItem)
         fun onItemRemoved(item: TriplistItem)
         fun onItemEdited(item: TriplistItem)
-        fun onTripSelected(country: String?, place: String?)
+        fun onTripSelected(country: String?, place: String?, description: String?)
     }
 
     inner class TriplistViewHolder(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
         var binding = ItemTriplistListBinding.bind(itemView)
         var country: String? = null
         var place: String? = null
+        var description: String? = null
 
         init {
-            binding.root.setOnClickListener { listener.onTripSelected(country, place) }
+            binding.root.setOnClickListener { listener.onTripSelected(country, place, description) }
         }
 
-        fun bind(newCountry: String?, newPlace: String?) {
+        fun bind(newCountry: String?, newPlace: String?, newDescription: String?) {
             country = newCountry
             binding.tvCountry.text = country
             place = newPlace
+            binding.tvPlace.text = place
+            description = newDescription
         }
     }
 }

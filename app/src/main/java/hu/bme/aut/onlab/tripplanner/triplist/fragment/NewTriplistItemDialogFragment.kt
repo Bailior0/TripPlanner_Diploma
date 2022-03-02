@@ -24,6 +24,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
 
     private lateinit var placeEditText: EditText
     private lateinit var countryEditText: EditText
+    private lateinit var descriptionEditText: EditText
     private lateinit var dateDatePicker: DatePicker
     private lateinit var categorySpinner: Spinner
     private lateinit var alreadyVisitedCheckBox: CheckBox
@@ -93,6 +94,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
         val contentView = LayoutInflater.from(context).inflate(R.layout.fragment_new_triplist_item_dialog, null)
         placeEditText = contentView.findViewById(R.id.etPlace)
         countryEditText = contentView.findViewById(R.id.etCountry)
+        descriptionEditText = contentView.findViewById(R.id.etDescription)
         dateDatePicker = contentView.findViewById(R.id.etDate)
         categorySpinner = contentView.findViewById(R.id.spCategory)
         categorySpinner.adapter = ArrayAdapter(
@@ -114,6 +116,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
 
         placeEditText.setText(item!!.place)
         countryEditText.setText(item!!.country)
+        descriptionEditText.setText(item!!.description)
         dateDatePicker.updateDate(year, month, day)
         categorySpinner.setSelection(item!!.category.ordinal)
         alreadyVisitedCheckBox.isChecked = item!!.visited
@@ -122,6 +125,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
     private fun getTriplistItem() = TriplistItem(
         place = binding.etPlace.text.toString(),
         country = binding.etCountry.text.toString(),
+        description = binding.etDescription.text.toString(),
         date = String.format(
             Locale.getDefault(), "%04d.%02d.%02d.",
             binding.etDate.year, binding.etDate.month + 1, binding.etDate.dayOfMonth
@@ -133,6 +137,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
     private fun setEditedItem() {
         item!!.place = placeEditText.text.toString()
         item!!.country = countryEditText.text.toString()
+        item!!.description = descriptionEditText.text.toString()
         item!!.date = String.format(
             Locale.getDefault(), "%04d.%02d.%02d.",
             dateDatePicker.year, dateDatePicker.month + 1, dateDatePicker.dayOfMonth

@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.triplist.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import hu.bme.aut.onlab.tripplanner.data.TriplistDatabase
 import hu.bme.aut.onlab.tripplanner.data.TriplistItem
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentTripsBinding
+import hu.bme.aut.onlab.tripplanner.details.DetailsActivity
 import hu.bme.aut.onlab.tripplanner.triplist.adapter.TriplistAdapter
 import kotlin.concurrent.thread
 
@@ -68,12 +70,13 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
         )
     }
 
-    override fun onTripSelected(country: String?, place: String?) {
-        /*val showDetailsIntent = Intent()
-        showDetailsIntent.setClass(this@TriplistActivity, DetailsActivity::class.java)
+    override fun onTripSelected(country: String?, place: String?, description: String?) {
+        val showDetailsIntent = Intent()
+        showDetailsIntent.setClass(requireActivity().getApplicationContext(), DetailsActivity::class.java)
         showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_COUNTRY, country)
         showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_PLACE, place)
-        startActivity(showDetailsIntent)*/
+        showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_DESCRIPTION, description)
+        startActivity(showDetailsIntent)
     }
 
     fun triplistItemCreated(newItem: TriplistItem) {

@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TripPlanner">
         <activity
+            android:name=".details.DetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".triplist.TriplistActivity"
             android:exported="true" />
         <activity

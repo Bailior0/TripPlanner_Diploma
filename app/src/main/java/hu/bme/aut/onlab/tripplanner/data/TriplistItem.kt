@@ -7,6 +7,7 @@ data class TriplistItem(
     @ColumnInfo(name = "id") @PrimaryKey(autoGenerate = true) var id: Long? = null,
     @ColumnInfo(name = "Place") var place: String,
     @ColumnInfo(name = "Country") var country: String,
+    @ColumnInfo(name = "Description") var description: String,
     @ColumnInfo(name = "Date") var date: String,
     @ColumnInfo(name = "Category") var category: Category,
     @ColumnInfo(name = "Visited") var visited: Boolean
