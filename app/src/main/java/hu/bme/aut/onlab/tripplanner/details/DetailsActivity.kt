@@ -29,6 +29,7 @@ class DetailsActivity : AppCompatActivity() {
         place = intent.getStringExtra(EXTRA_TRIP_PLACE)
         description = intent.getStringExtra(EXTRA_TRIP_DESCRIPTION)
 
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.title = place
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val text = "Country: $country\n\nPlace: $place\n\nDescription: $description"

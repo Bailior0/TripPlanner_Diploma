@@ -18,7 +18,8 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        FirebaseApp.initializeApp(this);
+        setSupportActionBar(binding.toolbar)
+        FirebaseApp.initializeApp(this)
 
         firebaseAuth = FirebaseAuth.getInstance()
 
@@ -59,6 +60,14 @@ class MainActivity : BaseActivity() {
                 firebaseUser?.updateProfile(profileChangeRequest)
 
                 toast("Registration was successful")
+                firebaseAuth
+                    .signInWithEmailAndPassword(binding.etEmail.text.toString(), binding.etPassword.text.toString())
+                    .addOnSuccessListener {
+                        hideProgressDialog()
+
+                        startActivity(Intent(this@MainActivity, TriplistActivity::class.java))
+                        finish()
+                    }
             }
             .addOnFailureListener { exception ->
                 hideProgressDialog()

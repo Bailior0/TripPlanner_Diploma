@@ -22,6 +22,10 @@
     <string name="button_cancel">Cancel</string>
     <string name="new_triplist_item">New Triplist Item</string>
     <string name="edit_triplist_item">Edit Triplist Item</string>
+    <string name="nav_header_title">TripPlanner</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation Header</string>
+    <string name="logout">Logout</string>
 
     <string-array name="category_items">
         <item>Outdoors</item>

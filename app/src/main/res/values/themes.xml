@@ -17,4 +17,13 @@
     <style name="DefaultViewMarginStyle">
         <item name="android:layout_margin">@dimen/default_padding</item>
     </style>
+
+    <style name="Theme.TripPlanner.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Drawer.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Drawer.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
