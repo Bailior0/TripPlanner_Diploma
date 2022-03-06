@@ -11,6 +11,11 @@
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.TripPlanner.NoActionBar">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDFW7RT67ri8GMdMDsHzYi8L9UtRFxOSHo" />
+
         <activity
             android:name=".details.DetailsActivity"
             android:exported="false" />

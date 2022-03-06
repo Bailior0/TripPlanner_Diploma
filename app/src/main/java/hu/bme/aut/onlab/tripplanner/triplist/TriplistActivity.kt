@@ -16,8 +16,6 @@ import hu.bme.aut.onlab.tripplanner.data.*
 import hu.bme.aut.onlab.tripplanner.databinding.ActivityTriplistBinding
 import hu.bme.aut.onlab.tripplanner.triplist.adapter.*
 import hu.bme.aut.onlab.tripplanner.triplist.fragment.*
-import kotlinx.android.synthetic.main.nav_header_triplist.*
-import kotlinx.android.synthetic.main.nav_header_triplist.view.*
 import kotlin.concurrent.thread
 
 class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewTriplistItemDialogListener, NavigationView.OnNavigationItemSelectedListener {
@@ -27,23 +25,23 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
     private lateinit var triplistPagerAdapter: TriplistPagerAdapter
     private lateinit var tripsFragment: TripsFragment
     private lateinit var calendarFragment: CalendarFragment
-    private lateinit var mapFragment: MapFragment
+    lateinit var mapFragment: MapsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTriplistBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         tripsFragment = TripsFragment()
         calendarFragment = CalendarFragment()
-        mapFragment = MapFragment()
+        mapFragment = MapsFragment()
+        triplistPagerAdapter = TriplistPagerAdapter(this, tripsFragment, calendarFragment, mapFragment)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         binding.navView.setNavigationItemSelectedListener(this)
-
-        triplistPagerAdapter = TriplistPagerAdapter(this, tripsFragment, calendarFragment, mapFragment)
 
         database = TriplistDatabase.getDatabase(applicationContext)
 
@@ -63,6 +61,7 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
     override fun onResume() {
         super.onResume()
         binding.mainViewPager.adapter = triplistPagerAdapter
+        binding.mainViewPager.isUserInputEnabled = false
 
         TabLayoutMediator(binding.tabLayout, binding.mainViewPager) {
                 tab, position -> tab.text = when(position) {
@@ -72,6 +71,7 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
                 else -> ""
             }
         }.attach()
+
     }
 
     override fun onTriplistItemCreated(newItem: TriplistItem) {
@@ -83,8 +83,10 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
 
             runOnUiThread {
                 tripsFragment.triplistItemCreated(newTripItem)
+                mapFragment.setMarkers()
             }
         }
+
     }
 
     override fun onTriplistItemEdited(item: TriplistItem) {
@@ -93,6 +95,7 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
 
             runOnUiThread {
                 tripsFragment.triplistItemEdited(item)
+                mapFragment.setMarkers()
             }
         }
     }
@@ -129,6 +132,12 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
             binding.drawerLayout.closeDrawer(GravityCompat.START)
         } else {
             super.onBackPressed()
+        }
+    }
+
+    fun deleteItem() {
+        runOnUiThread {
+            mapFragment.setMarkers()
         }
     }
 }

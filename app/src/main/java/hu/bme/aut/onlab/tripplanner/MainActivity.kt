@@ -1,14 +1,11 @@
 package hu.bme.aut.onlab.tripplanner
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.EditText
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.*
 import hu.bme.aut.onlab.tripplanner.databinding.ActivityMainBinding
 import hu.bme.aut.onlab.tripplanner.triplist.TriplistActivity
-import java.security.AccessController.getContext
 
 class MainActivity : BaseActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
