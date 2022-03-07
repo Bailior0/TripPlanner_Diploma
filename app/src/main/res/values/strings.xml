@@ -24,6 +24,8 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation Header</string>
     <string name="logout">Logout</string>
+    <string name="change_password">Change password</string>
+    <string name="change_email">Change email</string>
 
     <string-array name="category_items">
         <item>Outdoors</item>

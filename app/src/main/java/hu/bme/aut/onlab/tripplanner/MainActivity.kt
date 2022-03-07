@@ -83,8 +83,6 @@ class MainActivity : BaseActivity() {
                 }
                 else
                     toast("Please verify your email")
-
-
             }
             .addOnFailureListener { exception ->
                 hideProgressDialog()

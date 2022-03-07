@@ -1,15 +1,23 @@
 package hu.bme.aut.onlab.tripplanner.triplist
 
+import android.content.ClipData
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannableString
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.EmailAuthCredential
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import hu.bme.aut.onlab.tripplanner.BaseActivity
 import hu.bme.aut.onlab.tripplanner.MainActivity
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.*
@@ -18,7 +26,7 @@ import hu.bme.aut.onlab.tripplanner.triplist.adapter.*
 import hu.bme.aut.onlab.tripplanner.triplist.fragment.*
 import kotlin.concurrent.thread
 
-class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewTriplistItemDialogListener, NavigationView.OnNavigationItemSelectedListener {
+class TriplistActivity : BaseActivity(), NewTriplistItemDialogFragment.NewTriplistItemDialogListener, NavigationView.OnNavigationItemSelectedListener, AuthChangeDialogFragment.AuthChangeDialogListener {
     private lateinit var binding: ActivityTriplistBinding
 
     private lateinit var database: TriplistDatabase
@@ -107,6 +115,17 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
             }
+            R.id.nav_mailchange -> {
+                AuthChangeDialogFragment().show(
+                    supportFragmentManager,
+                    AuthChangeDialogFragment.TAG
+                )
+            }
+            R.id.nav_passwordchange -> {
+                val mail = FirebaseAuth.getInstance().currentUser?.email as String
+                FirebaseAuth.getInstance().sendPasswordResetEmail(mail)
+                toast("Verification email has been sent about your password change")
+            }
         }
 
         binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -138,6 +157,35 @@ class TriplistActivity : AppCompatActivity(), NewTriplistItemDialogFragment.NewT
     fun deleteItem() {
         runOnUiThread {
             mapFragment.setMarkers()
+        }
+    }
+
+    override fun onEmailChanged(password: String?, newEmail: String?) {
+        if(password.isNullOrEmpty()){
+            toast("Please enter a valid password")
+        }
+        else if(newEmail.isNullOrEmpty() || !newEmail.contains('@')){
+            toast("Please enter a valid new email")
+        }
+        else {
+            val mail = FirebaseAuth.getInstance().currentUser?.email as String
+            val credential = EmailAuthProvider.getCredential (
+                mail,
+                password
+            )
+
+            FirebaseAuth.getInstance().currentUser?.reauthenticate(credential)
+                ?.addOnSuccessListener {
+                    hideProgressDialog()
+                    FirebaseAuth.getInstance().currentUser?.verifyBeforeUpdateEmail(newEmail)
+
+                    toast("Verification email has been sent")
+                }
+                ?.addOnFailureListener { exception ->
+                    hideProgressDialog()
+
+                    toast(exception.localizedMessage)
+                }
         }
     }
 }

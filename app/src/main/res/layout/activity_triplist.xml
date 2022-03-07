@@ -68,6 +68,8 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_triplist"
-        app:menu="@menu/activity_triplist_drawer" />
+        app:menu="@menu/activity_triplist_drawer">
+
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

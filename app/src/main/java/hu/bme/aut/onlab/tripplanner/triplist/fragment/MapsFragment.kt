@@ -69,11 +69,10 @@ class MapsFragment : Fragment() {
                     bld.include(coordinates)
                 }
             }
-            if (items.isEmpty()) {
-                bld.include(LatLng(47.47985, 19.05608))
+            if (items.isNotEmpty()) {
+                val bounds = bld.build()
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70))
             }
-            val bounds = bld.build()
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70))
         }
     }
 }
