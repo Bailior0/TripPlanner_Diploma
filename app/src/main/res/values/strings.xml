@@ -34,4 +34,9 @@
         <item>Skiing</item>
         <item>Business</item>
     </string-array>
+    <string name="info">Information</string>
+    <string name="share">Share</string>
+    <string name="temperature">Current temperature</string>
+    <string name="current_weather">Current weather</string>
+    <string name="current_weather_description">Current weather description</string>
 </resources>

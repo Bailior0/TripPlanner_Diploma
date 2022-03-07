@@ -42,7 +42,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
             listener.onItemRemoved(triplistItem)
         }
 
-        holder.bind(triplistItem.country, triplistItem.place, triplistItem.description)
+        holder.bind(triplistItem.country, triplistItem.place, triplistItem.description, triplistItem.date, triplistItem.category.name,  triplistItem.visited)
     }
 
     @DrawableRes()
@@ -92,7 +92,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         fun onItemChanged(item: TriplistItem)
         fun onItemRemoved(item: TriplistItem)
         fun onItemEdited(item: TriplistItem)
-        fun onTripSelected(country: String?, place: String?, description: String?)
+        fun onTripSelected(country: String?, place: String?, description: String?, date: String?, category: String?, visited: Boolean)
     }
 
     inner class TriplistViewHolder(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -100,17 +100,26 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         var country: String? = null
         var place: String? = null
         var description: String? = null
+        var date: String? = null
+        var category: String? = null
+        var visited: Boolean = false
 
         init {
-            binding.root.setOnClickListener { listener.onTripSelected(country, place, description) }
+            binding.root.setOnClickListener { listener.onTripSelected(country, place, description, date, category, visited) }
         }
 
-        fun bind(newCountry: String?, newPlace: String?, newDescription: String?) {
+        fun bind(newCountry: String?, newPlace: String?, newDescription: String?, newDate: String?, newCategory: String?, newVisited: Boolean) {
             country = newCountry
             binding.tvCountry.text = country
             place = newPlace
             binding.tvPlace.text = place
             description = newDescription
+            date = newDate
+            binding.tvDate.text = date
+            category = newCategory
+            binding.tvCategory.text = category
+            visited = newVisited
+            binding.cbVisited.isChecked = visited
         }
     }
 }

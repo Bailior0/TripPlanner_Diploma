@@ -2,22 +2,42 @@ package hu.bme.aut.onlab.tripplanner.details
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
-import hu.bme.aut.onlab.tripplanner.R
+import android.widget.Toast
 import hu.bme.aut.onlab.tripplanner.databinding.ActivityDetailsBinding
+import hu.bme.aut.onlab.tripplanner.details.adapter.DetailsPagerAdapter
+import hu.bme.aut.onlab.tripplanner.details.data.WeatherDataHolder
+import hu.bme.aut.onlab.tripplanner.details.fragment.*
+import hu.bme.aut.onlab.tripplanner.details.model.WeatherData
+import hu.bme.aut.onlab.tripplanner.details.network.NetworkManager
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class DetailsActivity : AppCompatActivity() {
+class DetailsActivity : AppCompatActivity(), WeatherDataHolder {
 
     private lateinit var binding: ActivityDetailsBinding
-    private var country: String? = null
-    private var place: String? = null
-    private var description: String? = null
+    var country: String? = null
+    var place: String? = null
+    var description: String? = null
+    var date: String? = null
+    var category: String? = null
+    var visited: Boolean = false
+    private lateinit var detailsPagerAdapter: DetailsPagerAdapter
+    private lateinit var informationFragment: InformationFragment
+    private lateinit var shareFragment: ShareFragment
+
+    private var weatherData: WeatherData? = null
 
     companion object {
         private const val TAG = "DetailsActivity"
         const val EXTRA_TRIP_COUNTRY = "extra.trip_country"
         const val EXTRA_TRIP_PLACE = "extra.trip_place"
         const val EXTRA_TRIP_DESCRIPTION = "extra.trip_description"
+        const val EXTRA_TRIP_DATE = "extra.trip_date"
+        const val EXTRA_TRIP_CATEGORY = "extra.trip_category"
+        const val EXTRA_TRIP_VISITED = "extra.trip_visited"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,16 +48,24 @@ class DetailsActivity : AppCompatActivity() {
         country = intent.getStringExtra(EXTRA_TRIP_COUNTRY)
         place = intent.getStringExtra(EXTRA_TRIP_PLACE)
         description = intent.getStringExtra(EXTRA_TRIP_DESCRIPTION)
+        date = intent.getStringExtra(EXTRA_TRIP_DATE)
+        category = intent.getStringExtra(EXTRA_TRIP_CATEGORY)
+        visited = intent.getBooleanExtra(EXTRA_TRIP_VISITED, false)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = place
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val text = "Country: $country\n\nPlace: $place\n\nDescription: $description"
-        binding.tvDescription.text = text
+
+        informationFragment = InformationFragment()
+        shareFragment = ShareFragment()
+        detailsPagerAdapter = DetailsPagerAdapter(supportFragmentManager, this, informationFragment, shareFragment)
     }
 
     override fun onResume() {
         super.onResume()
+        binding.mainViewPager.adapter = detailsPagerAdapter
+
+        loadWeatherData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -46,5 +74,39 @@ class DetailsActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun getWeatherData(): WeatherData? {
+        return weatherData
+    }
+
+    private fun loadWeatherData() {
+        NetworkManager.getWeather(place)?.enqueue(object : Callback<WeatherData?> {
+            override fun onResponse(
+                call: Call<WeatherData?>,
+                response: Response<WeatherData?>
+            ) {
+                Log.d(TAG, "onResponse: " + response.code())
+                if (response.isSuccessful) {
+                    displayWeatherData(response.body())
+                } else {
+                    Toast.makeText(this@DetailsActivity, "Couldn't find weather info for this place", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onFailure(
+                call: Call<WeatherData?>,
+                throwable: Throwable
+            ) {
+                throwable.printStackTrace()
+                Toast.makeText(this@DetailsActivity, "Network request error occured, check LOG", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+    private fun displayWeatherData(receivedWeatherData: WeatherData?) {
+        weatherData = receivedWeatherData
+        val detailsPagerAdapter = DetailsPagerAdapter(supportFragmentManager, this, informationFragment, shareFragment)
+        binding.mainViewPager.adapter = detailsPagerAdapter
     }
 }

@@ -1,22 +1,14 @@
 package hu.bme.aut.onlab.tripplanner.triplist
 
-import android.content.ClipData
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.SpannableString
-import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.auth.EmailAuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.ktx.Firebase
 import hu.bme.aut.onlab.tripplanner.BaseActivity
 import hu.bme.aut.onlab.tripplanner.MainActivity
 import hu.bme.aut.onlab.tripplanner.R
@@ -33,7 +25,7 @@ class TriplistActivity : BaseActivity(), NewTriplistItemDialogFragment.NewTripli
     private lateinit var triplistPagerAdapter: TriplistPagerAdapter
     private lateinit var tripsFragment: TripsFragment
     private lateinit var calendarFragment: CalendarFragment
-    lateinit var mapFragment: MapsFragment
+    private lateinit var mapFragment: MapsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -74,12 +74,15 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
         )
     }
 
-    override fun onTripSelected(country: String?, place: String?, description: String?) {
+    override fun onTripSelected(country: String?, place: String?, description: String?, date: String?, category: String?, visited: Boolean) {
         val showDetailsIntent = Intent()
         showDetailsIntent.setClass(requireActivity().applicationContext, DetailsActivity::class.java)
         showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_COUNTRY, country)
         showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_PLACE, place)
         showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_DESCRIPTION, description)
+        showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_DATE, date)
+        showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_CATEGORY, category)
+        showDetailsIntent.putExtra(DetailsActivity.EXTRA_TRIP_VISITED, visited)
         startActivity(showDetailsIntent)
     }
 
