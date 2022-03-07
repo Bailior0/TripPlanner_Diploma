@@ -55,16 +55,9 @@ class MainActivity : BaseActivity() {
                     .setDisplayName(firebaseUser?.email?.substringBefore('@'))
                     .build()
                 firebaseUser?.updateProfile(profileChangeRequest)
+                firebaseUser?.sendEmailVerification()
 
-                toast("Registration was successful")
-                firebaseAuth
-                    .signInWithEmailAndPassword(binding.etEmail.text.toString(), binding.etPassword.text.toString())
-                    .addOnSuccessListener {
-                        hideProgressDialog()
-
-                        startActivity(Intent(this@MainActivity, TriplistActivity::class.java))
-                        finish()
-                    }
+                toast("Registration was successful\nVerification email has been sent")
             }
             .addOnFailureListener { exception ->
                 hideProgressDialog()
@@ -84,9 +77,14 @@ class MainActivity : BaseActivity() {
             .signInWithEmailAndPassword(binding.etEmail.text.toString(), binding.etPassword.text.toString())
             .addOnSuccessListener {
                 hideProgressDialog()
+                if(firebaseAuth.currentUser!!.isEmailVerified) {
+                    startActivity(Intent(this@MainActivity, TriplistActivity::class.java))
+                    finish()
+                }
+                else
+                    toast("Please verify your email")
 
-                startActivity(Intent(this@MainActivity, TriplistActivity::class.java))
-                finish()
+
             }
             .addOnFailureListener { exception ->
                 hideProgressDialog()
