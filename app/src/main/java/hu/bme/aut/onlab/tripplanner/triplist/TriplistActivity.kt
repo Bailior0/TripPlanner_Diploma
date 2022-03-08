@@ -156,7 +156,7 @@ class TriplistActivity : BaseActivity(), NewTriplistItemDialogFragment.NewTripli
         if(password.isNullOrEmpty()){
             toast("Please enter a valid password")
         }
-        else if(newEmail.isNullOrEmpty() || !newEmail.contains('@')){
+        else if(newEmail.isNullOrEmpty() || !newEmail.contains('@') || newEmail == FirebaseAuth.getInstance().currentUser?.email){
             toast("Please enter a valid new email")
         }
         else {

@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.fragment.app.DialogFragment
@@ -53,7 +52,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
             CreateOrEdit.EDIT -> R.string.edit_triplist_item
         }
 
-        binding = FragmentNewTriplistItemDialogBinding.inflate(LayoutInflater.from(context))
+        binding = FragmentNewTriplistItemDialogBinding.inflate(layoutInflater)
         binding.spCategory.adapter = ArrayAdapter(
             requireContext(),
             com.google.android.material.R.layout.support_simple_spinner_dropdown_item,
@@ -91,7 +90,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
     private fun isValidEdit() = placeEditText.text.isNotEmpty()
 
     private fun getContentView(): View {
-        val contentView = LayoutInflater.from(context).inflate(R.layout.fragment_new_triplist_item_dialog, null)
+        val contentView = layoutInflater.inflate(R.layout.fragment_new_triplist_item_dialog, null)
         placeEditText = contentView.findViewById(R.id.etPlace)
         countryEditText = contentView.findViewById(R.id.etCountry)
         descriptionEditText = contentView.findViewById(R.id.etDescription)

@@ -1,9 +1,9 @@
 package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.RecyclerView
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.TriplistItem
@@ -29,7 +29,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
 
         holder.binding.tvCategory.text = triplistItem.category.name
 
-        holder.binding.cbVisited.setOnCheckedChangeListener { buttonView, isChecked ->
+        holder.binding.cbVisited.setOnCheckedChangeListener { _, isChecked ->
             triplistItem.visited = isChecked
             listener.onItemChanged(triplistItem)
         }
@@ -45,7 +45,6 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         holder.bind(triplistItem.country, triplistItem.place, triplistItem.description, triplistItem.date, triplistItem.category.name,  triplistItem.visited)
     }
 
-    @DrawableRes()
     private fun getImageResource(category: TriplistItem.Category): Int {
         return when (category) {
             TriplistItem.Category.OUTDOORS -> R.drawable.outdoors
@@ -56,6 +55,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addItem(item: TriplistItem) {
         items.add(item)
         notifyItemInserted(items.lastIndex)
@@ -63,6 +63,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateItem(triplistItems: List<TriplistItem>) {
         items.clear()
         items.addAll(triplistItems)
@@ -77,6 +78,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         notifyItemRemoved(pos)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun editItem(item: TriplistItem) {
         val position = items.indexOf(items.find { it.id == item.id })
         items.removeAt(position)
@@ -95,7 +97,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         fun onTripSelected(country: String?, place: String?, description: String?, date: String?, category: String?, visited: Boolean)
     }
 
-    inner class TriplistViewHolder(private val itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TriplistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var binding = ItemTriplistListBinding.bind(itemView)
         var country: String? = null
         var place: String? = null

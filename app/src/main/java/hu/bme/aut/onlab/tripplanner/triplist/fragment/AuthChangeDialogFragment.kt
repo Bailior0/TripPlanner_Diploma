@@ -4,12 +4,11 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import androidx.fragment.app.DialogFragment
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentAuthChangeDialogBinding
 
-class AuthChangeDialogFragment() : DialogFragment() {
+class AuthChangeDialogFragment : DialogFragment() {
     interface AuthChangeDialogListener {
         fun onEmailChanged(password: String?, newEmail: String?)
     }
@@ -24,7 +23,7 @@ class AuthChangeDialogFragment() : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        binding = FragmentAuthChangeDialogBinding.inflate(LayoutInflater.from(context))
+        binding = FragmentAuthChangeDialogBinding.inflate(layoutInflater)
 
         binding.etSecondTextInputLayout.hint = "New email"
         return AlertDialog.Builder(requireContext())

@@ -2,7 +2,6 @@ package hu.bme.aut.onlab.tripplanner.triplist.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,7 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
     private lateinit var database: TriplistDatabase
     private lateinit var adapter: TriplistAdapter
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         super.onCreateView(inflater, container, savedInstanceState)
         binding = FragmentTripsBinding.inflate(layoutInflater, container, false)
         database = TriplistDatabase.getDatabase(requireActivity().applicationContext)
@@ -50,7 +49,10 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
     override fun onItemChanged(item: TriplistItem) {
         thread {
             database.triplistItemDao().update(item)
-            Log.d("TripsFragment", "TriplistItem update was successful")
+
+            requireActivity().runOnUiThread {
+                adapter.editItem(item)
+            }
         }
     }
 
@@ -64,7 +66,6 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
                 act.deleteItem()
             }
         }
-
     }
 
     override fun onItemEdited(editItem: TriplistItem) {

@@ -14,7 +14,7 @@ abstract class TriplistDatabase : RoomDatabase() {
                 applicationContext,
                 TriplistDatabase::class.java,
                 "triplist-list"
-            ).build();
+            ).build()
         }
     }
 }

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentInformationBinding
 import hu.bme.aut.onlab.tripplanner.details.DetailsActivity
 import hu.bme.aut.onlab.tripplanner.details.data.WeatherDataHolder
@@ -27,7 +26,7 @@ class InformationFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         binding = FragmentInformationBinding.inflate(LayoutInflater.from(context))
         return binding.root
     }

@@ -1,12 +1,14 @@
 package hu.bme.aut.onlab.tripplanner.details
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import hu.bme.aut.onlab.tripplanner.BaseActivity
 import hu.bme.aut.onlab.tripplanner.databinding.ActivityDetailsBinding
 import hu.bme.aut.onlab.tripplanner.details.adapter.DetailsPagerAdapter
+import hu.bme.aut.onlab.tripplanner.details.data.SharedData
 import hu.bme.aut.onlab.tripplanner.details.data.WeatherDataHolder
 import hu.bme.aut.onlab.tripplanner.details.fragment.*
 import hu.bme.aut.onlab.tripplanner.details.model.WeatherData
@@ -15,7 +17,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DetailsActivity : AppCompatActivity(), WeatherDataHolder {
+class DetailsActivity : BaseActivity(), WeatherDataHolder, NewShareItemDialogFragment.NewShareItemDialogListener {
 
     private lateinit var binding: ActivityDetailsBinding
     var country: String? = null
@@ -24,14 +26,10 @@ class DetailsActivity : AppCompatActivity(), WeatherDataHolder {
     var date: String? = null
     var category: String? = null
     var visited: Boolean = false
-    private lateinit var detailsPagerAdapter: DetailsPagerAdapter
-    private lateinit var informationFragment: InformationFragment
-    private lateinit var shareFragment: ShareFragment
 
     private var weatherData: WeatherData? = null
 
     companion object {
-        private const val TAG = "DetailsActivity"
         const val EXTRA_TRIP_COUNTRY = "extra.trip_country"
         const val EXTRA_TRIP_PLACE = "extra.trip_place"
         const val EXTRA_TRIP_DESCRIPTION = "extra.trip_description"
@@ -55,16 +53,10 @@ class DetailsActivity : AppCompatActivity(), WeatherDataHolder {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = place
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        informationFragment = InformationFragment()
-        shareFragment = ShareFragment()
-        detailsPagerAdapter = DetailsPagerAdapter(supportFragmentManager, this, informationFragment, shareFragment)
     }
 
     override fun onResume() {
         super.onResume()
-        binding.mainViewPager.adapter = detailsPagerAdapter
-
         loadWeatherData()
     }
 
@@ -86,11 +78,12 @@ class DetailsActivity : AppCompatActivity(), WeatherDataHolder {
                 call: Call<WeatherData?>,
                 response: Response<WeatherData?>
             ) {
-                Log.d(TAG, "onResponse: " + response.code())
                 if (response.isSuccessful) {
-                    displayWeatherData(response.body())
+                    weatherData = response.body()
+                    binding.mainViewPager.adapter = DetailsPagerAdapter(supportFragmentManager, applicationContext)
                 } else {
                     Toast.makeText(this@DetailsActivity, "Couldn't find weather info for this place", Toast.LENGTH_LONG).show()
+                    binding.mainViewPager.adapter = DetailsPagerAdapter(supportFragmentManager, applicationContext)
                 }
             }
 
@@ -104,9 +97,16 @@ class DetailsActivity : AppCompatActivity(), WeatherDataHolder {
         })
     }
 
-    private fun displayWeatherData(receivedWeatherData: WeatherData?) {
-        weatherData = receivedWeatherData
-        val detailsPagerAdapter = DetailsPagerAdapter(supportFragmentManager, this, informationFragment, shareFragment)
-        binding.mainViewPager.adapter = detailsPagerAdapter
+    override fun onUploadPost(nick: String, title: String, comment: String) {
+        val newPost = SharedData(uid, userName, nick, title, comment /*, imageUrl*/)
+
+        val db = Firebase.firestore
+
+        db.collection(place!!)
+            .add(newPost)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Post created", Toast.LENGTH_SHORT).show()}
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show() }
     }
 }

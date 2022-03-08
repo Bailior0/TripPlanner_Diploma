@@ -39,4 +39,8 @@
     <string name="temperature">Current temperature</string>
     <string name="current_weather">Current weather</string>
     <string name="current_weather_description">Current weather description</string>
+    <string name="title">Title</string>
+    <string name="post">Comment</string>
+    <string name="attach_image">Attach image</string>
+    <string name="nick">Nickname</string>
 </resources>
