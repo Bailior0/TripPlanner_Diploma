@@ -23,7 +23,6 @@ class ShareAdapter(private val context: Context) : ListAdapter<SharedData, Share
         val tvNickname: TextView = binding.tvNickname
         val tvTitle: TextView = binding.tvTitle
         val tvBody: TextView = binding.tvBody
-        val imgPost: ImageView = binding.imgPost
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -34,13 +33,6 @@ class ShareAdapter(private val context: Context) : ListAdapter<SharedData, Share
         holder.tvNickname.text = tmpPost.nickname
         holder.tvTitle.text = tmpPost.title
         holder.tvBody.text = tmpPost.body
-
-        if (tmpPost.imageUrl.isNullOrBlank()) {
-            holder.imgPost.visibility = View.GONE
-        } else {
-            Glide.with(context).load(tmpPost.imageUrl).into(holder.imgPost)
-            holder.imgPost.visibility = View.VISIBLE
-        }
 
         setAnimation(holder.itemView, position)
     }

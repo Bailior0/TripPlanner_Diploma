@@ -5,6 +5,5 @@ data class SharedData (
     val author: String? = null,
     val nickname: String? = null,
     val title: String? = null,
-    val body: String? = null,
-    val imageUrl: String? = null
+    val body: String? = null
 )

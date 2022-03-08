@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.details.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -31,6 +32,7 @@ class InformationFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val act = activity as DetailsActivity
@@ -51,6 +53,7 @@ class InformationFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun displayWeatherData() {
         val weather = weatherDataHolder?.getWeatherData()?.weather?.first()
         val weatherData = weatherDataHolder!!.getWeatherData()

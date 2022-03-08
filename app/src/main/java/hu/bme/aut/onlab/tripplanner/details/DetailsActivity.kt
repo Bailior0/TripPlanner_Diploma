@@ -98,7 +98,7 @@ class DetailsActivity : BaseActivity(), WeatherDataHolder, NewShareItemDialogFra
     }
 
     override fun onUploadPost(nick: String, title: String, comment: String) {
-        val newPost = SharedData(uid, userName, nick, title, comment /*, imageUrl*/)
+        val newPost = SharedData(uid, userName, nick, title, comment)
 
         val db = Firebase.firestore
 
