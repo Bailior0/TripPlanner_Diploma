@@ -72,6 +72,10 @@ class DetailsActivity : BaseActivity(), WeatherDataHolder, NewShareItemDialogFra
         return weatherData
     }
 
+    fun getUId(): String? {
+        return uid
+    }
+
     private fun loadWeatherData() {
         NetworkManager.getWeather(place)?.enqueue(object : Callback<WeatherData?> {
             override fun onResponse(
@@ -97,8 +101,21 @@ class DetailsActivity : BaseActivity(), WeatherDataHolder, NewShareItemDialogFra
         })
     }
 
+    override fun onEditPost(item: SharedData) {
+        if(item.uid == uid) {
+            val db = Firebase.firestore
+
+            db.collection(place!!).document(item.id!!)
+                .set(item)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Post edited", Toast.LENGTH_SHORT).show()}
+                .addOnFailureListener { exception ->
+                    Toast.makeText(this, exception.message, Toast.LENGTH_SHORT).show() }
+        }
+    }
+
     override fun onUploadPost(nick: String, title: String, comment: String) {
-        val newPost = SharedData(uid, userName, nick, title, comment)
+        val newPost = SharedData(null, uid, userName, nick, title, comment)
 
         val db = Firebase.firestore
 

@@ -14,8 +14,9 @@ import com.google.firebase.ktx.Firebase
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentShareBinding
 import hu.bme.aut.onlab.tripplanner.details.DetailsActivity
 import hu.bme.aut.onlab.tripplanner.details.adapter.ShareAdapter
+import hu.bme.aut.onlab.tripplanner.details.data.SharedData
 
-class ShareFragment : Fragment() {
+class ShareFragment : Fragment(), ShareAdapter.SharelistItemClickListener {
     private lateinit var shareAdapter: ShareAdapter
     private lateinit var binding: FragmentShareBinding
 
@@ -24,8 +25,9 @@ class ShareFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentShareBinding.inflate(layoutInflater, container, false)
-        shareAdapter = ShareAdapter(requireActivity().applicationContext)
+        shareAdapter = ShareAdapter(requireActivity().applicationContext, this)
         binding.rvMain.adapter = shareAdapter
+        shareAdapter.setActivity(activity as DetailsActivity)
         binding.rvMain.layoutManager = LinearLayoutManager(requireActivity().applicationContext).apply {
             reverseLayout = true
             stackFromEnd = true
@@ -52,11 +54,32 @@ class ShareFragment : Fragment() {
 
                 for (dc in snapshots!!.documentChanges) {
                     when (dc.type) {
-                        DocumentChange.Type.ADDED -> shareAdapter.addPost(dc.document.toObject())
-                        DocumentChange.Type.MODIFIED -> Toast.makeText(requireActivity().applicationContext, dc.document.data.toString(), Toast.LENGTH_SHORT).show()
-                        DocumentChange.Type.REMOVED -> Toast.makeText(requireActivity().applicationContext, dc.document.data.toString(), Toast.LENGTH_SHORT).show()
+                        DocumentChange.Type.ADDED -> shareAdapter.addPost(dc.document.toObject(), dc.document.id)
+                        DocumentChange.Type.MODIFIED -> shareAdapter.editPost(dc.document.toObject(), dc.document.id)
+                        DocumentChange.Type.REMOVED -> shareAdapter.removePost(dc.document.id)
                     }
                 }
             }
+    }
+
+    override fun onItemEdited(item: SharedData) {
+        NewShareItemDialogFragment(item).show(
+            childFragmentManager,
+            NewShareItemDialogFragment.TAG
+        )
+    }
+
+    override fun onItemRemoved(item: SharedData) {
+        val act = activity as DetailsActivity
+        if(item.uid == act.getUId()) {
+            val db = Firebase.firestore
+
+            db.collection(act.place!!).document(item.id!!)
+                .delete()
+                .addOnSuccessListener {
+                    Toast.makeText(requireActivity().applicationContext, "Post removed", Toast.LENGTH_SHORT).show() }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(requireActivity().applicationContext, exception.message, Toast.LENGTH_SHORT).show() }
+        }
     }
 }

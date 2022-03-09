@@ -35,7 +35,8 @@
         <item>Business</item>
     </string-array>
     <string name="info">Information</string>
-    <string name="share">Share</string>
+    <string name="create_comment">Create comment</string>
+    <string name="edit_comment">Edit comment</string>
     <string name="temperature">Current temperature</string>
     <string name="current_weather">Current weather</string>
     <string name="current_weather_description">Current weather description</string>
@@ -43,4 +44,5 @@
     <string name="post">Comment</string>
     <string name="attach_image">Attach image</string>
     <string name="nick">Nickname</string>
+    <string name="share">Share</string>
 </resources>
