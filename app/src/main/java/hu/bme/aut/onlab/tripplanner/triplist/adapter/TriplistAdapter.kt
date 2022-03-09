@@ -1,6 +1,7 @@
 package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

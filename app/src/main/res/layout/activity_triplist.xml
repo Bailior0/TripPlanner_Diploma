@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 app:layout_anchor="@id/mainViewPager"
                 app:layout_anchorGravity="bottom|right|end"
-                android:layout_margin="24dp"
+                android:layout_margin="40dp"
                 app:srcCompat="@drawable/ic_add_white_36dp" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
