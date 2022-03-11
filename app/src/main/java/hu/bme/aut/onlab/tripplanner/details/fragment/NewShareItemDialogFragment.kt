@@ -1,11 +1,13 @@
 package hu.bme.aut.onlab.tripplanner.details.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentNewShareItemDialogBinding
@@ -57,6 +59,8 @@ class NewShareItemDialogFragment() : DialogFragment() {
                 .setPositiveButton(R.string.button_ok) { _, _ ->
                     if(isValidCreate())
                         listener.onUploadPost(binding.etNick.text.toString(), binding.etTitle.text.toString(), binding.etBody.text.toString())
+                    else
+                        Toast.makeText(requireActivity().applicationContext, "All fields must be filled", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton(R.string.button_cancel, null)
                 .create()
@@ -71,6 +75,8 @@ class NewShareItemDialogFragment() : DialogFragment() {
                         setEditedItem()
                         listener.onEditPost(item!!)
                     }
+                    else
+                        Toast.makeText(requireActivity().applicationContext, "All fields must be filled", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton(R.string.button_cancel, null)
                 .create()
@@ -80,6 +86,7 @@ class NewShareItemDialogFragment() : DialogFragment() {
     private fun isValidCreate() = binding.etTitle.text.isNotEmpty() && binding.etBody.text.isNotEmpty() && binding.etNick.text.isNotEmpty()
     private fun isValidEdit() = nickEditText.text.isNotEmpty() && titleEditText.text.isNotEmpty() && commentEditText.text.isNotEmpty()
 
+    @SuppressLint("InflateParams")
     private fun getContentView(): View {
         val contentView = layoutInflater.inflate(R.layout.fragment_new_share_item_dialog, null)
         nickEditText = contentView.findViewById(R.id.etNick)

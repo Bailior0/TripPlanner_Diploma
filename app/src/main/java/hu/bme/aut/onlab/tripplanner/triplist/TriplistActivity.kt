@@ -83,6 +83,7 @@ class TriplistActivity : BaseActivity(), NewTriplistItemDialogFragment.NewTripli
 
             runOnUiThread {
                 tripsFragment.triplistItemCreated(newTripItem)
+                calendarFragment.setData()
                 mapFragment.setMarkers()
             }
         }
@@ -95,6 +96,7 @@ class TriplistActivity : BaseActivity(), NewTriplistItemDialogFragment.NewTripli
 
             runOnUiThread {
                 tripsFragment.triplistItemEdited(item)
+                calendarFragment.setData()
                 mapFragment.setMarkers()
             }
         }
@@ -148,6 +150,7 @@ class TriplistActivity : BaseActivity(), NewTriplistItemDialogFragment.NewTripli
 
     fun deleteItem() {
         runOnUiThread {
+            calendarFragment.setData()
             mapFragment.setMarkers()
         }
     }

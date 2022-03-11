@@ -3,19 +3,29 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable-night/ic_baseline_keyboard_arrow_left_24.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable-night/ic_baseline_keyboard_arrow_right_24.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1955" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable-xhdpi/side_nav_bar.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_keyboard_arrow_left_24.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_keyboard_arrow_left_25.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_keyboard_arrow_right_24.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_keyboard_arrow_right_25.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_lock_open_24.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_mail_outline_24.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1955" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/drawable/ic_logout_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/activity_details.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/activity_main.xml" value="0.22826086956521738" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/activity_triplist.xml" value="0.1" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/activity_triplist.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/activity_triplist_drawer.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/app_bar_triplist.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/card_share.xml" value="0.1897644927536232" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/content_trips.xml" value="0.1" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/fragment_auth_change.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/fragment_auth_change_dialog.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/fragment_calendar.xml" value="0.22826086956521738" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/fragment_information.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/TripPlanner/app/src/main/res/layout/fragment_map.xml" value="0.22826086956521738" />

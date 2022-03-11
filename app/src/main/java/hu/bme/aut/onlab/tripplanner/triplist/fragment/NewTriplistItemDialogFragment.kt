@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.triplist.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -66,6 +67,8 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
                 .setPositiveButton(R.string.button_ok) { _, _ ->
                     if (isValidCreate())
                         listener.onTriplistItemCreated(getTriplistItem())
+                    else
+                        Toast.makeText(requireActivity().applicationContext, "The place field must be filled", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton(R.string.button_cancel, null)
                 .create()
@@ -80,6 +83,8 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
                         setEditedItem()
                         listener.onTriplistItemEdited(item!!)
                     }
+                    else
+                        Toast.makeText(requireActivity().applicationContext, "The place field must be filled", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton(R.string.button_cancel, null)
                 .create()
@@ -89,6 +94,7 @@ class NewTriplistItemDialogFragment() : DialogFragment() {
     private fun isValidCreate() = binding.etPlace.text.isNotEmpty()
     private fun isValidEdit() = placeEditText.text.isNotEmpty()
 
+    @SuppressLint("InflateParams")
     private fun getContentView(): View {
         val contentView = layoutInflater.inflate(R.layout.fragment_new_triplist_item_dialog, null)
         placeEditText = contentView.findViewById(R.id.etPlace)

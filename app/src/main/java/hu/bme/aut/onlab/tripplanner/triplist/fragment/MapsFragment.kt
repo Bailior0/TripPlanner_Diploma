@@ -11,24 +11,26 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.*
+import hu.bme.aut.onlab.tripplanner.databinding.FragmentMapsBinding
 import java.util.*
 import kotlin.concurrent.thread
 
 class MapsFragment : Fragment() {
+    private lateinit var binding: FragmentMapsBinding
     private lateinit var database: TriplistDatabase
     private lateinit var items: List<TriplistItem>
 
     private lateinit var callback: OnMapReadyCallback
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_maps, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        binding = FragmentMapsBinding.inflate(layoutInflater, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,8 +71,9 @@ class MapsFragment : Fragment() {
             }
             if (items.isNotEmpty()) {
                 val bounds = bld.build()
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 70))
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 1000,1000, 70))
             }
+            googleMap.setMapStyle(MapStyleOptions(resources.getString(R.string.style_json)))
         }
     }
 }

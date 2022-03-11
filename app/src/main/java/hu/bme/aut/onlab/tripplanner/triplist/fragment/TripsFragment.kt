@@ -56,20 +56,20 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
         }
     }
 
-    override fun onItemRemoved(delItem: TriplistItem) {
+    override fun onItemRemoved(item: TriplistItem) {
         thread {
-            database.triplistItemDao().deleteItem(delItem)
+            database.triplistItemDao().deleteItem(item)
 
             requireActivity().runOnUiThread {
-                adapter.removeItem(delItem)
+                adapter.removeItem(item)
                 val act = requireActivity() as TriplistActivity
                 act.deleteItem()
             }
         }
     }
 
-    override fun onItemEdited(editItem: TriplistItem) {
-        NewTriplistItemDialogFragment(editItem).show(
+    override fun onItemEdited(item: TriplistItem) {
+        NewTriplistItemDialogFragment(item).show(
             childFragmentManager,
             NewTriplistItemDialogFragment.TAG
         )

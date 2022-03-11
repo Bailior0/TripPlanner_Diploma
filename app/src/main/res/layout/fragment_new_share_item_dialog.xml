@@ -20,6 +20,7 @@
             android:id="@+id/etNick"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
             android:maxLines="1" />
 
         <TextView
@@ -31,6 +32,7 @@
             android:id="@+id/etTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
             android:maxLines="1" />
 
         <TextView
@@ -42,8 +44,7 @@
             android:id="@+id/etBody"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:maxLines="10"
+            android:inputType="textMultiLine|textCapSentences"
             android:scrollHorizontally="false" />
 
     </LinearLayout>

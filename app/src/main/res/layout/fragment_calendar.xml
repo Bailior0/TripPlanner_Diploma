@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".triplist.fragment.CalendarFragment">
 
-    <CalendarView
+    <com.applandeo.materialcalendarview.CalendarView
         android:id="@+id/calendarView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:eventsEnabled="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:headerColor="@color/color2"
+        app:headerLabelColor="@color/color1"
+        app:previousButtonSrc="@drawable/ic_baseline_keyboard_arrow_left_24"
+        app:forwardButtonSrc="@drawable/ic_baseline_keyboard_arrow_right_24"
+        app:abbreviationsBarColor="@color/color2"
+        app:abbreviationsLabelsColor="@color/color1"
+        app:pagesColor="@color/color2"
+        app:daysLabelsColor="@color/color1"
+        app:anotherMonthsDaysLabelsColor="@color/anotherMonthsDaysLabelsColor"/>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
