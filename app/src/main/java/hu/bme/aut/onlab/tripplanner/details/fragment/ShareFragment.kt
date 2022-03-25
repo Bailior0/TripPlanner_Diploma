@@ -33,10 +33,12 @@ class ShareFragment : Fragment(), ShareAdapter.SharelistItemClickListener {
             stackFromEnd = true
         }
         binding.fab.setOnClickListener{
-            NewShareItemDialogFragment().show(
-                childFragmentManager,
-                NewShareItemDialogFragment.TAG
-            )
+            val act = activity as DetailsActivity
+            if(act.isOnline(requireActivity().applicationContext))
+                NewShareItemDialogFragment().show(
+                    childFragmentManager,
+                    NewShareItemDialogFragment.TAG
+                )
         }
         initPostsListener()
         return binding.root

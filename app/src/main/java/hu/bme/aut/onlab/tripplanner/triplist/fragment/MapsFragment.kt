@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.*
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentMapsBinding
+import hu.bme.aut.onlab.tripplanner.triplist.TriplistActivity
 import java.util.*
 import kotlin.concurrent.thread
 
@@ -45,8 +46,8 @@ class MapsFragment : Fragment() {
             thread {
                 items = database.triplistItemDao().getAll()
                 database.close()
+                setCallback()
                 requireActivity().runOnUiThread {
-                    setCallback()
                     val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
                     mapFragment?.getMapAsync(callback)
                 }
@@ -57,19 +58,23 @@ class MapsFragment : Fragment() {
     private fun setCallback() {
         callback = OnMapReadyCallback { googleMap ->
             googleMap.clear()
+            val act = activity as TriplistActivity
+            val connected = act.isOnline(requireActivity().applicationContext)
             val geocoder = Geocoder(requireActivity().applicationContext, Locale.getDefault())
             val bld = LatLngBounds.Builder()
-            for (item in items) {
-                val matches = geocoder.getFromLocationName(item.place + " " + item.country, 1)
-                var coordinates: LatLng
+            if(connected) {
+                for (item in items) {
+                    val matches = geocoder.getFromLocationName(item.place + " " + item.country, 1)
+                    var coordinates: LatLng
 
-                if (matches.size > 0) {
-                    coordinates = LatLng(matches[0].latitude, matches[0].longitude)
-                    googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place))
-                    bld.include(coordinates)
+                    if (matches.size > 0) {
+                        coordinates = LatLng(matches[0].latitude, matches[0].longitude)
+                        googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place))
+                        bld.include(coordinates)
+                    }
                 }
             }
-            if (items.isNotEmpty()) {
+            if (items.isNotEmpty() && connected) {
                 val bounds = bld.build()
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 1000,1000, 70))
             }

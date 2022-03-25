@@ -96,7 +96,7 @@ class DetailsActivity : BaseActivity(), WeatherDataHolder, NewShareItemDialogFra
                 throwable: Throwable
             ) {
                 throwable.printStackTrace()
-                Toast.makeText(this@DetailsActivity, "Network request error occured, check LOG", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@DetailsActivity, "Network request error occured", Toast.LENGTH_LONG).show()
             }
         })
     }

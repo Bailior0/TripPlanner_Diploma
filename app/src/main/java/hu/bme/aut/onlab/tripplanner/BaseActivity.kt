@@ -1,6 +1,9 @@
 package hu.bme.aut.onlab.tripplanner
 
 import android.app.ProgressDialog
+import android.content.Context
+import android.net.ConnectivityManager
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -45,5 +48,23 @@ abstract class BaseActivity : AppCompatActivity() {
 
     protected fun toast(message: String?) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        if (connectivityManager != null) {
+            val activeNetwork = connectivityManager.activeNetworkInfo
+            if (activeNetwork != null) {
+                if (activeNetwork.type == ConnectivityManager.TYPE_WIFI) {
+                    Log.i("Internet", "TYPE_WIFI")
+                    return true
+                } else if (activeNetwork.type == ConnectivityManager.TYPE_MOBILE) {
+                    Log.i("Internet", "TYPE_MOBILE")
+                    return true
+                }
+            }
+        }
+        Toast.makeText(applicationContext, "Network request error occured", Toast.LENGTH_SHORT).show()
+        return false
     }
 }

@@ -110,15 +110,18 @@ class TriplistActivity : BaseActivity(), NewTriplistItemDialogFragment.NewTripli
                 finish()
             }
             R.id.nav_mailchange -> {
-                AuthChangeDialogFragment().show(
-                    supportFragmentManager,
-                    AuthChangeDialogFragment.TAG
-                )
+                if(isOnline(applicationContext))
+                    AuthChangeDialogFragment().show(
+                        supportFragmentManager,
+                        AuthChangeDialogFragment.TAG
+                    )
             }
             R.id.nav_passwordchange -> {
-                val mail = FirebaseAuth.getInstance().currentUser?.email as String
-                FirebaseAuth.getInstance().sendPasswordResetEmail(mail)
-                toast("Verification email has been sent about your password change")
+                if(isOnline(applicationContext)) {
+                    val mail = FirebaseAuth.getInstance().currentUser?.email as String
+                    FirebaseAuth.getInstance().sendPasswordResetEmail(mail)
+                    toast("Verification email has been sent about your password change")
+                }
             }
         }
 

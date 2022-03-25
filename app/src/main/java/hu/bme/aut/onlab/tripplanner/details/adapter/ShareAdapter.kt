@@ -42,11 +42,13 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
         }
 
         holder.binding.ibEdit.setOnClickListener {
-            listener.onItemEdited(tmpPost)
+            if(activity.isOnline(context))
+                listener.onItemEdited(tmpPost)
         }
 
         holder.binding.ibRemove.setOnClickListener {
-            listener.onItemRemoved(tmpPost)
+            if(activity.isOnline(context))
+                listener.onItemRemoved(tmpPost)
         }
     }
 
@@ -54,7 +56,6 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
         post.id = id
         postList.add(post)
         notifyItemInserted(postList.lastIndex)
-
     }
 
     fun editPost(post: SharedData, id: String) {
@@ -65,6 +66,7 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
     }
 
     fun removePost(id: String) {
+
         val position = postList.indexOf(postList.find { it.id == id })
         postList.removeAt(position)
         notifyItemRemoved(position)
