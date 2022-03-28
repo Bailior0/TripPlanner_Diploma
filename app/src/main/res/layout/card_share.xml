@@ -63,7 +63,7 @@
                 android:layout_height="44dp"
                 android:layout_gravity="end|center_vertical"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_pencil_grey600_48dp" />
+                android:src="@drawable/ic_baseline_edit_24" />
 
             <ImageButton
                 android:id="@+id/ibRemove"
@@ -72,7 +72,7 @@
                 android:layout_height="44dp"
                 android:layout_gravity="end|center_vertical"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_delete_grey600_48dp" />
+                android:src="@drawable/ic_baseline_delete_24" />
 
         </LinearLayout>
 

@@ -10,4 +10,9 @@
     <color name="color1">#121212</color>
     <color name="color2">#FFFFFFFF</color>
     <color name="anotherMonthsDaysLabelsColor">#CFCFCF</color>
+    <color name="outdoors">#aa81c784</color>
+    <color name="beaches">#aa00e5ff</color>
+    <color name="sightseeing">#aaffee58</color>
+    <color name="skiing">#aa1e88e5</color>
+    <color name="business">#aa836fa9</color>
 </resources>

@@ -42,7 +42,19 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
             listener.onItemRemoved(triplistItem)
         }
 
+        holder.binding.root.setBackgroundResource(getBackgroundColor(triplistItem.category))
+
         holder.bind(triplistItem.country, triplistItem.place, triplistItem.description, triplistItem.date, triplistItem.category.name,  triplistItem.visited)
+    }
+
+    private fun getBackgroundColor(category: TriplistItem.Category): Int {
+        return when (category) {
+            TriplistItem.Category.OUTDOORS -> R.color.outdoors
+            TriplistItem.Category.BEACHES -> R.color.beaches
+            TriplistItem.Category.SIGHTSEEING -> R.color.sightseeing
+            TriplistItem.Category.SKIING -> R.color.skiing
+            TriplistItem.Category.BUSINESS -> R.color.business
+        }
     }
 
     private fun getImageResource(category: TriplistItem.Category): Int {

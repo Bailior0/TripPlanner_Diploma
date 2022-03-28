@@ -96,8 +96,10 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
     }
 
     fun triplistItemEdited(item: TriplistItem) {
-        requireActivity().runOnUiThread {
-            adapter.editItem(item)
+        if(isAdded) {
+            requireActivity().runOnUiThread {
+                adapter.editItem(item)
+            }
         }
     }
 }

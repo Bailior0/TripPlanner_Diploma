@@ -11,10 +11,7 @@ import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.*
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentMapsBinding
@@ -78,7 +75,13 @@ class MapsFragment : Fragment() {
 
                     if (!matches.isNullOrEmpty() && matches.size > 0) {
                         coordinates = LatLng(matches[0].latitude, matches[0].longitude)
-                        googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place))
+                        when(item.category) {
+                            TriplistItem.Category.OUTDOORS -> googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)))
+                            TriplistItem.Category.BEACHES -> googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)))
+                            TriplistItem.Category.SIGHTSEEING -> googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)))
+                            TriplistItem.Category.SKIING -> googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))
+                            TriplistItem.Category.BUSINESS -> googleMap.addMarker(MarkerOptions().position(coordinates).title(item.place).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)))
+                        }
                         bld.include(coordinates)
                     }
                 }

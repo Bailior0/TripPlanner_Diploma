@@ -3,4 +3,9 @@
     <color name="color1">#FFFFFFFF</color>
     <color name="color2">#121212</color>
     <color name="anotherMonthsDaysLabelsColor">#707070</color>
+    <color name="outdoors">#5581c784</color>
+    <color name="beaches">#5500e5ff</color>
+    <color name="sightseeing">#55ffee58</color>
+    <color name="skiing">#551e88e5</color>
+    <color name="business">#55836fa9</color>
 </resources>
