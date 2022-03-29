@@ -1,13 +1,10 @@
 package hu.bme.aut.onlab.tripplanner.details.adapter
 
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.databinding.CardShareBinding
