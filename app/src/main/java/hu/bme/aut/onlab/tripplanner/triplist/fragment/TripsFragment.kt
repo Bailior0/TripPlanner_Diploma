@@ -50,10 +50,6 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
     override fun onItemChanged(item: TriplistItem) {
         thread {
             database.triplistItemDao().update(item)
-
-            requireActivity().runOnUiThread {
-                adapter.editItem(item)
-            }
         }
     }
 

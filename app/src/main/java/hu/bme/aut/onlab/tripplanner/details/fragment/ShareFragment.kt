@@ -76,10 +76,10 @@ class ShareFragment : Fragment(), ShareAdapter.SharelistItemClickListener {
         val act = activity as DetailsActivity
         val db = Firebase.firestore
         val userId = act.getUId()
-        val equal = item.liked.find { it == userId }
+        val userFound = item.liked.find { it == userId }
 
-        if(!equal.isNullOrEmpty()) {
-            val poz = item.liked.indexOf(equal)
+        if(!userFound.isNullOrEmpty()) {
+            val poz = item.liked.indexOf(userFound)
             item.liked.removeAt(poz)
         }
         else {

@@ -1,6 +1,5 @@
 package hu.bme.aut.onlab.tripplanner.details.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.databinding.FragmentInformationBinding
 import hu.bme.aut.onlab.tripplanner.details.DetailsActivity
 import hu.bme.aut.onlab.tripplanner.details.data.WeatherDataHolder
@@ -32,7 +32,6 @@ class InformationFragment : Fragment() {
         return binding.root
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val act = activity as DetailsActivity
@@ -42,10 +41,10 @@ class InformationFragment : Fragment() {
         binding.tvDate.text = act.date
         binding.tvCategory.text = act.category
         if(act.visited) {
-            binding.tvVisited.text = "Visited"
+            binding.tvVisited.setText(R.string.visited)
         }
         else {
-            binding.tvVisited.text = "Not yet visited"
+            binding.tvVisited.setText(R.string.not_visited)
         }
 
         if (weatherDataHolder?.getWeatherData() != null) {
@@ -53,13 +52,13 @@ class InformationFragment : Fragment() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun displayWeatherData() {
         val weather = weatherDataHolder?.getWeatherData()?.weather?.first()
         val weatherData = weatherDataHolder!!.getWeatherData()
         binding.tvMain.text = weather?.main
         binding.tvWeatherDescription.text = weather?.description
-        binding.tvTemperature.text = weatherData?.main?.temp.toString() + " °C"
+        val temp = weatherData?.main?.temp.toString() + " °C"
+        binding.tvTemperature.text = temp
 
         Glide.with(this)
             .load("https://openweathermap.org/img/w/${weather?.icon}.png")

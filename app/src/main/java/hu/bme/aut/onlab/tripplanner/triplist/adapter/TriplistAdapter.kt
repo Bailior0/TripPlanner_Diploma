@@ -37,6 +37,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         holder.binding.cbVisited.setOnCheckedChangeListener { _, isChecked ->
             triplistItem.visited = isChecked
             listener.onItemChanged(triplistItem)
+            holder.bind(triplistItem.country, triplistItem.place, triplistItem.description, triplistItem.date, triplistItem.category.name,  triplistItem.visited)
         }
 
         holder.binding.ibEdit.setOnClickListener {

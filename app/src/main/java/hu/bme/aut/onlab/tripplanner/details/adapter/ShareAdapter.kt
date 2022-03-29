@@ -1,13 +1,11 @@
 package hu.bme.aut.onlab.tripplanner.details.adapter
 
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
-import android.util.Log
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.databinding.CardShareBinding
@@ -38,7 +36,7 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
         holder.binding.tvBody.text = tmpPost.body
 
         holder.binding.tvLikeNum.text = tmpPost.liked.size.toString()
-        holder.binding.tvUseful.text = "Useful"
+        holder.binding.tvUseful.setText(R.string.useful)
 
         setAnimation(holder.itemView, position)
 
@@ -62,13 +60,19 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
         }
 
         val userId = activity.getUId()
-        val equal = tmpPost.liked.find { it == userId }
+        val userFound = tmpPost.liked.find { it == userId }
 
-        if(!equal.isNullOrEmpty()) {
+        if(!userFound.isNullOrEmpty()) {
             holder.binding.ibLike.setImageResource(R.drawable.ic_baseline_thumb_up_24_blue)
+            holder.binding.tvLikeNum.setTextColor(activity.resources.getColor(R.color.blue))
+            holder.binding.tvLikeNum.setTypeface(null, Typeface.BOLD)
+            holder.binding.tvUseful.setTextColor(activity.resources.getColor(R.color.blue))
+            holder.binding.tvUseful.setTypeface(null, Typeface.BOLD)
         }
         else {
             holder.binding.ibLike.setImageResource(R.drawable.ic_baseline_thumb_up_24)
+            holder.binding.tvLikeNum.setTextColor(activity.resources.getColor(R.color.color1))
+            holder.binding.tvUseful.setTextColor(activity.resources.getColor(R.color.color1))
         }
 
         holder.binding.ibLike.setOnClickListener {

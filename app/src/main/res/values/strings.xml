@@ -46,4 +46,6 @@
     <string name="nick">Nickname</string>
     <string name="share">Share</string>
     <string name="main_desc">Main</string>
+    <string name="not_visited">Not yet visited</string>
+    <string name="useful">Useful</string>
 </resources>

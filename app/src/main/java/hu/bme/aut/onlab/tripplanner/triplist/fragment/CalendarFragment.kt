@@ -40,39 +40,42 @@ class CalendarFragment : Fragment() {
                 items = database.triplistItemDao().getAll()
                 database.close()
                 requireActivity().runOnUiThread {
-                    if(items.isNotEmpty()) {
-                        val calendars = mutableListOf<Calendar>()
-                        val events = mutableListOf<EventDay>()
-                        for (item in items) {
-                            val day = item.date.substring(8, 10).toInt()
-                            val month = item.date.substring(5, 7).toInt()-1
-                            val year = item.date.substring(0, 4).toInt()
-
-                            val calendar = Calendar.getInstance()
-                            calendar.set(year, month, day)
-                            calendars.add(calendar)
-
-                            when (item.category) {
-                                TriplistItem.Category.OUTDOORS -> events.add(EventDay(calendar, R.drawable.outdoors))
-                                TriplistItem.Category.BEACHES -> events.add(EventDay(calendar, R.drawable.beaches))
-                                TriplistItem.Category.SIGHTSEEING -> events.add(EventDay(calendar, R.drawable.sightseeing))
-                                TriplistItem.Category.SKIING -> events.add(EventDay(calendar, R.drawable.skiing))
-                                TriplistItem.Category.BUSINESS -> events.add(EventDay(calendar, R.drawable.business))
-                            }
-                        }
-
-                        binding.calendarView.setEvents(events)
-                        binding.calendarView.setOnDayClickListener(object : OnDayClickListener {
-                            override fun onDayClick(eventDay: EventDay) {
-                                for ((index, item) in items.withIndex()) {
-                                    if(eventDay == EventDay(calendars[index]))
-                                        Toast.makeText(requireActivity().applicationContext, item.place, Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        })
-                    }
+                    if(items.isNotEmpty())
+                        setDates(items)
                 }
             }
         }
+    }
+
+    private fun setDates(items: List<TriplistItem>) {
+        val calendars = mutableListOf<Calendar>()
+        val events = mutableListOf<EventDay>()
+        for (item in items) {
+            val day = item.date.substring(8, 10).toInt()
+            val month = item.date.substring(5, 7).toInt()-1
+            val year = item.date.substring(0, 4).toInt()
+
+            val calendar = Calendar.getInstance()
+            calendar.set(year, month, day)
+            calendars.add(calendar)
+
+            when (item.category) {
+                TriplistItem.Category.OUTDOORS -> events.add(EventDay(calendar, R.drawable.outdoors))
+                TriplistItem.Category.BEACHES -> events.add(EventDay(calendar, R.drawable.beaches))
+                TriplistItem.Category.SIGHTSEEING -> events.add(EventDay(calendar, R.drawable.sightseeing))
+                TriplistItem.Category.SKIING -> events.add(EventDay(calendar, R.drawable.skiing))
+                TriplistItem.Category.BUSINESS -> events.add(EventDay(calendar, R.drawable.business))
+            }
+        }
+
+        binding.calendarView.setEvents(events)
+        binding.calendarView.setOnDayClickListener(object : OnDayClickListener {
+            override fun onDayClick(eventDay: EventDay) {
+                for ((index, item) in items.withIndex()) {
+                    if(eventDay == EventDay(calendars[index]))
+                        Toast.makeText(requireActivity().applicationContext, item.place, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 }
