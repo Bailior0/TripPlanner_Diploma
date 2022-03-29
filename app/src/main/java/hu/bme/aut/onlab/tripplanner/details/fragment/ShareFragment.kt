@@ -1,6 +1,7 @@
 package hu.bme.aut.onlab.tripplanner.details.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -71,10 +72,33 @@ class ShareFragment : Fragment(), ShareAdapter.SharelistItemClickListener {
         )
     }
 
+    override fun onItemLiked(item: SharedData) {
+        val act = activity as DetailsActivity
+        val db = Firebase.firestore
+        val userId = act.getUId()
+        val equal = item.liked.find { it == userId }
+
+        if(!equal.isNullOrEmpty()) {
+            val poz = item.liked.indexOf(equal)
+            item.liked.removeAt(poz)
+        }
+        else {
+            item.liked.add(userId!!)
+        }
+
+        db.collection(act.place!!).document(item.id!!)
+            .update(mapOf(
+                "liked" to item.liked,
+                "id" to item.id
+            ))
+    }
+
     override fun onItemRemoved(item: SharedData) {
         val act = activity as DetailsActivity
         if(item.uid == act.getUId()) {
             val db = Firebase.firestore
+
+            Log.d("Trips", "" + item.id)
 
             db.collection(act.place!!).document(item.id!!)
                 .delete()

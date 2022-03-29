@@ -6,5 +6,6 @@ data class SharedData (
     val author: String? = null,
     var nickname: String? = null,
     var title: String? = null,
-    var body: String? = null
+    var body: String? = null,
+    var liked: MutableList<String> = mutableListOf()
 )

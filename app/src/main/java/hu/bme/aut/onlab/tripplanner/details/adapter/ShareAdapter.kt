@@ -1,10 +1,13 @@
 package hu.bme.aut.onlab.tripplanner.details.adapter
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.databinding.CardShareBinding
@@ -34,11 +37,18 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
         holder.binding.tvTitle.text = tmpPost.title
         holder.binding.tvBody.text = tmpPost.body
 
+        holder.binding.tvLikeNum.text = tmpPost.liked.size.toString()
+        holder.binding.tvUseful.text = "Useful"
+
         setAnimation(holder.itemView, position)
 
         if(tmpPost.uid != activity.getUId()) {
             holder.binding.ibEdit.visibility = View.GONE
             holder.binding.ibRemove.visibility = View.GONE
+        }
+        else {
+            holder.binding.ibEdit.visibility = View.VISIBLE
+            holder.binding.ibRemove.visibility = View.VISIBLE
         }
 
         holder.binding.ibEdit.setOnClickListener {
@@ -49,6 +59,21 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
         holder.binding.ibRemove.setOnClickListener {
             if(activity.isOnline(context))
                 listener.onItemRemoved(tmpPost)
+        }
+
+        val userId = activity.getUId()
+        val equal = tmpPost.liked.find { it == userId }
+
+        if(!equal.isNullOrEmpty()) {
+            holder.binding.ibLike.setImageResource(R.drawable.ic_baseline_thumb_up_24_blue)
+        }
+        else {
+            holder.binding.ibLike.setImageResource(R.drawable.ic_baseline_thumb_up_24)
+        }
+
+        holder.binding.ibLike.setOnClickListener {
+            if(activity.isOnline(context))
+                listener.onItemLiked(tmpPost)
         }
     }
 
@@ -66,7 +91,6 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
     }
 
     fun removePost(id: String) {
-
         val position = postList.indexOf(postList.find { it.id == id })
         postList.removeAt(position)
         notifyItemRemoved(position)
@@ -79,6 +103,7 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
     interface SharelistItemClickListener {
         fun onItemRemoved(item: SharedData)
         fun onItemEdited(item: SharedData)
+        fun onItemLiked(item: SharedData)
     }
 
     private fun setAnimation(viewToAnimate: View, position: Int) {
