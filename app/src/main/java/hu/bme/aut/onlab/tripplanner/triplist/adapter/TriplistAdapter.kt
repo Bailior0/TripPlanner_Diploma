@@ -1,23 +1,28 @@
 package hu.bme.aut.onlab.tripplanner.triplist.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.TriplistItem
 import hu.bme.aut.onlab.tripplanner.databinding.ItemTriplistListBinding
+import hu.bme.aut.onlab.tripplanner.triplist.TriplistActivity
 
 class TriplistAdapter(private val listener: TriplistItemClickListener) : RecyclerView.Adapter<TriplistAdapter.TriplistViewHolder>() {
 
     private val items = mutableListOf<TriplistItem>()
+    private lateinit var activity: TriplistActivity
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TriplistViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_triplist_list, parent, false)
         return TriplistViewHolder(view)
     }
 
+    @SuppressLint("ResourceType")
     override fun onBindViewHolder(holder: TriplistViewHolder, position: Int) {
         val triplistItem = items[position]
 
@@ -42,7 +47,8 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
             listener.onItemRemoved(triplistItem)
         }
 
-        holder.binding.root.setBackgroundResource(getBackgroundColor(triplistItem.category))
+        val background = holder.binding.root.background as GradientDrawable
+        background.setColor(ContextCompat.getColor(activity.applicationContext, getBackgroundColor(triplistItem.category)))
 
         holder.bind(triplistItem.country, triplistItem.place, triplistItem.description, triplistItem.date, triplistItem.category.name,  triplistItem.visited)
     }
@@ -98,6 +104,10 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         notifyItemChanged(position)
         items.sortBy { it.date }
         notifyDataSetChanged()
+    }
+
+    fun setActivity(act: TriplistActivity) {
+        activity = act
     }
 
     override fun getItemCount(): Int = items.size

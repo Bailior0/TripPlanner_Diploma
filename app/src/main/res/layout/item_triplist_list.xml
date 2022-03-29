@@ -8,8 +8,8 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp"
-    android:layout_marginTop="5dp"
-    android:background="@color/sightseeing">
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/round_corners">
 
     <CheckBox
         android:id="@+id/cbVisited"

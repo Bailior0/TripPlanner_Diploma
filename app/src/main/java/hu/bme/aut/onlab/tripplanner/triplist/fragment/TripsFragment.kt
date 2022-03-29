@@ -32,6 +32,7 @@ class TripsFragment : Fragment(), TriplistAdapter.TriplistItemClickListener {
 
     private fun initRecyclerView() {
         adapter = TriplistAdapter(this)
+        adapter.setActivity(activity as TriplistActivity)
         binding.rvMain.layoutManager = LinearLayoutManager(requireActivity())
         binding.rvMain.adapter = adapter
         loadItemsInBackground()
