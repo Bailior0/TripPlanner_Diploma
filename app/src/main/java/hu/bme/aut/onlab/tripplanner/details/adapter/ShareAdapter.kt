@@ -1,7 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.details.adapter
 
 import android.content.Context
-import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
