@@ -65,9 +65,7 @@ class ShareAdapter(private val context: Context, private val listener: Sharelist
         if(!userFound.isNullOrEmpty()) {
             holder.binding.ibLike.setImageResource(R.drawable.ic_baseline_thumb_up_24_blue)
             holder.binding.tvLikeNum.setTextColor(activity.resources.getColor(R.color.blue))
-            holder.binding.tvLikeNum.setTypeface(null, Typeface.BOLD)
             holder.binding.tvUseful.setTextColor(activity.resources.getColor(R.color.blue))
-            holder.binding.tvUseful.setTypeface(null, Typeface.BOLD)
         }
         else {
             holder.binding.ibLike.setImageResource(R.drawable.ic_baseline_thumb_up_24)
