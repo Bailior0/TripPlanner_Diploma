@@ -26,19 +26,18 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
     override fun onBindViewHolder(holder: TriplistViewHolder, position: Int) {
         val triplistItem = items[position]
 
-        holder.binding.ivIcon.setImageResource(getImageResource(triplistItem.category))
-        holder.binding.cbVisited.isChecked = triplistItem.visited
-        holder.binding.tvCountry.text = triplistItem.country
-        holder.binding.tvPlace.text = triplistItem.place
-        holder.binding.tvDate.text = triplistItem.date
-
-        holder.binding.tvCategory.text = triplistItem.category.name
-
         holder.binding.cbVisited.setOnCheckedChangeListener { _, isChecked ->
             triplistItem.visited = isChecked
             listener.onItemChanged(triplistItem)
             holder.bind(triplistItem.country, triplistItem.place, triplistItem.description, triplistItem.date, triplistItem.category.name,  triplistItem.visited)
         }
+
+        holder.binding.ivIcon.setImageResource(getImageResource(triplistItem.category))
+        holder.binding.tvCountry.text = triplistItem.country
+        holder.binding.tvPlace.text = triplistItem.place
+        holder.binding.tvDate.text = triplistItem.date
+        holder.binding.cbVisited.isChecked = triplistItem.visited
+        holder.binding.tvCategory.text = triplistItem.category.name
 
         holder.binding.ibEdit.setOnClickListener {
             listener.onItemEdited(triplistItem)
@@ -74,12 +73,10 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun addItem(item: TriplistItem) {
         items.add(item)
         notifyItemInserted(items.lastIndex)
-        items.sortBy { it.date }
-        notifyDataSetChanged()
+        sort()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -87,8 +84,7 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         items.clear()
         items.addAll(triplistItems)
         notifyDataSetChanged()
-        items.sortBy { it.date }
-        notifyDataSetChanged()
+        sort()
     }
 
     fun removeItem(item: TriplistItem) {
@@ -97,12 +93,16 @@ class TriplistAdapter(private val listener: TriplistItemClickListener) : Recycle
         notifyItemRemoved(pos)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     fun editItem(item: TriplistItem) {
         val position = items.indexOf(items.find { it.id == item.id })
         items.removeAt(position)
         items.add(position, item)
         notifyItemChanged(position)
+        sort()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun sort() {
         items.sortBy { it.date }
         notifyDataSetChanged()
     }
