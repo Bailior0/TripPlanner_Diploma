@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="hu.bme.aut.onlab.tripplanner">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".TripPlannerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,12 +17,6 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDFW7RT67ri8GMdMDsHzYi8L9UtRFxOSHo" />
 
-        <activity
-            android:name=".details.DetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".triplist.TriplistActivity"
-            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

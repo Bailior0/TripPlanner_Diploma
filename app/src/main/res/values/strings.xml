@@ -26,6 +26,7 @@
     <string name="logout">Logout</string>
     <string name="change_password">Change password</string>
     <string name="change_email">Change email</string>
+    <string name="network_error">Network request error occurred</string>
 
     <string-array name="category_items">
         <item>Outdoors</item>
