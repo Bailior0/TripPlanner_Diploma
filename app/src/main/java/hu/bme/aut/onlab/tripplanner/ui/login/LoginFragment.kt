@@ -4,30 +4,33 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import co.zsmb.rainbowcake.navigation.navigator
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.AndroidEntryPoint
-import hu.bme.aut.onlab.tripplanner.databinding.FragmentLoginBinding
+import hu.bme.aut.onlab.tripplanner.views.Login
+import hu.bme.aut.onlab.tripplanner.views.helpers.FullScreenLoading
+import hu.bme.aut.onlab.tripplanner.views.theme.AppJustUi1Theme
 
 @AndroidEntryPoint
 class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
     override fun provideViewModel() = getViewModelFromFactory()
 
-    private lateinit var binding: FragmentLoginBinding
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
-
-        requireActivity().setActionBar(binding.toolbar)
-
         FirebaseApp.initializeApp(requireContext())
 
-        binding.btnRegister.setOnClickListener { viewModel.register(requireContext(), binding.etEmail.text, binding.etPassword.text) }
-        binding.btnLogin.setOnClickListener { viewModel.login(navigator, requireContext(), binding.etEmail.text, binding.etPassword.text) }
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                FullScreenLoading()
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,9 +40,29 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
     }
 
     override fun render(viewState: LoginViewState) {
-        when(viewState) {
-            is Loading -> {}
-            is LoginContent -> {}
-        }.exhaustive
+        (view as ComposeView).setContent {
+            AppJustUi1Theme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colors.background
+                ) {
+                    when (viewState) {
+                        is Loading -> FullScreenLoading()
+                        is LoginContent -> Login(
+                            onLoginClick = ::onLogin,
+                            onRegisterClick = ::onRegister
+                        )
+                    }.exhaustive
+                }
+            }
+        }
+    }
+
+    private fun onLogin(email: String, pass: String) {
+        viewModel.login(navigator, requireContext(), email, pass)
+    }
+
+    private fun onRegister(email: String, pass: String) {
+        viewModel.register(requireContext(), email, pass)
     }
 }

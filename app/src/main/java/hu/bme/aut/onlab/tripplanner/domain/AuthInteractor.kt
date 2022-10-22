@@ -1,7 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.domain
 
 import android.content.Context
-import android.text.Editable
 import android.widget.Toast
 import co.zsmb.rainbowcake.navigation.Navigator
 import com.google.firebase.auth.EmailAuthProvider
@@ -13,7 +12,7 @@ import javax.inject.Inject
 class AuthInteractor @Inject constructor() {
     private var firebaseAuth = FirebaseAuth.getInstance()
 
-    private fun validateForm(context: Context, mail: Editable, pass: Editable): Boolean {
+    private fun validateForm(context: Context, mail: String, pass: String): Boolean {
         if (mail.isEmpty()) {
             Toast.makeText(context, "Please enter your email", Toast.LENGTH_SHORT).show()
             return false
@@ -25,13 +24,13 @@ class AuthInteractor @Inject constructor() {
         return true
     }
 
-    fun registerClick(context: Context, mail: Editable, pass: Editable) {
+    fun registerClick(context: Context, mail: String, pass: String) {
         if (!validateForm(context, mail, pass)) {
             return
         }
 
         firebaseAuth
-            .createUserWithEmailAndPassword(mail.toString(), pass.toString())
+            .createUserWithEmailAndPassword(mail, pass)
             .addOnSuccessListener { result ->
                 val firebaseUser = result.user
                 val profileChangeRequest = UserProfileChangeRequest.Builder()
@@ -47,13 +46,13 @@ class AuthInteractor @Inject constructor() {
             }
     }
 
-    fun loginClick(navigator: Navigator?, context: Context, mail: Editable, pass: Editable) {
+    fun loginClick(navigator: Navigator?, context: Context, mail: String, pass: String) {
         if (!validateForm(context, mail, pass)) {
             return
         }
 
         firebaseAuth
-            .signInWithEmailAndPassword(mail.toString(), pass.toString())
+            .signInWithEmailAndPassword(mail, pass)
             .addOnSuccessListener {
                 if(firebaseAuth.currentUser!!.isEmailVerified) {
                     navigator?.add(TripListFragment())
