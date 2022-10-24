@@ -8,5 +8,6 @@ object Loading : ShareViewState()
 
 data class ShareContent(
     var list: List<SharedData> = emptyList(),
+    var currentUser: String? = null,
     var isLoading: Boolean = true
 ) : ShareViewState()

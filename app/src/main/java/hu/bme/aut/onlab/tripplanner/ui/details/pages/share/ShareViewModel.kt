@@ -13,11 +13,13 @@ class ShareViewModel @Inject constructor(
 ) : RainbowCakeViewModel<ShareViewState>(Loading) {
 
     fun setShare(place: String) = execute {
+        val user = sharePresenter.getCurrentUser()
         viewModelScope.launch {
             sharePresenter.getItems(place).collect {
                 viewState = ShareContent(isLoading = true)
                 viewState = ShareContent(
                     list = it,
+                    currentUser = user,
                     isLoading = false
                 )
             }
@@ -29,7 +31,13 @@ class ShareViewModel @Inject constructor(
     }
 
     fun editPost(place: String, item: SharedData) = execute {
+        val user = sharePresenter.getCurrentUser()
         sharePresenter.editPost(place, item)
+        viewState = ShareContent(
+            list = sharePresenter.getItemsOnce(place),
+            currentUser = user,
+            isLoading = true
+        )
     }
 
     fun deletePost(place: String, item: SharedData) = execute {
@@ -37,6 +45,12 @@ class ShareViewModel @Inject constructor(
     }
 
     fun likePost(place: String, item: SharedData) = execute {
+        val user = sharePresenter.getCurrentUser()
         sharePresenter.likePost(place, item)
+        viewState = ShareContent(
+            list = sharePresenter.getItemsOnce(place),
+            currentUser = user,
+            isLoading = true
+        )
     }
 }

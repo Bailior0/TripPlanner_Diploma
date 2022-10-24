@@ -14,5 +14,6 @@ data class DetailsContent(
 
 data class WeatherContent(
     var isLoading: Boolean = true,
+    var trip: TripListItem? = null,
     var weather: WeatherData? = null
 ) : InformationViewState()

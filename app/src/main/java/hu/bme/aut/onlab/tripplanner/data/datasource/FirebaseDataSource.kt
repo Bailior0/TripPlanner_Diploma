@@ -42,6 +42,21 @@ class FirebaseDataSource @Inject constructor() {
         }
     }
 
+    suspend fun getItemsOnce(trip: String): List<SharedData> {
+        val items = mutableListOf<SharedData>()
+        database.collection(trip).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    items.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+
+        return items
+    }
+
     suspend fun onUploadPost(trip: String, nick: String, title: String, comment: String) {
         val newPost = SharedData(null, FirebaseAuth.getInstance().currentUser?.uid, FirebaseAuth.getInstance().currentUser?.displayName, nick, title, comment)
 

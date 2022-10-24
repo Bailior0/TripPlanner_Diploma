@@ -12,6 +12,10 @@ class ShareInteractor @Inject constructor(
         return firebaseDataSource.getItems(place)
     }
 
+    suspend fun getItemsOnce(place: String): List<SharedData> {
+        return firebaseDataSource.getItemsOnce(place)
+    }
+
     suspend fun uploadPost(place: String, nick: String, title: String, comment: String) {
         firebaseDataSource.onUploadPost(place, nick, title, comment)
     }

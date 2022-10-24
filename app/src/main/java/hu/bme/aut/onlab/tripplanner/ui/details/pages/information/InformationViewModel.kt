@@ -10,11 +10,11 @@ import javax.inject.Inject
 class InformationViewModel @Inject constructor(private val informationPresenter: InformationPresenter) : RainbowCakeViewModel<InformationViewState>(
     Loading
 ) {
-    fun setTrip(trip: TripListItem) {
+    fun setTrip(trip: TripListItem) = execute {
         viewState = DetailsContent(false, trip)
     }
 
-    fun setWeather(city: String, context: Context) = execute {
-        viewState = WeatherContent(false, informationPresenter.getWeather(city, context))
+    fun setWeather(trip: TripListItem, city: String, context: Context) = execute {
+        viewState = WeatherContent(false, trip, informationPresenter.getWeather(city, context))
     }
 }

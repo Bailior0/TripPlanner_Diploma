@@ -12,23 +12,7 @@ import javax.inject.Inject
 class AuthInteractor @Inject constructor() {
     private var firebaseAuth = FirebaseAuth.getInstance()
 
-    private fun validateForm(context: Context, mail: String, pass: String): Boolean {
-        if (mail.isEmpty()) {
-            Toast.makeText(context, "Please enter your email", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        if (pass.isEmpty()) {
-            Toast.makeText(context, "Please enter your password", Toast.LENGTH_SHORT).show()
-            return false
-        }
-        return true
-    }
-
     fun registerClick(context: Context, mail: String, pass: String) {
-        if (!validateForm(context, mail, pass)) {
-            return
-        }
-
         firebaseAuth
             .createUserWithEmailAndPassword(mail, pass)
             .addOnSuccessListener { result ->
@@ -47,10 +31,6 @@ class AuthInteractor @Inject constructor() {
     }
 
     fun loginClick(navigator: Navigator?, context: Context, mail: String, pass: String) {
-        if (!validateForm(context, mail, pass)) {
-            return
-        }
-
         firebaseAuth
             .signInWithEmailAndPassword(mail, pass)
             .addOnSuccessListener {
@@ -71,6 +51,10 @@ class AuthInteractor @Inject constructor() {
 
     fun getCurrentUserEmail(): String? {
         return firebaseAuth.currentUser?.email
+    }
+
+    fun getCurrentUser(): String? {
+        return firebaseAuth.currentUser?.uid
     }
 
     fun sendPasswordReset() {

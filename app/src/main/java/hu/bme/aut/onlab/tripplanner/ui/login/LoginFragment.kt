@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.ui.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -58,11 +59,11 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
         }
     }
 
-    private fun onLogin(email: String, pass: String) {
-        viewModel.login(navigator, requireContext(), email, pass)
+    private fun onLogin(email: String, pass: String, context: Context) {
+        viewModel.login(navigator, context, email, pass)
     }
 
-    private fun onRegister(email: String, pass: String) {
-        viewModel.register(requireContext(), email, pass)
+    private fun onRegister(email: String, pass: String, context: Context) {
+        viewModel.register(context, email, pass)
     }
 }

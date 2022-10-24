@@ -1,22 +1,25 @@
 package hu.bme.aut.onlab.tripplanner.ui.details.pages.sharedialog
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.Toast
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.unit.dp
 import co.zsmb.rainbowcake.base.RainbowCakeDialogFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import dagger.hilt.android.AndroidEntryPoint
-import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
-import hu.bme.aut.onlab.tripplanner.databinding.FragmentNewShareItemDialogBinding
+import hu.bme.aut.onlab.tripplanner.views.ShareItem
+import hu.bme.aut.onlab.tripplanner.views.helpers.FullScreenLoading
+import hu.bme.aut.onlab.tripplanner.views.theme.AppJustUi1Theme
 
 @AndroidEntryPoint
 class NewShareItemDialogFragment() : RainbowCakeDialogFragment<ShareItemViewState, ShareItemViewModel>() {
@@ -28,11 +31,6 @@ class NewShareItemDialogFragment() : RainbowCakeDialogFragment<ShareItemViewStat
     }
 
     private lateinit var listener: NewShareItemDialogListener
-    private lateinit var binding: FragmentNewShareItemDialogBinding
-
-    private lateinit var nickEditText: EditText
-    private lateinit var titleEditText: EditText
-    private lateinit var commentEditText: EditText
 
     private var item: SharedData? = null
     private var type: CreateOrEdit = CreateOrEdit.CREATE
@@ -57,7 +55,11 @@ class NewShareItemDialogFragment() : RainbowCakeDialogFragment<ShareItemViewStat
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                FullScreenLoading()
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,80 +68,52 @@ class NewShareItemDialogFragment() : RainbowCakeDialogFragment<ShareItemViewStat
         viewModel.setShareItem()
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val title: Int = when (type) {
-            CreateOrEdit.CREATE -> R.string.create_comment
-            CreateOrEdit.EDIT -> R.string.edit_comment
-        }
-
-        binding = FragmentNewShareItemDialogBinding.inflate(layoutInflater)
-
-        if(item == null) {
-            return AlertDialog.Builder(requireContext())
-                .setTitle(title)
-                .setView(binding.root)
-                .setPositiveButton(R.string.button_ok) { _, _ ->
-                    if(isValidCreate())
-                        listener.onUploadPost(binding.etNick.text.toString(), binding.etTitle.text.toString(), binding.etBody.text.toString())
-                    else
-                        Toast.makeText(requireActivity().applicationContext, "All fields must be filled", Toast.LENGTH_SHORT).show()
-                }
-                .setNegativeButton(R.string.button_cancel, null)
-                .create()
-        }
-
-        else {
-            return AlertDialog.Builder(requireContext())
-                .setTitle(title)
-                .setView(getContentView())
-                .setPositiveButton(R.string.button_ok) { _, _ ->
-                    if (isValidEdit()){
-                        setEditedItem()
-                        listener.onEditPost(item!!)
-                    }
-                    else
-                        Toast.makeText(requireActivity().applicationContext, "All fields must be filled", Toast.LENGTH_SHORT).show()
-                }
-                .setNegativeButton(R.string.button_cancel, null)
-                .create()
-        }
-    }
-
-    private fun isValidCreate() = binding.etTitle.text.isNotEmpty() && binding.etBody.text.isNotEmpty() && binding.etNick.text.isNotEmpty()
-    private fun isValidEdit() = nickEditText.text.isNotEmpty() && titleEditText.text.isNotEmpty() && commentEditText.text.isNotEmpty()
-
-    @SuppressLint("InflateParams")
-    private fun getContentView(): View {
-        val contentView = layoutInflater.inflate(R.layout.fragment_new_share_item_dialog, null)
-        nickEditText = contentView.findViewById(R.id.etNick)
-        titleEditText = contentView.findViewById(R.id.etTitle)
-        commentEditText = contentView.findViewById(R.id.etBody)
-        if (item != null) {
-            setFields()
-        }
-        return contentView
-    }
-
-    private fun setFields() {
-        nickEditText.setText(item!!.nickname)
-        titleEditText.setText(item!!.title)
-        commentEditText.setText(item!!.body)
-    }
-
-    private fun setEditedItem() {
-        item!!.nickname = nickEditText.text.toString()
-        item!!.title = titleEditText.text.toString()
-        item!!.body = commentEditText.text.toString()
-    }
-
     companion object {
         const val TAG = "NewShareItemDialogFragment"
     }
 
     override fun render(viewState: ShareItemViewState) {
-        when(viewState) {
-            is Loading -> {}
-            is ShareItemContent -> {}
-        }.exhaustive
+        (view as ComposeView).setContent {
+            AppJustUi1Theme {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(400.dp),
+                    color = MaterialTheme.colors.background
+                ) {
+                    when (viewState) {
+                        is Loading -> FullScreenLoading()
+                        is ShareItemContent -> when (type) {
+                            CreateOrEdit.CREATE -> ShareItem(
+                                null,
+                                onOkUploadClick = ::onUpload,
+                                onOkEditClick = ::onEdit,
+                                onCancelClick = ::onCancel
+                            )
+                            CreateOrEdit.EDIT -> ShareItem(
+                                item,
+                                onOkUploadClick = ::onUpload,
+                                onOkEditClick = ::onEdit,
+                                onCancelClick = ::onCancel
+                            )
+                        }
+                    }.exhaustive
+                }
+            }
+        }
+    }
+
+    private fun onUpload(nick: String, title: String, comment: String) {
+        listener.onUploadPost(nick, title, comment)
+        dialog?.dismiss()
+    }
+
+    private fun onEdit(newItem: SharedData) {
+        listener.onEditPost(newItem)
+        dialog?.dismiss()
+    }
+
+    private fun onCancel() {
+        dialog?.dismiss()
     }
 }
