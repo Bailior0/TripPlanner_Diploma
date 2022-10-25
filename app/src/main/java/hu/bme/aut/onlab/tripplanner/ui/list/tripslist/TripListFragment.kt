@@ -94,7 +94,7 @@ class TripListFragment : RainbowCakeFragment<TripListViewState, TripListViewMode
         when(viewState) {
             is Loading -> {}
             is TripsContent -> {
-                tripsFragment.setAdapter(viewState.trips)
+                tripsFragment.setAdapter()
                 calendarFragment.changeCalendar()
                 mapFragment.changeMap()
             }

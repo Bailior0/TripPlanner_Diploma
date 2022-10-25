@@ -11,7 +11,8 @@ class TripsViewModel @Inject constructor(private val tripsPresenter: TripsPresen
 ) {
 
     fun load() = execute {
-        viewState = TripsContent(trips = tripsPresenter.load())
+        viewState = TripsContent(loading = true)
+        viewState = TripsContent(trips = tripsPresenter.load(), loading = false)
     }
 
     fun edit(editedItem: TripListItem) = execute {
