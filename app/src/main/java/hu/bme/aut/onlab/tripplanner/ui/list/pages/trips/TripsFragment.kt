@@ -98,7 +98,12 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
 
     private fun onTripSelected(tripListItem: TripListItem) {
         state = tripListFragment.tripListPagerAdapter.saveState()
-        navigator?.add(DetailsFragment.newInstance(tripListItem))
+        navigator?.add(DetailsFragment.newInstance(tripListItem),
+            enterAnim = 0,
+            exitAnim = 0,
+            popEnterAnim = 0,
+            popExitAnim = 0
+        )
     }
 
     override fun onTripListItemEdited(editedItem: TripListItem) {

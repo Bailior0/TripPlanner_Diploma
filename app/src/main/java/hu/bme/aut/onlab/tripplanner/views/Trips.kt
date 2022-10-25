@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.onlab.tripplanner.R
@@ -95,10 +96,14 @@ fun TripItem(
                         item.visited = checkedState
                         onItemChanged(item)
                     },
-                    modifier = Modifier.offset(x = (-2).dp)
+                    modifier = Modifier.offset(x = (-2).dp),
+                    colors = CheckboxDefaults.colors(
+                        checkmarkColor = Color.LightGray,
+                        checkedColor = Color.Black
+                    )
                 )
                 Text(
-                    text = "Visited",
+                    text = stringResource(R.string.visited),
                     Modifier.padding(end = 5.dp)
                 )
             }

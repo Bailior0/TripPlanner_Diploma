@@ -2,8 +2,8 @@
     <string name="app_name">TripPlanner</string>
 
     <string name="title_email">Email</string>
-    <string name="login">Login</string>
-    <string name="register">Register</string>
+    <string name="login">LOGIN</string>
+    <string name="register">REGISTER</string>
     <string name="title_password">Password</string>
     <string name="title_activity_triplist">TriplistActivity</string>
     <string name="list">List</string>
@@ -17,7 +17,7 @@
     <string name="category">Category</string>
     <string name="already_visited">Already visited</string>
     <string name="button_ok">OK</string>
-    <string name="button_cancel">Cancel</string>
+    <string name="button_cancel">CANCEL</string>
     <string name="new_triplist_item">New Triplist Item</string>
     <string name="edit_triplist_item">Edit Triplist Item</string>
     <string name="nav_header_title">TripPlanner</string>
@@ -41,7 +41,7 @@
     <string name="edit_comment">Edit comment</string>
     <string name="temperature">Current temperature</string>
     <string name="current_weather">Current weather</string>
-    <string name="current_weather_description">Current weather description</string>
+    <string name="current_weather_description">Current weather desc</string>
     <string name="title">Title</string>
     <string name="post">Comment</string>
     <string name="nick">Nickname</string>

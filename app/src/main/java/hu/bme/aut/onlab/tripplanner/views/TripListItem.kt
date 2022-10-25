@@ -10,10 +10,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import hu.bme.aut.onlab.tripplanner.views.helpers.ComboBox
 import hu.bme.aut.onlab.tripplanner.views.helpers.DatePicker
@@ -78,8 +80,8 @@ fun TripListItem(
 
             Text(
                 text = when(item == null) {
-                    true -> "New Triplist Item"
-                    false -> "Edit Triplist Item"
+                    true -> stringResource(R.string.new_triplist_item)
+                    false -> stringResource(R.string.edit_triplist_item)
                 },
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -97,7 +99,7 @@ fun TripListItem(
                 singleLine = true,
                 label = {
                     Text(
-                        text = "Country",
+                        text = stringResource(R.string.country),
                         color = Color.Gray
                     )
                 },
@@ -117,7 +119,7 @@ fun TripListItem(
                 singleLine = true,
                 label = {
                     Text(
-                        text = "Place",
+                        text = stringResource(R.string.place),
                         color = Color.Gray
                     )
                 },
@@ -137,7 +139,7 @@ fun TripListItem(
                 singleLine = true,
                 label = {
                     Text(
-                        text = "Description",
+                        text = stringResource(R.string.description),
                         color = Color.Gray
                     )
                 },
@@ -152,7 +154,7 @@ fun TripListItem(
             )
 
             Text(
-                text = "Date",
+                text = stringResource(R.string.date),
                 color = Color.Gray,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier
@@ -178,7 +180,7 @@ fun TripListItem(
             }
 
             Text(
-                text = "Category",
+                text = stringResource(R.string.category),
                 color = Color.Gray,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier
@@ -219,17 +221,21 @@ fun TripListItem(
             ) {
                 Checkbox(
                     checked = checkedState,
-                    onCheckedChange = { checkedState = it }
+                    onCheckedChange = { checkedState = it },
+                    colors = CheckboxDefaults.colors(
+                        checkmarkColor = Color.LightGray,
+                        checkedColor = Color.Black
+                    )
                 )
                 Text(
-                    text = "Visited",
+                    text = stringResource(R.string.visited),
                 )
             }
 
             Button(
                 content = {
                     Text(
-                        text = "CANCEL",
+                        text = stringResource(R.string.button_cancel),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(20.dp, 0.dp)
@@ -249,7 +255,7 @@ fun TripListItem(
             Button(
                 content = {
                     Text(
-                        text = "OK",
+                        text = stringResource(R.string.button_ok),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(20.dp, 0.dp)

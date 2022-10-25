@@ -18,6 +18,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import hu.bme.aut.onlab.tripplanner.R
 
 @Composable
 fun AuthChange(
@@ -56,7 +58,7 @@ fun AuthChange(
             ) = createRefs()
 
             Text(
-                text = "Change email",
+                text = stringResource(R.string.change_email),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
@@ -74,22 +76,20 @@ fun AuthChange(
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 leadingIcon = {
-                    Icon(imageVector  = Icons.Filled.Key, "mail")
+                    Icon(imageVector  = Icons.Filled.Key, null)
                 },
                 trailingIcon = {
                     val image = if (passwordVisible)
                         Icons.Filled.Visibility
                     else Icons.Filled.VisibilityOff
 
-                    val description = if (passwordVisible) "Hide password" else "Show password"
-
                     IconButton(onClick = {passwordVisible = !passwordVisible}){
-                        Icon(imageVector  = image, description)
+                        Icon(imageVector  = image, null)
                     }
                 },
                 label = {
                     Text(
-                        text = "Password",
+                        text = stringResource(R.string.title_password),
                         color = Color.Gray
                     )
                 },
@@ -109,11 +109,11 @@ fun AuthChange(
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 leadingIcon = {
-                    Icon(imageVector  = Icons.Filled.Email, "mail")
+                    Icon(imageVector  = Icons.Filled.Email, null)
                 },
                 label = {
                     Text(
-                        text = "Email",
+                        text = stringResource(R.string.title_email),
                         color = Color.Gray
                     )
                 },
@@ -130,7 +130,7 @@ fun AuthChange(
             Button(
                 content = {
                     Text(
-                        text = "CANCEL",
+                        text = stringResource(R.string.button_cancel),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(20.dp, 0.dp)
@@ -150,7 +150,7 @@ fun AuthChange(
             Button(
                 content = {
                     Text(
-                        text = "OK",
+                        text = stringResource(R.string.button_ok),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(20.dp, 0.dp)

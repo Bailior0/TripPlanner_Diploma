@@ -9,11 +9,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 
 @Composable
@@ -59,8 +61,8 @@ fun ShareItem(
 
             Text(
                 text = when(item == null) {
-                    true -> "Create comment"
-                    false -> "Edit comment"
+                    true -> stringResource(R.string.create_comment)
+                    false -> stringResource(R.string.edit_comment)
                 },
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
@@ -92,7 +94,7 @@ fun ShareItem(
                     singleLine = true,
                     label = {
                         Text(
-                            text = "Nickname",
+                            text = stringResource(R.string.nick),
                             color = Color.Gray
                         )
                     },
@@ -127,7 +129,7 @@ fun ShareItem(
                     singleLine = true,
                     label = {
                         Text(
-                            text = "Title",
+                            text = stringResource(R.string.title),
                             color = Color.Gray
                         )
                     },
@@ -148,7 +150,7 @@ fun ShareItem(
                 singleLine = true,
                 label = {
                     Text(
-                        text = "Comment",
+                        text = stringResource(R.string.post),
                         color = Color.Gray
                     )
                 },
@@ -165,7 +167,7 @@ fun ShareItem(
             Button(
                 content = {
                     Text(
-                        text = "CANCEL",
+                        text = stringResource(R.string.button_cancel),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(20.dp, 0.dp)
@@ -185,7 +187,7 @@ fun ShareItem(
             Button(
                 content = {
                     Text(
-                        text = "OK",
+                        text = stringResource(R.string.button_ok),
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .padding(20.dp, 0.dp)

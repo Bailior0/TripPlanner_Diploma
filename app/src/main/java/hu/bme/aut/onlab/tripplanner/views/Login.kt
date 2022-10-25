@@ -23,6 +23,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import hu.bme.aut.onlab.tripplanner.R
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun Login(
@@ -41,7 +42,7 @@ fun Login(
             .background(MaterialTheme.colors.background)
     ) {
         TopAppBar(
-            title = { Text(text = "TripPlanner") }
+            title = { Text(text = stringResource(R.string.app_name)) }
         )
 
         Column(
@@ -80,11 +81,11 @@ fun Login(
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     leadingIcon = {
-                        Icon(imageVector  = Icons.Filled.Email, "mail")
+                        Icon(imageVector  = Icons.Filled.Email, null)
                     },
                     label = {
                         Text(
-                            text = "Email",
+                            text = stringResource(R.string.title_email),
                             color = Color.Gray
                         )
                     },
@@ -105,22 +106,20 @@ fun Login(
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                     leadingIcon = {
-                        Icon(imageVector  = Icons.Filled.Key, "mail")
+                        Icon(imageVector  = Icons.Filled.Key, null)
                     },
                     trailingIcon = {
                         val image = if (passwordVisible)
                             Icons.Filled.Visibility
                         else Icons.Filled.VisibilityOff
 
-                        val description = if (passwordVisible) "Hide password" else "Show password"
-
                         IconButton(onClick = {passwordVisible = !passwordVisible}){
-                            Icon(imageVector  = image, description)
+                            Icon(imageVector  = image, null)
                         }
                     },
                     label = {
                         Text(
-                            text = "Password",
+                            text = stringResource(R.string.title_password),
                             color = Color.Gray
                         )
                     },
@@ -137,7 +136,7 @@ fun Login(
                 Button(
                     content = {
                         Text(
-                            text = "LOGIN",
+                            text = stringResource(R.string.login),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .padding(25.dp, 0.dp)
@@ -164,7 +163,7 @@ fun Login(
                 Button(
                     content = {
                         Text(
-                            text = "REGISTER",
+                            text = stringResource(R.string.register),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .padding(25.dp, 0.dp)

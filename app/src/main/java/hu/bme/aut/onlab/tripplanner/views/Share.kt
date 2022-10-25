@@ -15,11 +15,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 
 @Composable
@@ -126,7 +128,7 @@ fun ListItem(
                         Icon(imageVector  = Icons.Filled.ThumbUp, "", tint = Color.Blue)
                     }
                     Text(
-                        text = "Useful", color = Color.Blue, fontSize = 18.sp, fontWeight = FontWeight.Bold
+                        text = stringResource(R.string.useful), color = Color.Blue, fontSize = 18.sp, fontWeight = FontWeight.Bold
                     )
                 } else {
                     Text(
@@ -138,7 +140,7 @@ fun ListItem(
                         Icon(imageVector  = Icons.Outlined.ThumbUp, "")
                     }
                     Text(
-                        text = "Useful", color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.Bold
+                        text = stringResource(R.string.useful), color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.Bold
                     )
                 }
             }

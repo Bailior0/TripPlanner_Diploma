@@ -35,7 +35,12 @@ class AuthInteractor @Inject constructor() {
             .signInWithEmailAndPassword(mail, pass)
             .addOnSuccessListener {
                 if(firebaseAuth.currentUser!!.isEmailVerified) {
-                    navigator?.add(TripListFragment())
+                    navigator?.add(TripListFragment(),
+                        enterAnim = 0,
+                        exitAnim = 0,
+                        popEnterAnim = 0,
+                        popExitAnim = 0
+                    )
                 }
                 else
                     Toast.makeText(context, "Please verify your email", Toast.LENGTH_SHORT).show()
