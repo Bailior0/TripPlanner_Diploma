@@ -82,7 +82,7 @@ class FirebaseDataSource @Inject constructor() {
 
     suspend fun onDeletePost(place: String, item: SharedData) {
         if(item.uid == FirebaseAuth.getInstance().currentUser?.uid)
-            Firebase.firestore.collection(place).document(item.id!!).delete()
+            database.collection(place).document(item.id!!).delete()
                 .addOnSuccessListener { documentReference ->
                     Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
                 }
@@ -103,7 +103,7 @@ class FirebaseDataSource @Inject constructor() {
             item.liked.add(userId!!)
         }
 
-        Firebase.firestore.collection(place).document(item.id!!)
+        database.collection(place).document(item.id!!)
             .update(mapOf(
                 "liked" to item.liked
             ))

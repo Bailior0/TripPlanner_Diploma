@@ -9,6 +9,5 @@ object Loading : TripsViewState()
 
 data class TripsContent(
     var trips: List<TripListItem> = emptyList(),
-    val loading: Boolean = true,
-    val maps: OnMapReadyCallback? = null
+    val loading: Boolean = true
 ) : TripsViewState()
