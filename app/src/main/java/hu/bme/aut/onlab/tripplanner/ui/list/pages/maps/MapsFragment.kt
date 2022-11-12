@@ -34,7 +34,11 @@ class MapsFragment : RainbowCakeFragment<MapsViewState, MapsViewModel>() {
     override fun render(viewState: MapsViewState) {
         when(viewState) {
             is Loading -> {}
-            is TripsContent -> { setMap(viewState.maps!!) }
+            is TripsContent -> {
+                if(viewState.maps != null)
+                    setMap(viewState.maps)
+                else setMap{ googleMap -> googleMap.clear() }
+            }
         }.exhaustive
     }
 

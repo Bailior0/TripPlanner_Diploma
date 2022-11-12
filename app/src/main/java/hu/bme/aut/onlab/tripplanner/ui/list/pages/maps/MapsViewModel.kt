@@ -11,6 +11,7 @@ class MapsViewModel @Inject constructor(private val mapsPresenter: MapsPresenter
 ) {
 
     fun setMap(context: Context) = execute {
+        viewState = TripsContent(loading = true)
         viewState = TripsContent(maps = mapsPresenter.setCallback(context), loading = false)
     }
 }

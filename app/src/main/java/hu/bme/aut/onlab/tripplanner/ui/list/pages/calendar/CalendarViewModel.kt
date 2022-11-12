@@ -10,6 +10,7 @@ class CalendarViewModel @Inject constructor(private val calendarPresenter: Calen
 ) {
 
     fun load() = execute {
+        viewState = TripsContent(loading = true)
         viewState = TripsContent(trips = calendarPresenter.load(), loading = false)
     }
 }
