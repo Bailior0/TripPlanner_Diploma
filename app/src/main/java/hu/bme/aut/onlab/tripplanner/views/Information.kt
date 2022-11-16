@@ -22,7 +22,6 @@ fun Information(
     trip: TripListItem?,
     weatherList: WeatherData?
 ) {
-    val weather = weatherList?.weather?.first()
     isConnected(LocalContext.current)
 
     Column(
@@ -94,45 +93,50 @@ fun Information(
                 }
             }
         }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text(stringResource(R.string.current_weather), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(weather?.main != null)
-                Text(weather.main, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text(stringResource(R.string.current_weather_description), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(weather?.description != null)
-                Text(weather.description, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text(stringResource(R.string.temperature), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(weatherList?.main?.temp != null)
-                Text(weatherList.main?.temp.toString() + " °C", Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Box(
-            modifier = Modifier
-                .padding(top = 20.dp, bottom = 20.dp)
-                .size(100.dp)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            GlideImage(
-                imageModel = { "https://openweathermap.org/img/w/${weather?.icon}.png" }
-            )
+        if(weatherList != null) {
+            val weather = weatherList.weather?.first()
+
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp, 10.dp)
+            ) {
+                Text(stringResource(R.string.current_weather), Modifier.weight(1f), textAlign = TextAlign.Justify)
+                if(weather?.main != null)
+                    Text(weather.main, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+            }
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp, 10.dp)
+            ) {
+                Text(stringResource(R.string.current_weather_description), Modifier.weight(1f), textAlign = TextAlign.Justify)
+                if(weather?.description != null)
+                    Text(weather.description, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+            }
+            Row(
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp, 10.dp)
+            ) {
+                Text(stringResource(R.string.temperature), Modifier.weight(1f), textAlign = TextAlign.Justify)
+                if(weatherList.main?.temp != null)
+                    Text(weatherList.main?.temp.toString() + " °C", Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+            }
+            if(weather != null)
+                Box(
+                    modifier = Modifier
+                        .padding(top = 20.dp, bottom = 20.dp)
+                        .size(100.dp)
+                        .align(Alignment.CenterHorizontally)
+                ) {
+                    GlideImage(
+                        imageModel = { "https://openweathermap.org/img/w/${weather.icon}.png" }
+                    )
+                }
         }
     }
 }

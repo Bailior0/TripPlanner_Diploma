@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.views.helpers
 
+import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,7 +31,12 @@ fun DatePicker(
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH)
             ) { _, year, monthOfYear, dayOfMonth ->
-                onValueChange("$year.${monthOfYear + 1}.$dayOfMonth.")
+                onValueChange(
+                    String.format(
+                        Locale.getDefault(), "%04d.%02d.%02d.",
+                        year, monthOfYear + 1, dayOfMonth
+                    )
+                )
             }
             datePicker
         }
