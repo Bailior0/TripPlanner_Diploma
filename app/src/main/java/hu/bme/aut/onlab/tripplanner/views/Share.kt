@@ -61,7 +61,7 @@ fun Share(
                         width = Dimension.fillToConstraints
                     }
             ) {
-                itemsIndexed(posts) { _, item ->
+                itemsIndexed(posts.sortedByDescending { it.liked.size }) { _, item ->
                     ListItem(
                         item = item,
                         user = user,

@@ -63,6 +63,7 @@ fun TripItem(
     onDeleteClicked: (TripListItem) -> Unit
 ) {
     var checkedState by remember { mutableStateOf(item.visited) }
+    checkedState = item.visited
 
     Card(
         modifier = Modifier

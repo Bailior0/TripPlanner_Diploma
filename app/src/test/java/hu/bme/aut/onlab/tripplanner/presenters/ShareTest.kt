@@ -29,7 +29,7 @@ class SharePresenterTest : PresenterTest() {
 
     companion object {
         private val MOCK_POST = SharedData(
-            nickname  = "Béla",
+            nickname = "Béla",
             title = "Szép",
             body = "Nagyon szép volt",
         )
