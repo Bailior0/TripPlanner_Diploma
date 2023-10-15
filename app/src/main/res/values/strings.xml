@@ -49,4 +49,5 @@
     <string name="main_desc">Main</string>
     <string name="not_visited">Not yet visited</string>
     <string name="useful">Useful</string>
+    <string name="identifier">Identifier</string>
 </resources>

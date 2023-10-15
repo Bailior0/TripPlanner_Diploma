@@ -1,6 +1,7 @@
 package hu.bme.aut.onlab.tripplanner.domain
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
 import android.widget.Toast
@@ -11,6 +12,8 @@ import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.disk.database.TripListItemDao
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import hu.bme.aut.onlab.tripplanner.data.network.ConnectivityChecker
+import hu.bme.aut.onlab.tripplanner.ml.Model2
+import org.tensorflow.lite.support.image.TensorImage
 import java.io.IOException
 import java.util.*
 import javax.inject.Inject
@@ -86,5 +89,19 @@ class TripsInteractor @Inject constructor(private val database: TripListItemDao)
             }
             googleMap.setMapStyle(MapStyleOptions(context.getString(R.string.style_json)))
         }
+    }
+
+    fun identify(image: Bitmap, context: Context): String {
+        val model = Model2.newInstance(context)
+
+        val tensorImage = TensorImage.fromBitmap(image)
+
+        val outputs = model.process(tensorImage)
+        val probability = outputs.probabilityAsCategoryList
+
+        model.close()
+        val maxScore = probability.maxByOrNull { p -> p.score }!!
+
+        return "Prediction:" + "\n" + maxScore.label + "\n" + "Probability: " + (maxScore.score * 10).toInt() + "%"
     }
 }

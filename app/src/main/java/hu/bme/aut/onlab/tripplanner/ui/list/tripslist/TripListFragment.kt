@@ -22,6 +22,7 @@ import hu.bme.aut.onlab.tripplanner.databinding.FragmentTriplistBinding
 import hu.bme.aut.onlab.tripplanner.ui.list.dialogs.authchange.AuthChangeDialogFragment
 import hu.bme.aut.onlab.tripplanner.ui.list.dialogs.newitem.NewTripListItemDialogFragment
 import hu.bme.aut.onlab.tripplanner.ui.list.pages.calendar.CalendarFragment
+import hu.bme.aut.onlab.tripplanner.ui.list.pages.identifier.IdentifierFragment
 import hu.bme.aut.onlab.tripplanner.ui.list.pages.maps.MapsFragment
 import hu.bme.aut.onlab.tripplanner.ui.list.pages.trips.TripsFragment
 
@@ -35,6 +36,7 @@ class TripListFragment : RainbowCakeFragment<TripListViewState, TripListViewMode
     private lateinit var tripsFragment: TripsFragment
     private lateinit var calendarFragment: CalendarFragment
     private lateinit var mapFragment: MapsFragment
+    private lateinit var identifierFragment: IdentifierFragment
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTriplistBinding.inflate(layoutInflater, container, false)
@@ -42,7 +44,8 @@ class TripListFragment : RainbowCakeFragment<TripListViewState, TripListViewMode
         tripsFragment = TripsFragment()
         calendarFragment = CalendarFragment()
         mapFragment = MapsFragment()
-        tripListPagerAdapter = TripListPagerAdapter(childFragmentManager, lifecycle, tripsFragment, calendarFragment, mapFragment)
+        identifierFragment = IdentifierFragment()
+        tripListPagerAdapter = TripListPagerAdapter(childFragmentManager, lifecycle, tripsFragment, calendarFragment, mapFragment, identifierFragment)
 
         binding.fab.setOnClickListener{
             NewTripListItemDialogFragment().show(
@@ -62,6 +65,7 @@ class TripListFragment : RainbowCakeFragment<TripListViewState, TripListViewMode
                 0 -> getString(R.string.list)
                 1 -> getString(R.string.calendar)
                 2 -> getString(R.string.map)
+                3 -> getString(R.string.identifier)
                 else -> ""
             }
         }.attach()
