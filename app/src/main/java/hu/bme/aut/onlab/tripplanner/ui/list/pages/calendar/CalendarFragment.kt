@@ -1,52 +1,62 @@
 package hu.bme.aut.onlab.tripplanner.ui.list.pages.calendar
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.ComposeView
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
-import com.applandeo.materialcalendarview.EventDay
-import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import dagger.hilt.android.AndroidEntryPoint
-import hu.bme.aut.onlab.tripplanner.R
-import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
-import hu.bme.aut.onlab.tripplanner.databinding.FragmentCalendarBinding
+import hu.bme.aut.onlab.tripplanner.views.helpers.FullScreenLoading
+import hu.bme.aut.onlab.tripplanner.views.theme.AppJustUi1Theme
+import hu.bme.aut.onlab.tripplanner.views.Calendar
 import java.util.*
 
 @AndroidEntryPoint
 class CalendarFragment : RainbowCakeFragment<CalendarViewState, CalendarViewModel>() {
     override fun provideViewModel() = getViewModelFromFactory()
 
-    private lateinit var binding: FragmentCalendarBinding
+    // lateinit var binding: FragmentCalendarBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentCalendarBinding.inflate(layoutInflater, container, false)
-
-        return binding.root
+        return ComposeView(requireContext()).apply {
+            setContent {
+                FullScreenLoading()
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.load()
+        //viewModel.load()
+        viewModel.addListener()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun render(viewState: CalendarViewState) {
-        when(viewState) {
-            is Loading -> {}
-            is TripsContent -> { setDates(viewState.trips) }
-        }.exhaustive
+        (view as ComposeView).setContent {
+            AppJustUi1Theme {
+                when (viewState) {
+                    is Loading -> FullScreenLoading()
+                    is CalendarContent -> Calendar(
+                        viewState.trips
+                    )
+                }.exhaustive
+            }
+        }
     }
 
-    fun changeCalendar() {
+    /*fun changeCalendar() {
         if(isAdded)
             viewModel.load()
-    }
+    }*/
 
-    private fun setDates(items: List<TripListItem>) {
+    /*private fun setDates(items: List<TripListItem>) {
         if(items.isNotEmpty() && isAdded) {
             val calendars = mutableListOf<Calendar>()
             val events = mutableListOf<EventDay>()
@@ -78,5 +88,5 @@ class CalendarFragment : RainbowCakeFragment<CalendarViewState, CalendarViewMode
                 }
             })
         }
-    }
+    }*/
 }

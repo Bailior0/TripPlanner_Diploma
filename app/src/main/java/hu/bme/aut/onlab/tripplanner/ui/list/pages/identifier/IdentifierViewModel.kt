@@ -18,6 +18,6 @@ class IdentifierViewModel @Inject constructor(private val identifierPresenter: I
 
     fun identify(image: Bitmap, context: Context) = execute {
         viewState = IdentifierContent(loading = true)
-        viewState = IdentifierContent(prediction = identifierPresenter.identify(image, context), loading = false)
+        viewState = IdentifierContent(prediction = identifierPresenter.identify(image, context), image = image, loading = false)
     }
 }

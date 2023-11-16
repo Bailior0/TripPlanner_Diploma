@@ -276,7 +276,10 @@ fun TripListItem(
                                     description = descriptionInput,
                                     date = dateInput,
                                     category =  TripListItem.Category.values().toList()[categorySelectedIndex],
-                                    visited = checkedState
+                                    visited = checkedState,
+                                    uid = "",
+                                    coordinateX = "",
+                                    coordinateY = ""
                                 )
                             )
                     } else {

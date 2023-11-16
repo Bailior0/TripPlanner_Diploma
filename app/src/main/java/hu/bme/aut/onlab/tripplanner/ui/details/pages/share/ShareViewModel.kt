@@ -32,7 +32,7 @@ class ShareViewModel @Inject constructor(
 
     fun editPost(place: String, item: SharedData) = execute {
         val user = sharePresenter.getCurrentUser()
-        sharePresenter.editPost(place, item)
+        sharePresenter.editPost(item)
         viewState = ShareContent(
             list = sharePresenter.getItemsOnce(place),
             currentUser = user,
@@ -40,13 +40,13 @@ class ShareViewModel @Inject constructor(
         )
     }
 
-    fun deletePost(place: String, item: SharedData) = execute {
-        sharePresenter.deletePost(place, item)
+    fun deletePost(item: SharedData) = execute {
+        sharePresenter.deletePost(item)
     }
 
     fun likePost(place: String, item: SharedData) = execute {
         val user = sharePresenter.getCurrentUser()
-        sharePresenter.likePost(place, item)
+        sharePresenter.likePost(item)
         viewState = ShareContent(
             list = sharePresenter.getItemsOnce(place),
             currentUser = user,

@@ -1,18 +1,13 @@
-package hu.bme.aut.onlab.tripplanner.ui.list.tripslist
+package hu.bme.aut.onlab.tripplanner.ui.list.pages.account
 
 import android.content.Context
 import co.zsmb.rainbowcake.withIOContext
 import hu.bme.aut.onlab.tripplanner.domain.AuthInteractor
-import hu.bme.aut.onlab.tripplanner.domain.TripsInteractor
 import javax.inject.Inject
 
-class TripListPresenter @Inject constructor(
-    private val tripsInteractor: TripsInteractor, private val authInteractor: AuthInteractor
+class AccountPresenter @Inject constructor(
+    private val authInteractor: AuthInteractor
 ) {
-
-    /*suspend fun add(newItem: TripListItem): List<TripListItem> = withIOContext {
-        return@withIOContext tripsInteractor.add(newItem)
-    }*/
 
     suspend fun getUserEmail(): String? = withIOContext {
         return@withIOContext authInteractor.getCurrentUserEmail()

@@ -22,16 +22,16 @@ class SharePresenter @Inject constructor(
         shareInteractor.uploadPost(place, nick, title, comment)
     }
 
-    suspend fun editPost(place: String, item: SharedData) = withIOContext {
-        shareInteractor.editPost(place, item)
+    suspend fun editPost(item: SharedData) = withIOContext {
+        shareInteractor.editPost(item)
     }
 
-    suspend fun deletePost(place: String, item: SharedData) = withIOContext {
-        shareInteractor.deletePost(place, item)
+    suspend fun deletePost(item: SharedData) = withIOContext {
+        shareInteractor.deletePost(item)
     }
 
-    suspend fun likePost(place: String, item: SharedData) = withIOContext {
-        shareInteractor.likePost(place, item)
+    suspend fun likePost(item: SharedData) = withIOContext {
+        shareInteractor.likePost(item)
     }
 
     suspend fun getCurrentUser(): String? = withIOContext {

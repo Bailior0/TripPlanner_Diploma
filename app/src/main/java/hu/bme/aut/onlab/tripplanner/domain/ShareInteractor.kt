@@ -9,26 +9,26 @@ class ShareInteractor @Inject constructor(
     private val firebaseDataSource: FirebaseDataSource
 ) {
     suspend fun getItems(place: String): Flow<List<SharedData>> {
-        return firebaseDataSource.getItems(place)
+        return firebaseDataSource.getPosts(place)
     }
 
     suspend fun getItemsOnce(place: String): List<SharedData> {
-        return firebaseDataSource.getItemsOnce(place)
+        return firebaseDataSource.getPostsOnce(place)
     }
 
     suspend fun uploadPost(place: String, nick: String, title: String, comment: String) {
         firebaseDataSource.onUploadPost(place, nick, title, comment)
     }
 
-    suspend fun editPost(place: String, item: SharedData) {
-        firebaseDataSource.onEditPost(place, item)
+    suspend fun editPost(item: SharedData) {
+        firebaseDataSource.onEditPost(item)
     }
 
-    suspend fun deletePost(place: String, item: SharedData) {
-        firebaseDataSource.onDeletePost(place, item)
+    suspend fun deletePost(item: SharedData) {
+        firebaseDataSource.onDeletePost(item)
     }
 
-    suspend fun likePost(place: String, item: SharedData) {
-        firebaseDataSource.onLikePost(place, item)
+    suspend fun likePost(item: SharedData) {
+        firebaseDataSource.onLikePost(item)
     }
 }

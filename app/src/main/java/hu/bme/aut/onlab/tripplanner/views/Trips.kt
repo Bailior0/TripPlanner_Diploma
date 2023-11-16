@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
@@ -27,29 +28,53 @@ import hu.bme.aut.onlab.tripplanner.views.theme.*
 fun Trips(
     trips: List<TripListItem>,
     onItemClicked: (TripListItem) -> Unit,
+    onFabClicked: () -> Unit,
     onItemChanged: (TripListItem) -> Unit,
     onEditClicked: (TripListItem) -> Unit,
     onDeleteClicked: (TripListItem) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(0.dp, 0.dp, 0.dp, 5.dp)
-        ) {
-            itemsIndexed(trips) { _, item ->
-                TripItem(
-                    item = item,
-                    onItemClicked = onItemClicked,
-                    onItemChanged = onItemChanged,
-                    onEditClicked = onEditClicked,
-                    onDeleteClicked = onDeleteClicked
-                )
+    val data  = mutableListOf<TripListItem>()
+    data.addAll(trips)
+    data.sortBy { it.date }
+
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { onFabClicked() },
+                modifier = Modifier
+                    .padding(0.dp, 0.dp, 0.dp, 100.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Add")
             }
+        }
+    ) {
+            innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background)
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(5.dp, 5.dp, 5.dp, 70.dp)
+            ) {
+                itemsIndexed(data) { _, item ->
+                    TripItem(
+                        item = item,
+                        onItemClicked = onItemClicked,
+                        onItemChanged = onItemChanged,
+                        onEditClicked = onEditClicked,
+                        onDeleteClicked = onDeleteClicked
+                    )
+                }
+            }
+            /*FloatingActionButton(
+                onClick = { onFabClicked() },
+            ) {
+                Icon(Icons.Filled.Add, "Floating action button.")
+            }*/
         }
     }
 }

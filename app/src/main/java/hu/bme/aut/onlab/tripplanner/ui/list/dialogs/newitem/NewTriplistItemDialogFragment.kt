@@ -63,14 +63,16 @@ class NewTripListItemDialogFragment() : RainbowCakeDialogFragment<NewTripListIte
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val parent = parentFragment
-        if (parent is NewTripListItemDialogListener)
-            this.newListener = parent
-        else if(parent is EditTripListItemDialogListener)
+        this.editListener = parent as EditTripListItemDialogListener
+        this.newListener = parent as NewTripListItemDialogListener
+        /*if(parent is EditTripListItemDialogListener)
             this.editListener = parent
+        else if (parent is NewTripListItemDialogListener)
+            this.newListener = parent
         else
             editListener = context as? EditTripListItemDialogListener
                 ?: throw RuntimeException("Activity must implement the listener interface!")
-    }
+   */ }
 
     companion object {
         const val TAG = "NewTriplistItemDialogFragment"

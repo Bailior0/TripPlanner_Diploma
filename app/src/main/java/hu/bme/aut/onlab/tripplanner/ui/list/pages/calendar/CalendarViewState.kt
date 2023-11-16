@@ -6,7 +6,7 @@ sealed class CalendarViewState
 
 object Loading : CalendarViewState()
 
-data class TripsContent(
+data class CalendarContent(
     var trips: List<TripListItem> = emptyList(),
     val loading: Boolean = true
 ) : CalendarViewState()

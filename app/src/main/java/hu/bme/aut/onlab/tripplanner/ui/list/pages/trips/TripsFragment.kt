@@ -5,10 +5,6 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import co.zsmb.rainbowcake.base.RainbowCakeFragment
 import co.zsmb.rainbowcake.extensions.exhaustive
@@ -25,7 +21,7 @@ import hu.bme.aut.onlab.tripplanner.views.theme.AppJustUi1Theme
 
 @AndroidEntryPoint
 class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
-    NewTripListItemDialogFragment.EditTripListItemDialogListener {
+    NewTripListItemDialogFragment.EditTripListItemDialogListener, NewTripListItemDialogFragment.NewTripListItemDialogListener {
     override fun provideViewModel() = getViewModelFromFactory()
 
     private lateinit var tripListFragment: TripListFragment
@@ -42,44 +38,41 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.load()
+        //viewModel.load()
+        viewModel.addListener()
     }
 
-    fun setAdapter() {
+    /*fun setAdapter() {
         if(state != null)
             tripListFragment.tripListPagerAdapter.restoreState(state!!)
         if(isAdded)
             viewModel.load()
-    }
+    }*/
 
-    fun setParent(tripListFragment: TripListFragment) {
+    /*fun setParent(tripListFragment: TripListFragment) {
         this.tripListFragment = tripListFragment
-    }
+    }*/
 
     override fun render(viewState: TripsViewState) {
         (view as ComposeView).setContent {
             AppJustUi1Theme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    when (viewState) {
-                        is Loading -> FullScreenLoading()
-                        is TripsContent -> Trips(
-                            viewState.trips,
-                            onItemClicked = ::onTripSelected,
-                            onItemChanged = ::onItemChanged,
-                            onEditClicked = ::onItemEdited,
-                            onDeleteClicked = ::onItemRemoved
-                        )
-                    }.exhaustive
-                }
+                when (viewState) {
+                    is Loading -> FullScreenLoading()
+                    is TripsContent -> Trips(
+                        viewState.trips,
+                        onItemClicked = ::onTripSelected,
+                        onFabClicked = ::onItemAdded,
+                        onItemChanged = ::onItemChanged,
+                        onEditClicked = ::onItemEdited,
+                        onDeleteClicked = ::onItemRemoved
+                    )
+                }.exhaustive
             }
         }
     }
 
     private fun onItemChanged(item: TripListItem) {
-        viewModel.checkerChanged(item)
+        //viewModel.checkerChanged(item)
     }
 
     private fun onItemEdited(item: TripListItem) {
@@ -89,15 +82,23 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
         )
     }
 
+    private fun onItemAdded() {
+        NewTripListItemDialogFragment().show(
+            childFragmentManager,
+            NewTripListItemDialogFragment.TAG
+        )
+    }
+
     private fun onItemRemoved(item: TripListItem) {
-        if(state != null)
-            tripListFragment.tripListPagerAdapter.restoreState(state!!)
-        viewModel.remove(item)
-        tripListFragment.onItemChanged()
+        /*if(state != null)
+            tripListFragment.tripListPagerAdapter.restoreState(state!!)*/
+        //viewModel.remove(item)
+        //tripListFragment.onItemChanged()
+        viewModel.deleteFB(item)
     }
 
     private fun onTripSelected(tripListItem: TripListItem) {
-        state = tripListFragment.tripListPagerAdapter.saveState()
+        //state = tripListFragment.tripListPagerAdapter.saveState()
         navigator?.add(DetailsFragment.newInstance(tripListItem),
             enterAnim = 0,
             exitAnim = 0,
@@ -107,9 +108,14 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
     }
 
     override fun onTripListItemEdited(editedItem: TripListItem) {
-        if(state != null)
-            tripListFragment.tripListPagerAdapter.restoreState(state!!)
-        viewModel.edit(editedItem)
-        tripListFragment.onItemChanged()
+        /*if(state != null)
+            tripListFragment.tripListPagerAdapter.restoreState(state!!)*/
+        //viewModel.edit(editedItem)
+        //tripListFragment.onItemChanged()
+        viewModel.editFB(editedItem)
+    }
+
+    override fun onTripListItemCreated(newItem: TripListItem) {
+        viewModel.addFB(newItem)
     }
 }

@@ -7,6 +7,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
@@ -20,9 +21,81 @@ import javax.inject.Singleton
 class FirebaseDataSource @Inject constructor() {
 
     private val database = Firebase.firestore
+    private val uid = FirebaseAuth.getInstance().currentUser?.uid
 
-    suspend fun getItems(trip: String): Flow<List<SharedData>> = callbackFlow {
-        val listenerRegistration = database.collection(trip)
+    suspend fun getTrips(): Flow<List<TripListItem>> = callbackFlow {
+        val listenerRegistration = database.collection("trips").whereEqualTo("uid", uid)
+            .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
+                if (firebaseFirestoreException != null) {
+                    cancel(message = "Error fetching items", cause = firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+                val items = mutableListOf<TripListItem>()
+                if (querySnapshot != null) {
+                    for(document in querySnapshot) {
+                        items.add(document.toObject())
+                    }
+                }
+                this.trySend(items).isSuccess
+            }
+        awaitClose {
+            Log.d("failure", "Cancelling items listener")
+            listenerRegistration.remove()
+        }
+    }
+
+    suspend fun getTripsOnce(): List<TripListItem> {
+        val items = mutableListOf<TripListItem>()
+        database.collection("trips").whereEqualTo("uid", uid).get()
+            .addOnSuccessListener { documents ->
+                for(document in documents)
+                    items.add(document.toObject())
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
+
+        return items
+    }
+
+    suspend fun onUploadTrip(newItem: TripListItem) {
+        if (uid != null)
+            newItem.uid = uid
+
+        database.collection("trips").add(newItem)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }.await()
+    }
+
+    suspend fun onEditTrip(item: TripListItem) {
+        if(item.uid == uid)
+            database.collection("trips").document(item.fbid!!.toString()).set(item)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }.await()
+    }
+
+    suspend fun onDeleteTrip(item: TripListItem) {
+        if(item.uid == uid)
+            database.collection("trips").document(item.fbid!!.toString()).delete()
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }.await()
+    }
+
+    suspend fun getPosts(trip: String): Flow<List<SharedData>> = callbackFlow {
+        val listenerRegistration = database.collection("comments").whereEqualTo("town", trip)
             .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                 if (firebaseFirestoreException != null) {
                     cancel(message = "Error fetching items", cause = firebaseFirestoreException)
@@ -42,9 +115,9 @@ class FirebaseDataSource @Inject constructor() {
         }
     }
 
-    suspend fun getItemsOnce(trip: String): List<SharedData> {
+    suspend fun getPostsOnce(trip: String): List<SharedData> {
         val items = mutableListOf<SharedData>()
-        database.collection(trip).get()
+        database.collection("comments").whereEqualTo("town", trip).get()
             .addOnSuccessListener { documents ->
                 for(document in documents)
                     items.add(document.toObject())
@@ -58,9 +131,9 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onUploadPost(trip: String, nick: String, title: String, comment: String) {
-        val newPost = SharedData(null, FirebaseAuth.getInstance().currentUser?.uid, FirebaseAuth.getInstance().currentUser?.displayName, nick, title, comment)
+        val newPost = SharedData(null, uid, FirebaseAuth.getInstance().currentUser?.displayName, nick, title, comment, mutableListOf(), trip)
 
-        database.collection(trip).add(newPost)
+        database.collection("comments").add(newPost)
             .addOnSuccessListener { documentReference ->
                 Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
             }
@@ -69,9 +142,9 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    suspend fun onEditPost(trip: String, item: SharedData) {
-        if(item.uid == FirebaseAuth.getInstance().currentUser?.uid)
-            database.collection(trip).document(item.id!!).set(item)
+    suspend fun onEditPost(item: SharedData) {
+        if(item.uid == uid)
+            database.collection("comments").document(item.id!!).set(item)
                 .addOnSuccessListener { documentReference ->
                     Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
                 }
@@ -80,9 +153,9 @@ class FirebaseDataSource @Inject constructor() {
                 }.await()
     }
 
-    suspend fun onDeletePost(place: String, item: SharedData) {
-        if(item.uid == FirebaseAuth.getInstance().currentUser?.uid)
-            database.collection(place).document(item.id!!).delete()
+    suspend fun onDeletePost(item: SharedData) {
+        if(item.uid == uid)
+            database.collection("comments").document(item.id!!).delete()
                 .addOnSuccessListener { documentReference ->
                     Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
                 }
@@ -91,19 +164,18 @@ class FirebaseDataSource @Inject constructor() {
                 }.await()
     }
 
-    suspend fun onLikePost(place: String, item: SharedData) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
-        val userFound = item.liked.find { it == userId }
+    suspend fun onLikePost(item: SharedData) {
+        val userFound = item.liked.find { it == uid }
 
         if(!userFound.isNullOrEmpty()) {
             val poz = item.liked.indexOf(userFound)
             item.liked.removeAt(poz)
         }
         else {
-            item.liked.add(userId!!)
+            item.liked.add(uid!!)
         }
 
-        database.collection(place).document(item.id!!)
+        database.collection("comments").document(item.id!!)
             .update(mapOf(
                 "liked" to item.liked
             ))
