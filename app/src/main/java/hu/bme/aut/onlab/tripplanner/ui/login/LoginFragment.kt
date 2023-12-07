@@ -63,7 +63,7 @@ class LoginFragment : RainbowCakeFragment<LoginViewState, LoginViewModel>() {
         viewModel.login(navigator, context, email, pass)
     }
 
-    private fun onRegister(email: String, pass: String, context: Context) {
-        viewModel.register(context, email, pass)
+    private fun onRegister(name: String, email: String, pass: String, context: Context) {
+        viewModel.register(context, email, pass, name)
     }
 }

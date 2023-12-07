@@ -6,13 +6,16 @@ import co.zsmb.rainbowcake.navigation.Navigator
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import hu.bme.aut.onlab.tripplanner.data.datasource.FirebaseDataSource
 import hu.bme.aut.onlab.tripplanner.ui.list.tripslist.TripListFragment
 import javax.inject.Inject
 
-class AuthInteractor @Inject constructor() {
+class AuthInteractor @Inject constructor(
+    private val firebaseDataSource: FirebaseDataSource
+) {
     private var firebaseAuth = FirebaseAuth.getInstance()
 
-    fun registerClick(context: Context, mail: String, pass: String) {
+    fun registerClick(context: Context, mail: String, pass: String, name: String) {
         firebaseAuth
             .createUserWithEmailAndPassword(mail, pass)
             .addOnSuccessListener { result ->
@@ -23,6 +26,7 @@ class AuthInteractor @Inject constructor() {
                 firebaseUser?.updateProfile(profileChangeRequest)
                 firebaseUser?.sendEmailVerification()
 
+                firebaseDataSource.addUser(firebaseUser?.uid, name)
                 Toast.makeText(context, "Registration was successful\nVerification email has been sent", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->

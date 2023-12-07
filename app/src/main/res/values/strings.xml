@@ -50,4 +50,7 @@
     <string name="not_visited">Not yet visited</string>
     <string name="useful">Useful</string>
     <string name="identifier">Identifier</string>
+    <string name="user_name_title">Name</string>
+    <string name="missing_email">Please enter your email</string>
+    <string name="missing_password">Please enter your password</string>
 </resources>

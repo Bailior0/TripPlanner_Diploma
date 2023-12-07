@@ -17,7 +17,7 @@ class LoginViewModel @Inject constructor(private val loginPresenter: LoginPresen
         loginPresenter.login(navigator, context, mail, pass)
     }
 
-    fun register(context: Context, mail: String, pass: String) = execute {
-        loginPresenter.register(context, mail, pass)
+    fun register(context: Context, mail: String, pass: String, name: String) = execute {
+        loginPresenter.register(context, mail, pass, name)
     }
 }

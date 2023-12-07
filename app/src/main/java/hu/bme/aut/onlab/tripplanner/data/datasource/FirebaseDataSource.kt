@@ -8,12 +8,14 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
+import hu.bme.aut.onlab.tripplanner.data.disk.model.User
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -185,5 +187,21 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
+    }
+
+    fun addUser(uid: String?, name: String) {
+        val newUser = User(name = name)
+        if(uid != null)
+            newUser.id = uid
+        else
+            newUser.id = UUID.randomUUID().toString()
+
+        database.collection("users").document(newUser.id).set(newUser)
+            .addOnSuccessListener { documentReference ->
+                Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+            }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
     }
 }

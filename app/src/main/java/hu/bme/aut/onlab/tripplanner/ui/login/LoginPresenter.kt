@@ -13,7 +13,7 @@ class LoginPresenter @Inject constructor(
         authInteractor.loginClick(navigator, context, mail, pass)
     }
 
-    suspend fun register(context: Context, mail: String, pass: String) = withIOContext {
-        authInteractor.registerClick(context, mail, pass)
+    suspend fun register(context: Context, mail: String, pass: String, name: String) = withIOContext {
+        authInteractor.registerClick(context, mail, pass, name)
     }
 }
