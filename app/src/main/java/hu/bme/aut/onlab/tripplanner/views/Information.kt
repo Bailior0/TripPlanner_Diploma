@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.skydoves.landscapist.glide.GlideImage
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
@@ -25,7 +26,8 @@ fun Information(
     isConnected(LocalContext.current)
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(5.dp, 10.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -37,7 +39,10 @@ fun Information(
         ) {
             Text(stringResource(R.string.country), Modifier.weight(1f), textAlign = TextAlign.Justify)
             if(trip?.country != null)
-                Text(trip.country, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                Text(trip.country,
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
         }
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -47,7 +52,10 @@ fun Information(
         ) {
             Text(stringResource(R.string.place), Modifier.weight(1f), textAlign = TextAlign.Justify)
             if(trip?.place != null)
-                Text(trip.place, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                Text(trip.place,
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
         }
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -57,7 +65,10 @@ fun Information(
         ) {
             Text(stringResource(R.string.description), Modifier.weight(1f), textAlign = TextAlign.Justify)
             if(trip?.description != null)
-                Text(trip.description, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                Text(trip.description,
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
         }
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -67,7 +78,10 @@ fun Information(
         ) {
             Text(stringResource(R.string.date), Modifier.weight(1f), textAlign = TextAlign.Justify)
             if(trip?.date != null)
-                Text(trip.date, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                Text(trip.date,
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
         }
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -77,7 +91,10 @@ fun Information(
         ) {
             Text(stringResource(R.string.category), Modifier.weight(1f), textAlign = TextAlign.Justify)
             if(trip?.category != null)
-                Text(trip.category.name, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                Text(trip.category.name,
+                    Modifier
+                        .weight(1f)
+                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
         }
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -88,8 +105,14 @@ fun Information(
             Text("Visited", Modifier.weight(1f), textAlign = TextAlign.Justify)
             if(trip?.visited != null) {
                 when(trip.visited) {
-                    true -> Text(stringResource(R.string.already_visited), Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
-                    false -> Text(stringResource(R.string.not_visited), Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                    true -> Text(stringResource(R.string.already_visited),
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
+                    false -> Text(stringResource(R.string.not_visited),
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
                 }
             }
         }
@@ -104,7 +127,10 @@ fun Information(
             ) {
                 Text(stringResource(R.string.current_weather), Modifier.weight(1f), textAlign = TextAlign.Justify)
                 if(weather?.main != null)
-                    Text(weather.main, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                    Text(weather.main,
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
             }
             Row(
                 horizontalArrangement = Arrangement.Start,
@@ -114,7 +140,10 @@ fun Information(
             ) {
                 Text(stringResource(R.string.current_weather_description), Modifier.weight(1f), textAlign = TextAlign.Justify)
                 if(weather?.description != null)
-                    Text(weather.description, Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                    Text(weather.description,
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
             }
             Row(
                 horizontalArrangement = Arrangement.Start,
@@ -124,7 +153,10 @@ fun Information(
             ) {
                 Text(stringResource(R.string.temperature), Modifier.weight(1f), textAlign = TextAlign.Justify)
                 if(weatherList.main?.temp != null)
-                    Text(weatherList.main?.temp.toString() + " °C", Modifier.weight(1f).padding(start = 50.dp), textAlign = TextAlign.Justify)
+                    Text(weatherList.main?.temp.toString() + " °C",
+                        Modifier
+                            .weight(1f)
+                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
             }
             if(weather != null)
                 Box(
@@ -133,8 +165,15 @@ fun Information(
                         .size(100.dp)
                         .align(Alignment.CenterHorizontally)
                 ) {
-                    GlideImage(
-                        imageModel = { "https://openweathermap.org/img/w/${weather.icon}.png" }
+                    val url = "https://openweathermap.org/img/w/${weather.icon}.png"
+                    /*GlideImage(
+                        imageModel = { "https://openweathermap.org/img/w/${weather.icon}.png" },
+                        //success = { Log.i("dolog", "https://openweathermap.org/img/w/${weather.icon}.png") },
+                        failure = { Log.i("dolog", "https://openweathermap.org/img/w/${weather.icon}.png") }
+                    )*/
+                    AsyncImage(
+                        model = url,
+                        contentDescription = null
                     )
                 }
         }

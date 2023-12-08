@@ -26,7 +26,7 @@ class AuthInteractor @Inject constructor(
                 firebaseUser?.updateProfile(profileChangeRequest)
                 firebaseUser?.sendEmailVerification()
 
-                firebaseDataSource.addUser(firebaseUser?.uid, name)
+                firebaseDataSource.addUser(firebaseUser?.uid, name, mail)
                 Toast.makeText(context, "Registration was successful\nVerification email has been sent", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener { exception ->

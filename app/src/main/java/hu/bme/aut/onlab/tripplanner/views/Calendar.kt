@@ -79,9 +79,6 @@ import java.time.Month
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.Locale
-import java.util.*
-
-//private val flights = generateFlights().groupBy { it.time.toLocalDate() }
 
 private val pageBackgroundColor = Color.White
 private val itemBackgroundColor = Color.White
@@ -107,10 +104,12 @@ fun Calendar(
     val endMonth = remember { currentMonth.plusMonths(500) }
     var selection by remember { mutableStateOf<CalendarDay?>(null) }
     val daysOfWeek = remember { daysOfWeek() }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(pageBackgroundColor),
+            .background(pageBackgroundColor)
+            .padding(0.dp, 0.dp, 0.dp, 70.dp)
     ) {
         val state = rememberCalendarState(
             startMonth = startMonth,
@@ -181,7 +180,7 @@ fun Calendar(
             Divider(color = pageBackgroundColor)
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(items = groupedTrips[selection?.date].orEmpty()) { trip ->
-                    FlightInformation(trip)
+                    TripListInformation(trip)
                 }
             }
         }
@@ -263,7 +262,7 @@ private fun MonthHeader(
 }
 
 @Composable
-private fun LazyItemScope.FlightInformation(trip: TripListItem) {
+private fun LazyItemScope.TripListInformation(trip: TripListItem) {
     Row(
         modifier = Modifier
             .fillParentMaxWidth()
@@ -298,7 +297,7 @@ private fun LazyItemScope.FlightInformation(trip: TripListItem) {
                 .weight(1f)
                 .fillMaxHeight(),
         ) {
-            AirportInformation(trip.place)
+            TripInformation(trip)
         }
         /*Box(
             modifier = Modifier
@@ -313,7 +312,7 @@ private fun LazyItemScope.FlightInformation(trip: TripListItem) {
 }
 
 @Composable
-private fun AirportInformation(place: String) {
+private fun TripInformation(trip: TripListItem) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -337,14 +336,14 @@ private fun AirportInformation(place: String) {
         ) {
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = place,
+                text = trip.place,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Black,
             )
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = place,
+                text = trip.country,
                 textAlign = TextAlign.Center,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light,

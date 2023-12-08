@@ -2,6 +2,7 @@ package hu.bme.aut.onlab.tripplanner.data.datasource
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
@@ -23,9 +24,10 @@ import javax.inject.Singleton
 class FirebaseDataSource @Inject constructor() {
 
     private val database = Firebase.firestore
-    private val uid = FirebaseAuth.getInstance().currentUser?.uid
+    //private val uid = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun getTrips(): Flow<List<TripListItem>> = callbackFlow {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         val listenerRegistration = database.collection("trips").whereEqualTo("uid", uid)
             .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                 if (firebaseFirestoreException != null) {
@@ -47,6 +49,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun getTripsOnce(): List<TripListItem> {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         val items = mutableListOf<TripListItem>()
         database.collection("trips").whereEqualTo("uid", uid).get()
             .addOnSuccessListener { documents ->
@@ -62,6 +65,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onUploadTrip(newItem: TripListItem) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         if (uid != null)
             newItem.uid = uid
 
@@ -72,9 +76,20 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
+
+
+        if(uid != null)
+            database.collection("users").document(uid).update("tripSize", FieldValue.increment(1))
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }
     }
 
     suspend fun onEditTrip(item: TripListItem) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         if(item.uid == uid)
             database.collection("trips").document(item.fbid!!.toString()).set(item)
                 .addOnSuccessListener { documentReference ->
@@ -86,6 +101,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onDeleteTrip(item: TripListItem) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         if(item.uid == uid)
             database.collection("trips").document(item.fbid!!.toString()).delete()
                 .addOnSuccessListener { documentReference ->
@@ -94,6 +110,15 @@ class FirebaseDataSource @Inject constructor() {
                 .addOnFailureListener { exception ->
                     Log.d("failure", "Error getting documents: ", exception)
                 }.await()
+
+        if(uid != null)
+            database.collection("users").document(uid).update("tripSize", FieldValue.increment(-1))
+                .addOnSuccessListener { documentReference ->
+                    Log.d("success", "DocumentSnapshot written with ID: $documentReference.")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d("failure", "Error getting documents: ", exception)
+                }
     }
 
     suspend fun getPosts(trip: String): Flow<List<SharedData>> = callbackFlow {
@@ -133,6 +158,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onUploadPost(trip: String, nick: String, title: String, comment: String) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         val newPost = SharedData(null, uid, FirebaseAuth.getInstance().currentUser?.displayName, nick, title, comment, mutableListOf(), trip)
 
         database.collection("comments").add(newPost)
@@ -145,6 +171,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onEditPost(item: SharedData) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         if(item.uid == uid)
             database.collection("comments").document(item.id!!).set(item)
                 .addOnSuccessListener { documentReference ->
@@ -156,6 +183,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onDeletePost(item: SharedData) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         if(item.uid == uid)
             database.collection("comments").document(item.id!!).delete()
                 .addOnSuccessListener { documentReference ->
@@ -167,6 +195,7 @@ class FirebaseDataSource @Inject constructor() {
     }
 
     suspend fun onLikePost(item: SharedData) {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
         val userFound = item.liked.find { it == uid }
 
         if(!userFound.isNullOrEmpty()) {
@@ -189,8 +218,8 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    fun addUser(uid: String?, name: String) {
-        val newUser = User(name = name)
+    fun addUser(uid: String?, name: String, mail: String) {
+        val newUser = User(name = name, email = mail)
         if(uid != null)
             newUser.id = uid
         else
@@ -203,5 +232,15 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }
+    }
+
+    suspend fun getCurrentUser(): QuerySnapshot {
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        return database.collection("users").whereEqualTo("id", uid).limit(1).get()
+            .addOnSuccessListener { }
+            .addOnFailureListener { exception ->
+                Log.d("failure", "Error getting documents: ", exception)
+            }
+            .await()
     }
 }

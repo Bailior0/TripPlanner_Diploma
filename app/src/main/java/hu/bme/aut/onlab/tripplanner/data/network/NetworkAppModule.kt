@@ -20,7 +20,7 @@ object NetworkAppModule {
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor {
             val original = it.request()
-            val httpUrl = original.url()
+            val httpUrl = original.url
             val newHttpUrl = httpUrl.newBuilder().addQueryParameter("appid", BuildConfig.APP_ID).build()
             val request = original.newBuilder().url(newHttpUrl).build()
             it.proceed(request)

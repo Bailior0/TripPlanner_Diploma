@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,10 +28,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.onlab.tripplanner.R
+import hu.bme.aut.onlab.tripplanner.data.disk.model.User
 
 @Composable
 fun Account(
-    userEmail: String,
+    user: User,
     onEmailChange: () -> Unit,
     onPasswordChange: () -> Unit,
     onLogout: () -> Unit
@@ -73,14 +75,57 @@ fun Account(
             Text(
                 buildAnnotatedString {
                     withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
-                        append(userEmail)
+                        append(user.name)
                     }
                 },
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .padding(0.dp, 10.dp, 0.dp, 0.dp)
             )
+
+            Text(
+                buildAnnotatedString {
+                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
+                        append(user.email)
+                    }
+                },
+                textAlign = TextAlign.Start,
+                modifier = Modifier
+                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp, 30.dp, 5.dp, 5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                if(user.tripSize > 0)
+                    Image(
+                        painter = painterResource(id = R.drawable.travelguide),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                if(user.tripSize >= 5)
+                    Image(
+                        painter = painterResource(id = R.drawable.baggage),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                if(user.tripSize >= 15)
+                    Image(
+                        painter = painterResource(id = R.drawable.worldwide),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+                if(user.tripSize >= 30)
+                    Image(
+                        painter = painterResource(id = R.drawable.astronaut),
+                        contentDescription = null,
+                        modifier = Modifier.size(80.dp)
+                    )
+            }
         }
+
         Column( ) {
             Button(
                 onClick = {

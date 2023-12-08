@@ -3,33 +3,32 @@ package hu.bme.aut.onlab.tripplanner.ui.list.pages.account
 import android.content.Context
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import hu.bme.aut.onlab.tripplanner.ui.list.tripslist.TripListPresenter
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountViewModel @Inject constructor(private val tripListPresenter: TripListPresenter) : RainbowCakeViewModel<AccountViewState>(
+class AccountViewModel @Inject constructor(private val accountPresenter: AccountPresenter) : RainbowCakeViewModel<AccountViewState>(
     Loading
 ) {
     fun load() = execute {
         viewState = AccountContent(loading = true)
-        val userEmail = tripListPresenter.getUserEmail()
-        if(userEmail != null)
-            viewState = AccountContent(loading = false, userEmail = userEmail)
+        val user = accountPresenter.getUser()
+        if(user != null)
+            viewState = AccountContent(loading = false, user = user)
     }
 
     fun getUserEmail() = execute {
-        tripListPresenter.getUserEmail()
+        accountPresenter.getUserEmail()
     }
 
     fun signOut() = execute {
-        tripListPresenter.signOut()
+        accountPresenter.signOut()
     }
 
     fun changePassword() = execute {
-        tripListPresenter.changePassword()
+        accountPresenter.changePassword()
     }
 
     fun changeEmail(context: Context, password: String?, newEmail: String?) = execute {
-        tripListPresenter.changeEmail(context, password, newEmail)
+        accountPresenter.changeEmail(context, password, newEmail)
     }
 }

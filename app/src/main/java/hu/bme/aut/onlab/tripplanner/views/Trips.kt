@@ -22,7 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
+import hu.bme.aut.onlab.tripplanner.views.helpers.SegmentedControl
 import hu.bme.aut.onlab.tripplanner.views.theme.*
+import java.util.Locale
 
 @Composable
 fun Trips(
@@ -36,6 +38,14 @@ fun Trips(
     val data  = mutableListOf<TripListItem>()
     data.addAll(trips)
     data.sortBy { it.date }
+    var switchState by remember { mutableIntStateOf(0) }
+
+    val calendar = java.util.Calendar.getInstance()
+    val calString = String.format(
+        Locale.getDefault(), "%04d.%02d.%02d.",
+        calendar.get(java.util.Calendar.YEAR), calendar.get(java.util.Calendar.MONTH) + 1, calendar.get(
+            java.util.Calendar.DAY_OF_MONTH)
+    )
 
     Scaffold(
         floatingActionButton = {
@@ -49,32 +59,51 @@ fun Trips(
         }
     ) {
             innerPadding ->
+
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background)
         ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(5.dp, 5.dp, 5.dp, 70.dp)
-            ) {
-                itemsIndexed(data) { _, item ->
-                    TripItem(
-                        item = item,
-                        onItemClicked = onItemClicked,
-                        onItemChanged = onItemChanged,
-                        onEditClicked = onEditClicked,
-                        onDeleteClicked = onDeleteClicked
-                    )
+            SegmentedControl(
+                listOf("Future", "Past"),
+                switchState
+            ) { switchState = it }
+
+            if(switchState == 0)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(5.dp, 5.dp, 5.dp, 70.dp)
+                ) {
+                    itemsIndexed(data.filter { it.date >= calString }) { _, item ->
+                        TripItem(
+                            item = item,
+                            onItemClicked = onItemClicked,
+                            onItemChanged = onItemChanged,
+                            onEditClicked = onEditClicked,
+                            onDeleteClicked = onDeleteClicked
+                        )
+                    }
                 }
-            }
-            /*FloatingActionButton(
-                onClick = { onFabClicked() },
-            ) {
-                Icon(Icons.Filled.Add, "Floating action button.")
-            }*/
+            
+            if(switchState == 1)
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(5.dp, 5.dp, 5.dp, 70.dp)
+                ) {
+                    itemsIndexed(data.filter { it.date < calString }) { _, item ->
+                        TripItem(
+                            item = item,
+                            onItemClicked = onItemClicked,
+                            onItemChanged = onItemChanged,
+                            onEditClicked = onEditClicked,
+                            onDeleteClicked = onDeleteClicked
+                        )
+                    }
+                }
         }
     }
 }

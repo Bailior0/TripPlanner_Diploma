@@ -49,7 +49,7 @@ class AccountFragment: RainbowCakeFragment<AccountViewState, AccountViewModel>()
                     when (viewState) {
                         is Loading -> FullScreenLoading()
                         is AccountContent -> Account(
-                            viewState.userEmail,
+                            viewState.user,
                             onEmailChange = ::onEmailChange,
                             onPasswordChange = ::onPasswordChange,
                             onLogout = ::onLogout

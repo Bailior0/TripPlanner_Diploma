@@ -44,6 +44,7 @@ fun Identifier(
 
     Column(
         modifier = Modifier.fillMaxSize()
+            .padding(0.dp, 0.dp, 0.dp, 70.dp)
     ) {
         Box(
             modifier = Modifier
