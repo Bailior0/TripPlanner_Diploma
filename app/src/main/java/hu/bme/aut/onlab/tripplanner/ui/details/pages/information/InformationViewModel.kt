@@ -5,6 +5,7 @@ import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class InformationViewModel @Inject constructor(private val informationPresenter: InformationPresenter) : RainbowCakeViewModel<InformationViewState>(

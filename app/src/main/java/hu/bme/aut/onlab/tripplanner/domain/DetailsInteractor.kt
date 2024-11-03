@@ -5,6 +5,7 @@ import hu.bme.aut.onlab.tripplanner.data.network.ConnectivityChecker.isConnected
 import hu.bme.aut.onlab.tripplanner.data.network.NetworkRepo
 import hu.bme.aut.onlab.tripplanner.data.network.model.WeatherData
 import javax.inject.Inject
+import javax.inject.Named
 
 class DetailsInteractor @Inject constructor(private val network: NetworkRepo) {
 

@@ -12,5 +12,6 @@ data class TripsContent(
     //val maps: OnMapReadyCallback? = null,
     val place: MutableList<String> = mutableListOf(),
     val coordinates: MutableList<LatLng> = mutableListOf(),
-    val categories: MutableList<TripListItem.Category>  = mutableListOf()
+    val categories: MutableList<TripListItem.Category> = mutableListOf(),
+    val route: List<List<LatLng>>? = null
 ) : MapsViewState()

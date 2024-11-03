@@ -8,15 +8,18 @@ import hu.bme.aut.onlab.tripplanner.BuildConfig
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
+@Named("Weather")
 object NetworkAppModule {
     private const val SERVICE_URL = "https://api.openweathermap.org"
 
     @Provides
     @Singleton
+    @Named("Weather")
     fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
         .addInterceptor {
             val original = it.request()
@@ -29,6 +32,7 @@ object NetworkAppModule {
 
     @Provides
     @Singleton
+    @Named("Weather")
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit = Retrofit.Builder()
         .baseUrl(SERVICE_URL)
         .client(okHttpClient)

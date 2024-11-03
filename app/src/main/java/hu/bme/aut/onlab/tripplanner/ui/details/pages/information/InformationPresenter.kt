@@ -5,6 +5,7 @@ import co.zsmb.rainbowcake.withIOContext
 import hu.bme.aut.onlab.tripplanner.data.network.model.WeatherData
 import hu.bme.aut.onlab.tripplanner.domain.DetailsInteractor
 import javax.inject.Inject
+import javax.inject.Named
 
 class InformationPresenter @Inject constructor(private val detailsInteractor: DetailsInteractor) {
 

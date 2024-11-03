@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import hu.bme.aut.onlab.tripplanner.data.datasource.FirebaseDataSource
 import hu.bme.aut.onlab.tripplanner.data.disk.database.TripListItemDao
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
-import hu.bme.aut.onlab.tripplanner.ml.Model2
+import hu.bme.aut.onlab.tripplanner.ml.Model4
 import kotlinx.coroutines.flow.Flow
 import org.tensorflow.lite.support.image.TensorImage
 import javax.inject.Inject
@@ -62,7 +62,7 @@ class TripsInteractor @Inject constructor(private val database: TripListItemDao,
     }*/
 
     fun identify(image: Bitmap, context: Context): String {
-        val model = Model2.newInstance(context)
+        val model = Model4.newInstance(context)
 
         val tensorImage = TensorImage.fromBitmap(image)
 
@@ -72,6 +72,6 @@ class TripsInteractor @Inject constructor(private val database: TripListItemDao,
         model.close()
         val maxScore = probability.maxByOrNull { p -> p.score }!!
 
-        return "Prediction:" + "\n" + maxScore.label + "\n" + "Probability: " + (maxScore.score * 10).toInt() + "%"
+        return "Prediction:" + "\n" + maxScore.label// + "\n" + "Probability: " + (maxScore.score * 10).toInt() + "%"
     }
 }

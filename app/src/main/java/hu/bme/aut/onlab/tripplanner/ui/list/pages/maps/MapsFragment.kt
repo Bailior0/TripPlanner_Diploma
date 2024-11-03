@@ -1,6 +1,7 @@
 package hu.bme.aut.onlab.tripplanner.ui.list.pages.maps
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,10 @@ import co.zsmb.rainbowcake.extensions.exhaustive
 import co.zsmb.rainbowcake.hilt.getViewModelFromFactory
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.onlab.tripplanner.R
+import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import hu.bme.aut.onlab.tripplanner.views.Maps
 import hu.bme.aut.onlab.tripplanner.views.helpers.FullScreenLoading
 import hu.bme.aut.onlab.tripplanner.views.theme.AppJustUi1Theme
@@ -52,7 +55,9 @@ class MapsFragment : RainbowCakeFragment<MapsViewState, MapsViewModel>() {
                             Maps(
                                 viewState.place,
                                 viewState.coordinates,
-                                viewState.categories
+                                viewState.categories,
+                                viewState.route,
+                                onMarkerClicked = ::onMarkerClicked
                             )
                             /*if(viewState.maps != null)
                                 setMap(viewState.maps)
@@ -74,5 +79,11 @@ class MapsFragment : RainbowCakeFragment<MapsViewState, MapsViewModel>() {
             val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
             mapFragment?.getMapAsync(callback)
         }
+    }
+
+    private fun onMarkerClicked(coordinate: LatLng, device: LatLng, coordinates: MutableList<LatLng>, categories: MutableList<TripListItem.Category>, place: MutableList<String>) : Boolean {
+        Log.i("dolog", coordinate.toString())
+        viewModel.onMarkerClicked(coordinate, device, coordinates, categories, place)
+        return false
     }
 }
