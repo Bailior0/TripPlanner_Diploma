@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.views
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -158,24 +159,52 @@ fun Information(
                             .weight(1f)
                             .padding(start = 50.dp), textAlign = TextAlign.Justify)
             }
-            if(weather != null)
-                Box(
+            if(weather != null) {
+                Column(
+                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .padding(top = 20.dp, bottom = 20.dp)
-                        .size(100.dp)
-                        .align(Alignment.CenterHorizontally)
+                        .padding(8.dp)
+                        .fillMaxHeight(),
                 ) {
-                    val url = "https://openweathermap.org/img/w/${weather.icon}.png"
-                    /*GlideImage(
-                        imageModel = { "https://openweathermap.org/img/w/${weather.icon}.png" },
-                        //success = { Log.i("dolog", "https://openweathermap.org/img/w/${weather.icon}.png") },
-                        failure = { Log.i("dolog", "https://openweathermap.org/img/w/${weather.icon}.png") }
-                    )*/
-                    AsyncImage(
-                        model = url,
-                        contentDescription = null
-                    )
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 20.dp, bottom = 20.dp)
+                            .size(100.dp)
+                            .align(Alignment.CenterHorizontally)
+                    ) {
+                        val url = "https://openweathermap.org/img/w/${weather.icon}.png"
+                        AsyncImage(
+                            model = url,
+                            contentDescription = null,
+                            onLoading = {
+                                Log.i("dologl", it.toString())
+
+                            },
+                            onSuccess = {
+                                Log.i("dologs", it.toString())
+
+                            },
+                            onError = {
+                                Log.i("dologe", it.toString())
+
+                            }
+                        )
+                        //Log.i("dolog", "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Parliament_Building%2C_Budapest%2C_outside.jpg/1280px-Parliament_Building%2C_Budapest%2C_outside.jpg")
+                        /*GlideImage(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            imageModel = {"https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/640px-PNG_transparency_demonstration_1.png"}
+                        )
+                        GlideImage(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            imageModel = {"https://openweathermap.org/img/wn/10d@2x.png"}
+                        )*/
+
+                    }
                 }
+            }
         }
+
     }
 }

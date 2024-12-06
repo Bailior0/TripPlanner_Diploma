@@ -65,10 +65,10 @@ class IdentifierFragment: RainbowCakeFragment<IdentifierViewState, IdentifierVie
         viewModel.identify(image, context)
     }
 
-    private fun onClicked() {
+    private fun onClicked(prediction: String) {
         if(isConnected(requireContext())) {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse("https://hu.wikipedia.org/wiki/Orsz%C3%A1gh%C3%A1z")
+            intent.data = Uri.parse("https://www.google.com/search?q=$prediction")
             startActivity(intent)
         }
         /*else

@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.data.datasource
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -8,6 +9,7 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import hu.bme.aut.onlab.tripplanner.data.disk.model.User
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
@@ -16,6 +18,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,6 +27,7 @@ import javax.inject.Singleton
 class FirebaseDataSource @Inject constructor() {
 
     private val database = Firebase.firestore
+    private val storageRef = Firebase.storage.reference
     //private val uid = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun getTrips(): Flow<List<TripListItem>> = callbackFlow {
@@ -76,7 +80,6 @@ class FirebaseDataSource @Inject constructor() {
             .addOnFailureListener { exception ->
                 Log.d("failure", "Error getting documents: ", exception)
             }.await()
-
 
         if(uid != null)
             database.collection("users").document(uid).update("tripSize", FieldValue.increment(1))
@@ -157,9 +160,25 @@ class FirebaseDataSource @Inject constructor() {
         return items
     }
 
-    suspend fun onUploadPost(trip: String, nick: String, title: String, comment: String) {
+    suspend fun onUploadPost(trip: String, nick: String, title: String, comment: String, image: Bitmap?) {
+        var imageId = ""
+        if(image!= null) {
+            imageId = UUID.randomUUID().toString() + ".jpg"
+            val imageRef = storageRef.child(imageId)
+            val baos = ByteArrayOutputStream()
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
+            var uploadTask = imageRef.putBytes(data)
+            uploadTask.addOnFailureListener {
+                // Handle unsuccessful uploads
+            }.addOnSuccessListener { taskSnapshot ->
+                //Log.i("dolog", taskSnapshot.uploadSessionUri.toString())
+            }
+        }
+
+
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-        val newPost = SharedData(null, uid, FirebaseAuth.getInstance().currentUser?.displayName, nick, title, comment, mutableListOf(), trip)
+        val newPost = SharedData(null, uid, FirebaseAuth.getInstance().currentUser?.displayName, nick, title, comment, mutableListOf(), trip, imageId)
 
         database.collection("comments").add(newPost)
             .addOnSuccessListener { documentReference ->
@@ -170,7 +189,23 @@ class FirebaseDataSource @Inject constructor() {
             }.await()
     }
 
-    suspend fun onEditPost(item: SharedData) {
+    suspend fun onEditPost(item: SharedData, image: Bitmap?) {
+        var imageId = ""
+        if(image!= null) {
+            imageId = UUID.randomUUID().toString() + ".jpg"
+            val imageRef = storageRef.child(imageId)
+            val baos = ByteArrayOutputStream()
+            image.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data = baos.toByteArray()
+            var uploadTask = imageRef.putBytes(data)
+            uploadTask.addOnFailureListener {
+                // Handle unsuccessful uploads
+            }.addOnSuccessListener { taskSnapshot ->
+                //Log.i("dolog", taskSnapshot.uploadSessionUri.toString())
+            }
+        }
+        item.pic = imageId
+
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         if(item.uid == uid)
             database.collection("comments").document(item.id!!).set(item)

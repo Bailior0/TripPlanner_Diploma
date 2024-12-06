@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.ui.details.pages.share
 
+import android.graphics.Bitmap
 import androidx.lifecycle.viewModelScope
 import co.zsmb.rainbowcake.base.RainbowCakeViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,13 +27,13 @@ class ShareViewModel @Inject constructor(
         }
     }
 
-    fun uploadPost(place: String, nick: String, title: String, comment: String) = execute {
-        sharePresenter.uploadPost(place, nick, title, comment)
+    fun uploadPost(place: String, nick: String, title: String, comment: String, image: Bitmap?) = execute {
+        sharePresenter.uploadPost(place, nick, title, comment, image)
     }
 
-    fun editPost(place: String, item: SharedData) = execute {
+    fun editPost(place: String, item: SharedData, image: Bitmap?) = execute {
         val user = sharePresenter.getCurrentUser()
-        sharePresenter.editPost(item)
+        sharePresenter.editPost(item, image)
         viewState = ShareContent(
             list = sharePresenter.getItemsOnce(place),
             currentUser = user,

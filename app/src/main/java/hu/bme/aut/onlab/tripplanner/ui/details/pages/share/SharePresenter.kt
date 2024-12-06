@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.ui.details.pages.share
 
+import android.graphics.Bitmap
 import co.zsmb.rainbowcake.withIOContext
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 import hu.bme.aut.onlab.tripplanner.domain.AuthInteractor
@@ -18,12 +19,12 @@ class SharePresenter @Inject constructor(
         shareInteractor.getItemsOnce(place)
     }
 
-    suspend fun uploadPost(place: String, nick: String, title: String, comment: String) = withIOContext {
-        shareInteractor.uploadPost(place, nick, title, comment)
+    suspend fun uploadPost(place: String, nick: String, title: String, comment: String, image: Bitmap?) = withIOContext {
+        shareInteractor.uploadPost(place, nick, title, comment, image)
     }
 
-    suspend fun editPost(item: SharedData) = withIOContext {
-        shareInteractor.editPost(item)
+    suspend fun editPost(item: SharedData, image: Bitmap?) = withIOContext {
+        shareInteractor.editPost(item, image)
     }
 
     suspend fun deletePost(item: SharedData) = withIOContext {

@@ -11,5 +11,6 @@ data class SharedData (
     var title: String? = null,
     var body: String? = null,
     var liked: MutableList<String> = mutableListOf(),
-    var town: String? = null
+    var town: String? = null,
+    var pic: String? = null
 )

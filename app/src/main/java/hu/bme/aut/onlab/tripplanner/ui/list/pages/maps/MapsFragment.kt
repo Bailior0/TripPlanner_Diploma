@@ -82,7 +82,6 @@ class MapsFragment : RainbowCakeFragment<MapsViewState, MapsViewModel>() {
     }
 
     private fun onMarkerClicked(coordinate: LatLng, device: LatLng, coordinates: MutableList<LatLng>, categories: MutableList<TripListItem.Category>, place: MutableList<String>) : Boolean {
-        Log.i("dolog", coordinate.toString())
         viewModel.onMarkerClicked(coordinate, device, coordinates, categories, place)
         return false
     }

@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.domain
 
+import android.graphics.Bitmap
 import hu.bme.aut.onlab.tripplanner.data.datasource.FirebaseDataSource
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 import kotlinx.coroutines.flow.Flow
@@ -16,12 +17,12 @@ class ShareInteractor @Inject constructor(
         return firebaseDataSource.getPostsOnce(place)
     }
 
-    suspend fun uploadPost(place: String, nick: String, title: String, comment: String) {
-        firebaseDataSource.onUploadPost(place, nick, title, comment)
+    suspend fun uploadPost(place: String, nick: String, title: String, comment: String, image: Bitmap?) {
+        firebaseDataSource.onUploadPost(place, nick, title, comment, image)
     }
 
-    suspend fun editPost(item: SharedData) {
-        firebaseDataSource.onEditPost(item)
+    suspend fun editPost(item: SharedData, image: Bitmap?) {
+        firebaseDataSource.onEditPost(item, image)
     }
 
     suspend fun deletePost(item: SharedData) {

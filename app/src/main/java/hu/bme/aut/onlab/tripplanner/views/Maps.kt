@@ -62,12 +62,13 @@ fun Maps(
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
             for(location in locationResult.locations){
-                deviceLatLng = LatLng(location!!.latitude, location.longitude)
+                deviceLatLng = LatLng(location.latitude, location.longitude)
             }
         }
     }
     //Update time
-    val UPDATE_TIME : Long = 20000
+
+    val UPDATE_TIME : Long = 200000
     //Update locationRequest
     val locationRequest : LocationRequest = LocationRequest.create().apply{
         interval = UPDATE_TIME
@@ -86,7 +87,8 @@ fun Maps(
         locationResult.addOnCompleteListener(mContext as Activity) { t ->
             if (t.isSuccessful) {
                 lastKnownLocation = t.result
-                deviceLatLng = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
+                if(lastKnownLocation != null)
+                    deviceLatLng = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude)
                 deviceCameraPositionState.position = CameraPosition.fromLatLngZoom(deviceLatLng, 18f)
                 Log.i("Location", deviceLatLng.toString())
             } else {
@@ -104,12 +106,20 @@ fun Maps(
             .padding(0.dp, 0.dp, 0.dp, 55.dp)
     ) {
         val cameraPositionState: CameraPositionState
-        if(coordinates.isNotEmpty())
+        if(!(deviceLatLng.latitude == 0.0 && deviceLatLng.longitude == 0.0)) {
             cameraPositionState = rememberCameraPositionState {
-                position = CameraPosition.fromLatLngZoom(LatLng(46.9128663,17.88800059)/*coordinates[0]*/, 10f)
+                val startLatLng = deviceLatLng
+                position = CameraPosition.fromLatLngZoom(startLatLng, 20f)
+            }
+        }
+        else if(coordinates.isNotEmpty())
+            cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(coordinates[0], 10f)
             }
         else
-            cameraPositionState = deviceCameraPositionState
+            cameraPositionState = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(LatLng(47.4730, 19.0530), 10f)
+            }
 
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
@@ -123,7 +133,6 @@ fun Maps(
             }
 
             for((index, coordinate) in coordinates.withIndex()) {
-                //Log.i("dolog", place[index] + coordinate)
                 Marker(
                     state = rememberMarkerState(position = coordinate),
                     title = place[index],

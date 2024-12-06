@@ -1,6 +1,7 @@
 package hu.bme.aut.onlab.tripplanner.ui.details.pages.sharedialog
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,8 +27,8 @@ class NewShareItemDialogFragment() : RainbowCakeDialogFragment<ShareItemViewStat
     override fun provideViewModel() = getViewModelFromFactory()
 
     interface NewShareItemDialogListener {
-        fun onUploadPost(nick: String, title: String, comment: String)
-        fun onEditPost(item: SharedData)
+        fun onUploadPost(nick: String, title: String, comment: String, image: Bitmap?)
+        fun onEditPost(item: SharedData, image: Bitmap?)
     }
 
     private lateinit var listener: NewShareItemDialogListener
@@ -103,13 +104,13 @@ class NewShareItemDialogFragment() : RainbowCakeDialogFragment<ShareItemViewStat
         }
     }
 
-    private fun onUpload(nick: String, title: String, comment: String) {
-        listener.onUploadPost(nick, title, comment)
+    private fun onUpload(nick: String, title: String, comment: String, image: Bitmap?) {
+        listener.onUploadPost(nick, title, comment, image)
         dialog?.dismiss()
     }
 
-    private fun onEdit(newItem: SharedData) {
-        listener.onEditPost(newItem)
+    private fun onEdit(newItem: SharedData, image: Bitmap?) {
+        listener.onEditPost(newItem, image)
         dialog?.dismiss()
     }
 

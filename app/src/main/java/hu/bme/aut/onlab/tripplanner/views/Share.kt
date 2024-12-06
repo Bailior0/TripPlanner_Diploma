@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.views
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,14 +16,22 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
+import kotlinx.coroutines.tasks.await
 
 @Composable
 fun Share(
@@ -33,6 +42,8 @@ fun Share(
     onDeleteClicked: (SharedData) -> Unit,
     onLikeClicked: (SharedData) -> Unit
 ) {
+    val storage = Firebase.storage
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,6 +76,7 @@ fun Share(
                     ListItem(
                         item = item,
                         user = user,
+                        storage = storage,
                         onEditClicked = onEditClicked,
                         onDeleteClicked = onDeleteClicked,
                         onLikeClicked = onLikeClicked
@@ -91,10 +103,29 @@ fun Share(
 fun ListItem(
     item: SharedData,
     user: String?,
+    storage: FirebaseStorage,
     onEditClicked: (SharedData) -> Unit,
     onDeleteClicked: (SharedData) -> Unit,
     onLikeClicked: (SharedData) -> Unit
 ) {
+    var imageUrl by remember { mutableStateOf<String?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
+
+    if(item.pic != null && item.pic != "") {
+        val storagePath = item.pic
+        val imageRef = storage.reference.child(item.pic!!)
+
+        LaunchedEffect(storagePath) {
+            try {
+                imageUrl = imageRef.downloadUrl.await().toString()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                isLoading = false
+            }
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -114,6 +145,23 @@ fun ListItem(
             Text(
                 text = item.body.toString(), color = Color.Black, fontSize = 18.sp
             )
+            if(item.pic != null && item.pic != "")
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    if (isLoading) {
+                        // Add a loading UI
+                    } else {
+                        imageUrl?.let {
+                            AsyncImage(
+                                model = it,
+                                contentDescription = "Image",
+                                modifier = Modifier.fillMaxSize(),
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                    }
+                }
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically

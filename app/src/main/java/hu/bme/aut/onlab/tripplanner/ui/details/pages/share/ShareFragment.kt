@@ -1,5 +1,6 @@
 package hu.bme.aut.onlab.tripplanner.ui.details.pages.share
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -45,12 +46,12 @@ class ShareFragment : RainbowCakeFragment<ShareViewState, ShareViewModel>(), New
         this.trip = trip
     }
 
-    override fun onUploadPost(nick: String, title: String, comment: String) {
-        viewModel.uploadPost(trip.place, nick, title, comment)
+    override fun onUploadPost(nick: String, title: String, comment: String, image: Bitmap?) {
+        viewModel.uploadPost(trip.place, nick, title, comment, image)
     }
 
-    override fun onEditPost(item: SharedData) {
-        viewModel.editPost(trip.place, item)
+    override fun onEditPost(item: SharedData, image: Bitmap?) {
+        viewModel.editPost(trip.place, item, image)
     }
 
     override fun render(viewState: ShareViewState) {

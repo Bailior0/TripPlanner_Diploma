@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AirplaneTicket
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.lightColors
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleTheme
@@ -325,7 +326,7 @@ private fun TripInformation(trip: TripListItem) {
                 .fillMaxHeight(),
             contentAlignment = Alignment.CenterEnd,
         ) {
-            Icon(imageVector  = Icons.Filled.AirplaneTicket, null)
+            Icon(imageVector  = Icons.Filled.Explore, null)
         }
         Column(
             modifier = Modifier

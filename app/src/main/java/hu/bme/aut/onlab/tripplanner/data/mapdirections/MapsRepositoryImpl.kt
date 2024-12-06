@@ -14,9 +14,6 @@ class MapsRepositoryImpl(
                 destinationLatLang = "${destination.latitude},${destination.longitude}"
             )
 
-            Log.i("dolog", response.isSuccessful.toString())
-
-
             if (response.isSuccessful && response.body() != null){
 
                 val polyLinePoints = try {
