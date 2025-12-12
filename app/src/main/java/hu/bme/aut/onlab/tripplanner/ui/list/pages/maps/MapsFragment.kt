@@ -38,7 +38,6 @@ class MapsFragment : RainbowCakeFragment<MapsViewState, MapsViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //viewModel.setMap(requireContext())
         viewModel.addListener(requireContext())
     }
 
@@ -59,20 +58,12 @@ class MapsFragment : RainbowCakeFragment<MapsViewState, MapsViewModel>() {
                                 viewState.route,
                                 onMarkerClicked = ::onMarkerClicked
                             )
-                            /*if(viewState.maps != null)
-                                setMap(viewState.maps)
-                            else setMap{ googleMap -> googleMap.clear() }*/
                         }
                     }.exhaustive
                 }
             }
         }
     }
-
-    /*fun changeMap() {
-        if(isAdded)
-            viewModel.setMap(requireContext())
-    }*/
 
     private fun setMap(callback: OnMapReadyCallback) {
         if(isAdded) {

@@ -9,7 +9,6 @@ data object Loading : MapsViewState()
 
 data class TripsContent(
     val loading: Boolean = true,
-    //val maps: OnMapReadyCallback? = null,
     val place: MutableList<String> = mutableListOf(),
     val coordinates: MutableList<LatLng> = mutableListOf(),
     val categories: MutableList<TripListItem.Category> = mutableListOf(),

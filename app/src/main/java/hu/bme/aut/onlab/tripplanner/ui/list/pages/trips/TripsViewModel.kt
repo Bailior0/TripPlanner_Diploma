@@ -25,38 +25,15 @@ class TripsViewModel @Inject constructor(private val tripsPresenter: TripsPresen
     }
 
     fun addFB(newItem: TripListItem) = execute {
-        //viewState = TripsContent(loading = true)
         tripsPresenter.addFB(newItem)
-        //viewState = TripsContent(loading = false)
     }
 
     fun editFB(editedItem: TripListItem) = execute {
         viewState = TripsContent(loading = true)
         tripsPresenter.editFB(editedItem)
-        //viewState = TripsContent(loading = false)
     }
 
     fun deleteFB(removedItem: TripListItem) = execute {
-        //viewState = TripsContent(loading = true)
         tripsPresenter.removeFB(removedItem)
-        //viewState = TripsContent(loading = false)
     }
-
-    /*fun load() = execute {
-        viewState = TripsContent(loading = true)
-        viewState = TripsContent(trips = tripsPresenter.load(), loading = false)
-    }
-
-    fun edit(editedItem: TripListItem) = execute {
-        viewState = TripsContent(loading = true)
-        viewState = TripsContent(trips = tripsPresenter.edit(editedItem), loading = false)
-    }
-
-    fun remove(removedItem: TripListItem) = execute {
-        viewState = TripsContent(trips = tripsPresenter.remove(removedItem))
-    }
-
-    fun checkerChanged(editedItem: TripListItem) = execute {
-        tripsPresenter.edit(editedItem)
-    }*/
 }

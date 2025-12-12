@@ -14,10 +14,6 @@ class TripListViewModel @Inject constructor(private val tripListPresenter: TripL
         viewState = TripsContent(isLoading = false)
     }
 
-    /*fun add(newItem: TripListItem) = execute {
-        viewState = TripsContent(trips = tripListPresenter.add(newItem), false)
-    }*/
-
     fun getUserEmail(): String? = runBlocking {
         return@runBlocking tripListPresenter.getUserEmail()
     }

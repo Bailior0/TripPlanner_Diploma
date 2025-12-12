@@ -17,6 +17,7 @@ import co.zsmb.rainbowcake.navigation.navigator
 import dagger.hilt.android.AndroidEntryPoint
 import hu.bme.aut.onlab.tripplanner.data.network.ConnectivityChecker.isConnected
 import hu.bme.aut.onlab.tripplanner.ui.list.dialogs.authchange.AuthChangeDialogFragment
+import hu.bme.aut.onlab.tripplanner.ui.login.LoginFragment
 import hu.bme.aut.onlab.tripplanner.views.Account
 import hu.bme.aut.onlab.tripplanner.views.helpers.FullScreenLoading
 import hu.bme.aut.onlab.tripplanner.views.theme.AppJustUi1Theme
@@ -81,6 +82,6 @@ class AccountFragment: RainbowCakeFragment<AccountViewState, AccountViewModel>()
 
     private fun onLogout() {
         viewModel.signOut()
-        navigator?.pop()
+        navigator?.setStack(LoginFragment())
     }
 }

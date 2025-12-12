@@ -1,6 +1,5 @@
 package hu.bme.aut.onlab.tripplanner.data.mapdirections
 
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 
 class MapsRepositoryImpl(

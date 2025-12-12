@@ -24,24 +24,7 @@ class MapsViewModel @Inject constructor(private val mapsPresenter: MapsPresenter
     Loading
 ) {
 
-    /*fun setMap(context: Context) = execute {
-        viewState = TripsContent(loading = true)
-        viewState = TripsContent(maps = mapsPresenter.setCallback(context), loading = false)
-    }*/
-
     fun addListener(context: Context) = execute {
-        /*val pathResult = mapsRepository.getDirections(
-            origin = LatLng(46.9128663,17.88800059),
-            destination = LatLng(47.68166189,16.5844795)
-        )
-
-        var route: List<List<LatLng>>? = null
-        when (pathResult) {
-            is Resource.Error -> {}
-            is Resource.Success -> {
-                route = pathResult.data?.routePoints
-            }
-        }*/
         viewModelScope.launch {
             mapsPresenter.addListener().collect {
                 val items = it
@@ -56,7 +39,7 @@ class MapsViewModel @Inject constructor(private val mapsPresenter: MapsPresenter
                         matches = null
                         var coordinate: LatLng?
 
-                        if (item.coordinateX == "" || item.coordinateY == "") {
+                        if (item.coordinateX == "" || item.coordinateY == "" || item.coordinateX == null || item.coordinateY == null) {
                             try {
                                 matches = geocoder.getFromLocationName(
                                     item.place + " " + item.country,

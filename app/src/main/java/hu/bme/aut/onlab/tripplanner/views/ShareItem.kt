@@ -48,8 +48,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bumptech.glide.Glide
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.Firebase
+import com.google.firebase.storage.storage
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 import kotlinx.coroutines.tasks.await
@@ -286,7 +286,7 @@ fun ShareItem(
                             null,
                             modifier = Modifier
                                 .size(50.dp)
-                                .clickable { mutableImage = null; imageUrl = null }
+                                .clickable { mutableImage = null; imageUrl = null; item?.pic = null }
                         )
                     }
                 } else {

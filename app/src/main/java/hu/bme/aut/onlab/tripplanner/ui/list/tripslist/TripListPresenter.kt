@@ -9,11 +9,6 @@ import javax.inject.Inject
 class TripListPresenter @Inject constructor(
     private val tripsInteractor: TripsInteractor, private val authInteractor: AuthInteractor
 ) {
-
-    /*suspend fun add(newItem: TripListItem): List<TripListItem> = withIOContext {
-        return@withIOContext tripsInteractor.add(newItem)
-    }*/
-
     suspend fun getUserEmail(): String? = withIOContext {
         return@withIOContext authInteractor.getCurrentUserEmail()
     }

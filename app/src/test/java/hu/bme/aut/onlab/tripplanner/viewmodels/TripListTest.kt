@@ -12,12 +12,15 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TripListViewModelTest : ViewModelTest() {
+class TripsViewModelTest : ViewModelTest() {
+
     private lateinit var tripsPresenter: TripsPresenter
     private lateinit var viewModel: TripsViewModel
 
@@ -39,47 +42,57 @@ class TripListViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun tripsLoadedTest() = runTest {
-        coEvery { tripsPresenter.load() } returns listOf(MOCK_TRIP)
+    fun `addListener collects trips and updates state`() = runTest {
+        coEvery { tripsPresenter.addListener() } returns flowOf(listOf(MOCK_TRIP))
 
         viewModel.observeStateAndEvents { stateObserver, _ ->
             stateObserver.assertObserved(Loading)
         }
 
-        viewModel.load()
-        coVerify(exactly = 1) { tripsPresenter.load() }
         viewModel.observeStateAndEvents { stateObserver, _ ->
-            stateObserver.assertObserved(TripsContent(trips = listOf(MOCK_TRIP), loading = false))
+            viewModel.addListener()
+            advanceUntilIdle()
+
+            stateObserver.assertObserved(
+                Loading,
+                TripsContent(loading = true),
+                TripsContent(trips = listOf(MOCK_TRIP), loading = false)
+            )
         }
     }
 
     @Test
-    fun tripsEditedTest() = runTest {
-        coEvery { tripsPresenter.edit(MOCK_TRIP) } returns listOf(MOCK_TRIP)
+    fun `addFB delegates to presenter`() = runTest {
+        coEvery { tripsPresenter.addFB(MOCK_TRIP) } returns Unit
+
+        viewModel.addFB(MOCK_TRIP)
+
+        coVerify(exactly = 1) { tripsPresenter.addFB(MOCK_TRIP) }
+    }
+
+    @Test
+    fun `editFB delegates to presenter and sets loading state`() = runTest {
+        coEvery { tripsPresenter.editFB(MOCK_TRIP) } returns Unit
 
         viewModel.observeStateAndEvents { stateObserver, _ ->
             stateObserver.assertObserved(Loading)
         }
 
-        viewModel.edit(MOCK_TRIP)
-        coVerify(exactly = 1) { tripsPresenter.edit(MOCK_TRIP) }
+        viewModel.editFB(MOCK_TRIP)
+
+        coVerify(exactly = 1) { tripsPresenter.editFB(MOCK_TRIP) }
+
         viewModel.observeStateAndEvents { stateObserver, _ ->
-            stateObserver.assertObserved(TripsContent(trips = listOf(MOCK_TRIP), loading = false))
+            stateObserver.assertObserved(TripsContent(loading = true))
         }
     }
 
     @Test
-    fun tripsRemovedTest() = runTest {
-        coEvery { tripsPresenter.remove(MOCK_TRIP) } returns listOf(MOCK_TRIP)
+    fun `deleteFB delegates to presenter`() = runTest {
+        coEvery { tripsPresenter.removeFB(MOCK_TRIP) } returns Unit
 
-        viewModel.observeStateAndEvents { stateObserver, _ ->
-            stateObserver.assertObserved(Loading)
-        }
+        viewModel.deleteFB(MOCK_TRIP)
 
-        viewModel.remove(MOCK_TRIP)
-        coVerify(exactly = 1) { tripsPresenter.remove(MOCK_TRIP) }
-        viewModel.observeStateAndEvents { stateObserver, _ ->
-            stateObserver.assertObserved(TripsContent(trips = listOf(MOCK_TRIP), loading = true))
-        }
+        coVerify(exactly = 1) { tripsPresenter.removeFB(MOCK_TRIP) }
     }
 }

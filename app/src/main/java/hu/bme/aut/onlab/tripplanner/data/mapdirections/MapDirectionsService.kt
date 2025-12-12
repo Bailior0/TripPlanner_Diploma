@@ -4,7 +4,6 @@ import hu.bme.aut.onlab.tripplanner.BuildConfig
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
-import javax.inject.Named
 
 interface MapDirectionsService {
     @GET("directions/json")

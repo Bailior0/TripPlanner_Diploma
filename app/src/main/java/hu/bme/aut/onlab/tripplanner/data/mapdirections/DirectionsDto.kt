@@ -1,6 +1,5 @@
 package hu.bme.aut.onlab.tripplanner.data.mapdirections
 
-import android.util.Log
 import com.google.android.gms.maps.model.LatLng
 
 data class DirectionsDto(
@@ -82,9 +81,6 @@ data class DirectionsDto(
                 data class Polyline(
                     val points: String
                 ){
-
-                    /* to decode polyline String to list of latLng
-                    * so we can draw route using the coordinates */
 
                     fun decodePolyline(encoded: String): List<LatLng> {
                         val poly = ArrayList<LatLng>()

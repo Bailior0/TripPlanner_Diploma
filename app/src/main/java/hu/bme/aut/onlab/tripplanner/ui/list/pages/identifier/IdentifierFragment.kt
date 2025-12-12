@@ -71,7 +71,5 @@ class IdentifierFragment: RainbowCakeFragment<IdentifierViewState, IdentifierVie
             intent.data = Uri.parse("https://www.google.com/search?q=$prediction")
             startActivity(intent)
         }
-        /*else
-            Snackbar.make(requireView(), R.string.network_error, Snackbar.LENGTH_SHORT).show()*/
     }
 }

@@ -4,7 +4,11 @@ import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -34,34 +38,32 @@ import hu.bme.aut.onlab.tripplanner.ui.list.pages.calendar.CalendarFragment
 import hu.bme.aut.onlab.tripplanner.ui.list.pages.identifier.IdentifierFragment
 import hu.bme.aut.onlab.tripplanner.ui.list.pages.maps.MapsFragment
 import hu.bme.aut.onlab.tripplanner.ui.list.pages.trips.TripsFragment
-import hu.bme.aut.onlab.tripplanner.views.theme.Purple700
-import hu.bme.aut.onlab.tripplanner.views.theme.Teal200
+import hu.bme.aut.onlab.tripplanner.ui.list.pages.recommendation.RecommendationFragment
+import hu.bme.aut.onlab.tripplanner.views.theme.BrandPrimary
+import hu.bme.aut.onlab.tripplanner.views.theme.BrandSecondary
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreenView(fragmentManager: FragmentManager, tripsFragment: TripsFragment, calendarFragment: CalendarFragment, mapsFragment: MapsFragment, identifierFragment: IdentifierFragment, accountFragment: AccountFragment) {
+fun MainScreenView(fragmentManager: FragmentManager, tripsFragment: TripsFragment, calendarFragment: CalendarFragment, mapsFragment: MapsFragment, identifierFragment: IdentifierFragment, recommendationFragment: RecommendationFragment, accountFragment: AccountFragment) {
     val navController = rememberNavController()
     Scaffold(
         modifier = Modifier
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .fillMaxSize()
+            .padding(WindowInsets.systemBars.asPaddingValues()),
         topBar = {
             TopAppBar(
                 title = {
                     Text("Trip Planner")
                 },
-                backgroundColor = Purple700,
+                backgroundColor = BrandPrimary,
                 contentColor = Color.White
             )
         },
         bottomBar = { BottomNavigation(navController = navController) },
-        /*floatingActionButton = {
-            FloatingActionButton(onClick = { onFabClicked() }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
-        }*/
     ) {
 
-        NavigationGraph(navController = navController, fragmentManager = fragmentManager, tripsFragment = tripsFragment, calendarFragment = calendarFragment, mapsFragment = mapsFragment, identifierFragment = identifierFragment, accountFragment = accountFragment)
+        NavigationGraph(navController = navController, fragmentManager = fragmentManager, tripsFragment = tripsFragment, calendarFragment = calendarFragment, mapsFragment = mapsFragment, identifierFragment = identifierFragment, recommendationFragment = recommendationFragment, accountFragment = accountFragment)
     }
 }
 @Composable
@@ -71,11 +73,12 @@ fun BottomNavigation(navController: NavController) {
         BottomNavItem.Calendar,
         BottomNavItem.Maps,
         BottomNavItem.Identifier,
+        BottomNavItem.Recommendation,
         BottomNavItem.Account
     )
     androidx.compose.material.BottomNavigation(
-        backgroundColor = Teal200,
-        contentColor = Color.Black
+        backgroundColor = BrandSecondary,
+        contentColor = Color.Black,
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
@@ -106,7 +109,7 @@ fun BottomNavigation(navController: NavController) {
 }
 
 @Composable
-fun NavigationGraph(navController: NavHostController, fragmentManager: FragmentManager, tripsFragment: TripsFragment, calendarFragment: CalendarFragment, mapsFragment: MapsFragment, identifierFragment: IdentifierFragment, accountFragment: AccountFragment) {
+fun NavigationGraph(navController: NavHostController, fragmentManager: FragmentManager, tripsFragment: TripsFragment, calendarFragment: CalendarFragment, mapsFragment: MapsFragment, identifierFragment: IdentifierFragment, accountFragment: AccountFragment, recommendationFragment: RecommendationFragment) {
     NavHost(navController, startDestination = BottomNavItem.Trips.screen_route) {
         composable(BottomNavItem.Trips.screen_route) {
             FragmentContainer(
@@ -134,6 +137,13 @@ fun NavigationGraph(navController: NavHostController, fragmentManager: FragmentM
                 modifier = Modifier.fillMaxSize(),
                 fragmentManager = fragmentManager,
                 commit = { add(it, identifierFragment) }
+            )
+        }
+        composable(BottomNavItem.Recommendation.screen_route) {
+            FragmentContainer(
+                modifier = Modifier.fillMaxSize(),
+                fragmentManager = fragmentManager,
+                commit = { add(it, recommendationFragment) }
             )
         }
         composable(BottomNavItem.Account.screen_route) {

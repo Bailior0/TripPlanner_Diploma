@@ -11,11 +11,6 @@ class CalendarViewModel @Inject constructor(private val calendarPresenter: Calen
     Loading
 ) {
 
-    /*fun load() = execute {
-        viewState = TripsContent(loading = true)
-        viewState = TripsContent(trips = calendarPresenter.load(), loading = false)
-    }*/
-
     fun addListener() = execute {
         viewState = CalendarContent(loading = true)
         viewModelScope.launch {

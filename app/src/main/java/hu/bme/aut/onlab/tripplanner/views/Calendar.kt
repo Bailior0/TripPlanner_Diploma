@@ -5,34 +5,40 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AirplaneTicket
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.lightColors
-import androidx.compose.material.ripple.LocalRippleTheme
-import androidx.compose.material.ripple.RippleTheme
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -45,6 +51,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -87,7 +94,7 @@ private val toolbarColor = Color.White
 private val selectedItemColor = Color.Gray
 private val inActiveTextColor = Color.LightGray
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun Calendar(
     trips: List<TripListItem>
@@ -122,11 +129,9 @@ fun Calendar(
         val coroutineScope = rememberCoroutineScope()
         val visibleMonth = rememberFirstCompletelyVisibleMonth(state)
         LaunchedEffect(visibleMonth) {
-            // Clear selection if we scroll to a new month.
             selection = null
         }
 
-        // Draw light content on dark background.
         CompositionLocalProvider(LocalContentColor provides lightColors().onSurface) {
             SimpleCalendarTitle(
                 modifier = Modifier
@@ -148,27 +153,25 @@ fun Calendar(
                 modifier = Modifier.wrapContentWidth(),
                 state = state,
                 dayContent = { day ->
-                    CompositionLocalProvider(LocalRippleTheme provides Example3RippleTheme) {
-                        val colors = if (day.position == DayPosition.MonthDate) {
-                            groupedTrips[day.date].orEmpty().map {
-                                when(it.category) {
-                                    TripListItem.Category.OUTDOORS -> Outdoors
-                                    TripListItem.Category.BEACHES -> Beaches
-                                    TripListItem.Category.SIGHTSEEING -> Sightseeing
-                                    TripListItem.Category.SKIING -> Skiing
-                                    TripListItem.Category.BUSINESS -> Business
-                                }
+                    val colors = if (day.position == DayPosition.MonthDate) {
+                        groupedTrips[day.date].orEmpty().map {
+                            when (it.category) {
+                                TripListItem.Category.OUTDOORS -> Outdoors
+                                TripListItem.Category.BEACHES -> Beaches
+                                TripListItem.Category.SIGHTSEEING -> Sightseeing
+                                TripListItem.Category.SKIING -> Skiing
+                                TripListItem.Category.BUSINESS -> Business
                             }
-                        } else {
-                            emptyList()
                         }
-                        Day(
-                            day = day,
-                            isSelected = selection == day,
-                            colors = colors,
-                        ) { clicked ->
-                            selection = clicked
-                        }
+                    } else {
+                        emptyList()
+                    }
+                    Day(
+                        day = day,
+                        isSelected = selection == day,
+                        colors = colors,
+                    ) { clicked ->
+                        selection = clicked
                     }
                 },
                 monthHeader = {
@@ -198,16 +201,17 @@ private fun Day(
 ) {
     Box(
         modifier = Modifier
-            .aspectRatio(1f) // This is important for square-sizing!
+            .aspectRatio(1f)
             .border(
                 width = if (isSelected) 1.dp else 0.dp,
                 color = if (isSelected) selectedItemColor else Color.Transparent,
             )
             .padding(1.dp)
             .background(color = itemBackgroundColor)
-            // Disable clicks on inDates/outDates
             .clickable(
                 enabled = day.position == DayPosition.MonthDate,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(color = Color.Gray),
                 onClick = { onClick(day) },
             ),
     ) {
@@ -263,110 +267,114 @@ private fun MonthHeader(
 }
 
 @Composable
-private fun LazyItemScope.TripListInformation(trip: TripListItem) {
+fun LazyItemScope.TripListInformation(trip: TripListItem) {
+
+    val categoryColor = when (trip.category) {
+        TripListItem.Category.OUTDOORS -> Outdoors
+        TripListItem.Category.BEACHES -> Beaches
+        TripListItem.Category.SIGHTSEEING -> Sightseeing
+        TripListItem.Category.SKIING -> Skiing
+        TripListItem.Category.BUSINESS -> Business
+    }
+
     Row(
         modifier = Modifier
             .fillParentMaxWidth()
-            .height(IntrinsicSize.Max),
-        horizontalArrangement = Arrangement.spacedBy(2.dp),
+            .padding(vertical = 6.dp, horizontal = 8.dp)
     ) {
-        Box(
+
+        Column(
             modifier = Modifier
-                .background(
-                    color = when(trip.category) {
-                        TripListItem.Category.OUTDOORS -> Outdoors
-                        TripListItem.Category.BEACHES -> Beaches
-                        TripListItem.Category.SIGHTSEEING -> Sightseeing
-                        TripListItem.Category.SKIING -> Skiing
-                        TripListItem.Category.BUSINESS -> Business
-                    }
-                )
-                .fillParentMaxWidth(1 / 5f)
-                .aspectRatio(1.5f),
-            contentAlignment = Alignment.Center,
+                .width(90.dp)
+                .height(80.dp)
+                .background(categoryColor.copy(alpha = 0.25f), RoundedCornerShape(20.dp))
+                .padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
+            Icon(
+                imageVector = Icons.Filled.Explore,
+                contentDescription = null,
+                tint = categoryColor,
+                modifier = Modifier.size(22.dp)
+            )
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = trip.date,
                 textAlign = TextAlign.Center,
-                lineHeight = 17.sp,
-                fontSize = 12.sp,
+                fontSize = 10.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colors.onSurface
             )
         }
-        Box(
-            modifier = Modifier
-                .background(color = itemBackgroundColor)
-                .weight(1f)
-                .fillMaxHeight(),
-        ) {
-            TripInformation(trip)
-        }
-        /*Box(
-            modifier = Modifier
-                .background(color = itemBackgroundColor)
-                .weight(1f)
-                .fillMaxHeight(),
-        ) {
-            AirportInformation(trip.place)
-        }*/
-    }
-    Divider(color = pageBackgroundColor, thickness = 2.dp)
-}
 
-@Composable
-private fun TripInformation(trip: TripListItem) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-    ) {
-        Box(
+        Spacer(modifier = Modifier.width(10.dp))
+
+        Card(
             modifier = Modifier
-                .weight(0.3f)
-                .fillMaxHeight()
-                .fillMaxHeight(),
-            contentAlignment = Alignment.CenterEnd,
+                .weight(1f)
+                .height(80.dp),
+            shape = RoundedCornerShape(20.dp),
+            elevation = 4.dp,
+            backgroundColor = MaterialTheme.colors.surface
         ) {
-            Icon(imageVector  = Icons.Filled.Explore, null)
-        }
-        Column(
-            modifier = Modifier
-                .weight(0.7f)
-                .fillMaxHeight()
-                .fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = trip.place,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Black,
-            )
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = trip.country,
-                textAlign = TextAlign.Center,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Light,
-            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = trip.place,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onSurface
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Text(
+                        text = trip.country,
+                        fontSize = 14.sp,
+                        color = Color.Gray,
+                    )
+                }
+
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = categoryColor.copy(alpha = 0.15f),
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                        .padding(horizontal = 10.dp, vertical = 4.dp)
+                ) {
+                    Text(
+                        text = trip.category.name,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = categoryColor
+                    )
+                }
+            }
         }
     }
+
+    Divider(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        thickness = 1.dp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
+    )
 }
 
-// The default dark them ripple is too bright so we tone it down.
-private object Example3RippleTheme : RippleTheme {
-    @Composable
-    override fun defaultColor() = RippleTheme.defaultRippleColor(Color.Gray, lightTheme = false)
-
-    @Composable
-    override fun rippleAlpha() = RippleTheme.defaultRippleAlpha(Color.Gray, lightTheme = false)
-}
-
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun rememberFirstCompletelyVisibleMonth(state: CalendarState): CalendarMonth {
     val visibleMonth = remember(state) { mutableStateOf(state.firstVisibleMonth) }
-    // Only take non-null values as null will be produced when the
-    // list is mid-scroll as no index will be completely visible.
     LaunchedEffect(state) {
         snapshotFlow { state.layoutInfo.completelyVisibleMonths.firstOrNull() }
             .filterNotNull()
@@ -376,6 +384,7 @@ fun rememberFirstCompletelyVisibleMonth(state: CalendarState): CalendarMonth {
 }
 
 private val CalendarLayoutInfo.completelyVisibleMonths: List<CalendarMonth>
+    @RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
     get() {
         val visibleItemsInfo = this.visibleMonthsInfo.toMutableList()
         return if (visibleItemsInfo.isEmpty()) {
@@ -401,7 +410,7 @@ fun DayOfWeek.displayText(uppercase: Boolean = false): String {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Composable
 fun SimpleCalendarTitle(
     modifier: Modifier,
@@ -445,7 +454,12 @@ private fun CalendarNavigationIcon(
         .fillMaxHeight()
         .aspectRatio(1f)
         .clip(shape = CircleShape)
-        .clickable(role = Role.Button, onClick = onClick),
+        .clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = ripple(color = Color.Gray),
+            role = Role.Button,
+            onClick = onClick
+        ),
 ) {
     Icon(
         modifier = Modifier
@@ -457,18 +471,18 @@ private fun CalendarNavigationIcon(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 fun YearMonth.displayText(short: Boolean = false): String {
     return "${this.month.displayText(short = short)} ${this.year}"
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 fun Month.displayText(short: Boolean = true): String {
     val style = if (short) TextStyle.SHORT else TextStyle.FULL
     return getDisplayName(style, Locale.ENGLISH)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
+@RequiresApi(Build.VERSION_CODES.VANILLA_ICE_CREAM)
 @Preview(heightDp = 600)
 @Composable
 private fun Example3Preview() {

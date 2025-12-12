@@ -13,26 +13,14 @@ class TripsPresenter @Inject constructor(private val tripsInteractor: TripsInter
     }
 
     suspend fun addFB(newItem: TripListItem) = withIOContext {
-        tripsInteractor.addFB(newItem)
+        tripsInteractor.addTrip(newItem)
     }
 
     suspend fun editFB(editedItem: TripListItem) = withIOContext {
-        tripsInteractor.editFB(editedItem)
+        tripsInteractor.editTrip(editedItem)
     }
 
     suspend fun removeFB(removedItem: TripListItem) = withIOContext {
-        tripsInteractor.removeFB(removedItem)
+        tripsInteractor.removeTrip(removedItem)
     }
-
-    /*suspend fun load(): List<TripListItem> = withIOContext {
-        return@withIOContext tripsInteractor.load()
-    }
-
-    suspend fun edit(editedItem: TripListItem): List<TripListItem> = withIOContext {
-        return@withIOContext tripsInteractor.edit(editedItem)
-    }
-
-    suspend fun remove(removedItem: TripListItem): List<TripListItem> = withIOContext {
-        return@withIOContext tripsInteractor.remove(removedItem)
-    }*/
 }

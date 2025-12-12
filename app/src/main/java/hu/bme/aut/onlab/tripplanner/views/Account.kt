@@ -1,18 +1,11 @@
 package hu.bme.aut.onlab.tripplanner.views
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -20,12 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.onlab.tripplanner.R
@@ -38,128 +29,154 @@ fun Account(
     onPasswordChange: () -> Unit,
     onLogout: () -> Unit
 ) {
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(0.dp, 0.dp, 0.dp, 70.dp),
+            .padding(bottom = 50.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
+
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                //.verticalScroll(rememberScrollState())
-                .padding(12.dp, 12.dp, 12.dp, 25.dp)
-                .weight(1f, false)
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
+            Image(
+                painter = painterResource(id = R.drawable.icon),
+                contentDescription = null,
                 modifier = Modifier
-                    .padding(top = 20.dp, bottom = 20.dp)
                     .size(120.dp)
-                    .clip(CircleShape)
-                    .align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = 6.dp,
+                shape = RoundedCornerShape(16.dp),
+                backgroundColor = MaterialTheme.colors.surface
             ) {
-                Image(painter = painterResource(id = R.drawable.icon), contentDescription = null, modifier = Modifier.fillMaxSize())
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "TripPlanner",
+                        fontWeight = FontWeight.ExtraBold,
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colors.primary
+                    )
+                    Spacer(Modifier.height(10.dp))
+
+                    Text(
+                        text = user.name,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                    Spacer(Modifier.height(6.dp))
+
+                    Text(
+                        text = user.email,
+                        fontSize = 16.sp,
+                        color = Color.Gray
+                    )
+                }
             }
 
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
-                        append("TripPlanner")
-                    }
-                },
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
-            )
+            Spacer(modifier = Modifier.height(20.dp))
 
             Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
-                        append(user.name)
-                    }
-                },
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
-            )
-
-            Text(
-                buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 18.sp)) {
-                        append(user.email)
-                    }
-                },
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .padding(0.dp, 10.dp, 0.dp, 0.dp)
-            )
-            Row(
+                text = "Achievements",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(5.dp, 30.dp, 5.dp, 5.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(bottom = 12.dp),
+                textAlign = TextAlign.Start
+            )
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = 4.dp,
+                shape = RoundedCornerShape(14.dp)
             ) {
-                if(user.tripSize > 0)
-                    Image(
-                        painter = painterResource(id = R.drawable.travelguide),
-                        contentDescription = null,
-                        modifier = Modifier.size(80.dp)
-                    )
-                if(user.tripSize >= 5)
-                    Image(
-                        painter = painterResource(id = R.drawable.baggage),
-                        contentDescription = null,
-                        modifier = Modifier.size(80.dp)
-                    )
-                if(user.tripSize >= 15)
-                    Image(
-                        painter = painterResource(id = R.drawable.worldwide),
-                        contentDescription = null,
-                        modifier = Modifier.size(80.dp)
-                    )
-                if(user.tripSize >= 30)
-                    Image(
-                        painter = painterResource(id = R.drawable.astronaut),
-                        contentDescription = null,
-                        modifier = Modifier.size(80.dp)
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (user.tripSize > 0)
+                        Image(
+                            painter = painterResource(id = R.drawable.travelguide),
+                            contentDescription = null,
+                            modifier = Modifier.size(60.dp)
+                        )
+
+                    if (user.tripSize >= 5)
+                        Image(
+                            painter = painterResource(id = R.drawable.baggage),
+                            contentDescription = null,
+                            modifier = Modifier.size(60.dp)
+                        )
+
+                    if (user.tripSize >= 15)
+                        Image(
+                            painter = painterResource(id = R.drawable.worldwide),
+                            contentDescription = null,
+                            modifier = Modifier.size(60.dp)
+                        )
+
+                    if (user.tripSize >= 30)
+                        Image(
+                            painter = painterResource(id = R.drawable.astronaut),
+                            contentDescription = null,
+                            modifier = Modifier.size(60.dp)
+                        )
+                }
             }
         }
 
-        Column( ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 30.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
             Button(
-                onClick = {
-                    onEmailChange()
-                },
+                onClick = { onEmailChange() },
                 modifier = Modifier
-                    .padding(vertical = 2.dp, horizontal = 50.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(10),
+                    .fillMaxWidth(0.85f)
+                    .height(52.dp),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Change email")
+                Text("Change email", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
+
             Button(
-                onClick = {
-                    onPasswordChange()
-                },
+                onClick = { onPasswordChange() },
                 modifier = Modifier
-                    .padding(vertical = 2.dp, horizontal = 50.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(10),
+                    .fillMaxWidth(0.85f)
+                    .height(52.dp),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Change password")
+                Text("Change password", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
+
             Button(
-                onClick = {
-                    onLogout()
-                },
+                onClick = { onLogout() },
                 modifier = Modifier
-                    .padding(vertical = 2.dp, horizontal = 50.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(10),
+                    .fillMaxWidth(0.85f)
+                    .height(52.dp),
+                shape = RoundedCornerShape(12.dp)
             ) {
-                Text("Log out")
+                Text("Log out", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             }
         }
     }

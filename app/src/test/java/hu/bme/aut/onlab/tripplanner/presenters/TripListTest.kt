@@ -1,19 +1,22 @@
 package hu.bme.aut.onlab.tripplanner.presenters
 
 import co.zsmb.rainbowcake.test.base.PresenterTest
-import com.google.common.truth.Truth
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import hu.bme.aut.onlab.tripplanner.domain.TripsInteractor
 import hu.bme.aut.onlab.tripplanner.ui.list.pages.trips.TripsPresenter
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class TripListTestPresenterTest : PresenterTest() {
+class TripsPresenterTest : PresenterTest() {
+
     private lateinit var tripsInteractor: TripsInteractor
     private lateinit var presenter: TripsPresenter
 
@@ -35,29 +38,39 @@ class TripListTestPresenterTest : PresenterTest() {
     }
 
     @Test
-    fun tripsLoadedTest() = runBlocking {
-        coEvery { tripsInteractor.load() } returns listOf(MOCK_TRIP)
+    fun `addListener returns the flow from TripsInteractor`() = runBlocking {
+        val flowTrips = flowOf(listOf(MOCK_TRIP))
+        coEvery { tripsInteractor.addListener() } returns flowTrips
 
-        val items = presenter.load()
+        val result = presenter.addListener()
 
-        Truth.assertThat(items).isEqualTo(listOf(MOCK_TRIP))
+        assertEquals(flowTrips, result)
     }
 
     @Test
-    fun tripsEditedTest() = runBlocking {
-        coEvery { tripsInteractor.edit(MOCK_TRIP) } returns listOf(MOCK_TRIP)
+    fun `addFB delegates to TripsInteractor_addTrip`() = runBlocking {
+        coEvery { tripsInteractor.addTrip(MOCK_TRIP) } returns Unit
 
-        val items = presenter.edit(MOCK_TRIP)
+        presenter.addFB(MOCK_TRIP)
 
-        Truth.assertThat(items).isEqualTo(listOf(MOCK_TRIP))
+        coVerify(exactly = 1) { tripsInteractor.addTrip(MOCK_TRIP) }
     }
 
     @Test
-    fun tripsRemovedTest() = runBlocking {
-        coEvery { tripsInteractor.remove(MOCK_TRIP) } returns listOf(MOCK_TRIP)
+    fun `editFB delegates to TripsInteractor_editTrip`() = runBlocking {
+        coEvery { tripsInteractor.editTrip(MOCK_TRIP) } returns Unit
 
-        val items = presenter.remove(MOCK_TRIP)
+        presenter.editFB(MOCK_TRIP)
 
-        Truth.assertThat(items).isEqualTo(listOf(MOCK_TRIP))
+        coVerify(exactly = 1) { tripsInteractor.editTrip(MOCK_TRIP) }
+    }
+
+    @Test
+    fun `removeFB delegates to TripsInteractor_removeTrip`() = runBlocking {
+        coEvery { tripsInteractor.removeTrip(MOCK_TRIP) } returns Unit
+
+        presenter.removeFB(MOCK_TRIP)
+
+        coVerify(exactly = 1) { tripsInteractor.removeTrip(MOCK_TRIP) }
     }
 }

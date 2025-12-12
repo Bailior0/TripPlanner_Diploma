@@ -57,7 +57,7 @@ fun Maps(
     var lastKnownLocation by remember { mutableStateOf<Location?>(null) }
     var deviceLatLng by remember { mutableStateOf(LatLng(0.0, 0.0)) }
     val deviceCameraPositionState = rememberCameraPositionState {position = CameraPosition.fromLatLngZoom(deviceLatLng, 20f)}
-    //Location Update Callback
+
     val locationCallBack = object : LocationCallback(){
         override fun onLocationResult(locationResult: LocationResult) {
             super.onLocationResult(locationResult)
@@ -66,10 +66,9 @@ fun Maps(
             }
         }
     }
-    //Update time
 
     val UPDATE_TIME : Long = 200000
-    //Update locationRequest
+
     val locationRequest : LocationRequest = LocationRequest.create().apply{
         interval = UPDATE_TIME
         fastestInterval = UPDATE_TIME/4

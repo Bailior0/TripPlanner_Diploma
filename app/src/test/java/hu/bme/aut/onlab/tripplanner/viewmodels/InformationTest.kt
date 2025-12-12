@@ -17,6 +17,7 @@ import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class InformationViewModelTest : ViewModelTest() {
+
     private lateinit var informationPresenter: InformationPresenter
     private lateinit var viewModel: InformationViewModel
 
@@ -40,19 +41,20 @@ class InformationViewModelTest : ViewModelTest() {
     }
 
     @Test
-    fun informationTripTest() = runTest {
+    fun `setTrip updates state to DetailsContent`() = runTest {
         viewModel.observeStateAndEvents { stateObserver, _ ->
             stateObserver.assertObserved(Loading)
         }
 
         viewModel.setTrip(MOCK_TRIP)
+
         viewModel.observeStateAndEvents { stateObserver, _ ->
-            stateObserver.assertObserved(DetailsContent(false, MOCK_TRIP))
+            stateObserver.assertObserved(DetailsContent(isLoading = false, trip = MOCK_TRIP))
         }
     }
 
     @Test
-    fun informationWeatherTest() = runTest {
+    fun `setWeather uses presenter and sets WeatherContent`() = runTest {
         coEvery { informationPresenter.getWeather("Paris", MOCK_CONTEXT) } returns MOCK_WEATHER
 
         viewModel.observeStateAndEvents { stateObserver, _ ->
@@ -60,9 +62,17 @@ class InformationViewModelTest : ViewModelTest() {
         }
 
         viewModel.setWeather(MOCK_TRIP, "Paris", MOCK_CONTEXT)
+
         coVerify(exactly = 1) { informationPresenter.getWeather("Paris", MOCK_CONTEXT) }
+
         viewModel.observeStateAndEvents { stateObserver, _ ->
-            stateObserver.assertObserved(WeatherContent(false, MOCK_TRIP, MOCK_WEATHER))
+            stateObserver.assertObserved(
+                WeatherContent(
+                    isLoading = false,
+                    trip = MOCK_TRIP,
+                    weather = MOCK_WEATHER
+                )
+            )
         }
     }
 }

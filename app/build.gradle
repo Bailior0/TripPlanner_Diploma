@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
@@ -14,13 +13,17 @@ def apikeyPropertiesFile = rootProject.file("apikey.properties")
 def apikeyProperties = new Properties()
 apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
 
+configurations.configureEach {
+    exclude group: 'org.jetbrains.kotlin', module: 'kotlin-android-extensions-runtime'
+}
+
 android {
-    compileSdk 34
+    compileSdk 36
 
     defaultConfig {
         applicationId "hu.bme.aut.onlab.tripplanner"
         minSdk 23
-        targetSdk 34
+        targetSdk 35
         versionCode 1
         versionName "1.0"
 
@@ -36,126 +39,135 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
+
     buildFeatures {
         viewBinding true
         compose true
         mlModelBinding true
         buildConfig true
     }
+
     testOptions {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }
+
     namespace 'hu.bme.aut.onlab.tripplanner'
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.13.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.core:core-ktx:1.17.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.6'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.9.4'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation 'com.google.firebase:firebase-auth-ktx:23.0.0'
+    // Firebase
+    implementation 'com.google.firebase:firebase-auth-ktx:23.2.1'
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    implementation 'com.google.firebase:firebase-firestore:25.1.0'
-    implementation 'com.google.firebase:firebase-firestore-ktx:25.1.0'
-    implementation 'com.google.firebase:firebase-storage:21.0.1'
-    implementation 'com.google.firebase:firebase-storage-ktx:21.0.1'
+    implementation 'com.google.firebase:firebase-firestore-ktx:25.1.4'
+    implementation 'com.google.firebase:firebase-storage-ktx:21.0.2'
 
+    // Compose
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.foundation:foundation:$compose_version"
     implementation "androidx.compose.foundation:foundation-layout:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
-    implementation 'androidx.test:monitor:1.7.2'
-    implementation 'androidx.test.ext:junit-ktx:1.2.1'
-    implementation 'com.android.volley:volley:1.2.1'
+    implementation 'androidx.compose.runtime:runtime-saveable:1.9.3'
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    implementation 'androidx.navigation:navigation-compose:2.8.3'
-    implementation 'androidx.activity:activity-compose:1.9.3'
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
-    implementation 'com.google.maps.android:maps-compose:6.1.2'
-    implementation ("androidx.compose.material:material-icons-extended"){
-        version {
-            strictly("1.6.8")
-        }
-    }
-    implementation ('androidx.compose.material:material'){
-        version {
-            strictly("1.6.8")
-        }
-    }
-    implementation ("androidx.compose.material:material-ripple-android"){
-        version {
-            strictly("1.6.8")
-        }
-    }
-    implementation ("androidx.compose.material:material-android"){
-        version {
-            strictly("1.6.8")
-        }
-    }
 
-    implementation 'org.tensorflow:tensorflow-lite-support:0.4.4'
-    implementation 'org.tensorflow:tensorflow-lite-metadata:0.4.4'
-    implementation 'org.tensorflow:tensorflow-lite-gpu:2.16.1'
+    implementation 'androidx.navigation:navigation-compose:2.9.5'
+    implementation 'androidx.activity:activity-compose:1.11.0'
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.1.1"
+    implementation 'com.google.maps.android:maps-compose:6.12.1'
 
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.3'
-    implementation 'com.google.android.gms:play-services-maps:19.0.0'
+    implementation("androidx.compose.material:material:1.6.8")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
+    implementation("androidx.compose.material:material-android:1.6.8")
+    implementation("androidx.compose.material:material-ripple-android:1.6.8")
+
+    implementation("androidx.compose.material3:material3:1.4.0")
+    implementation("androidx.compose.material3:material3-window-size-class:1.4.0")
+    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.5.0-alpha06")
+
+    // TensorFlow
+    implementation 'org.tensorflow:tensorflow-lite-support:0.5.0'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.5.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.17.0'
+
+    // Navigation + Maps + Location
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.9.5'
+    implementation 'com.google.android.gms:play-services-maps:19.2.0'
     implementation 'com.google.android.gms:play-services-location:21.3.0'
 
-    def room_version = '2.6.1'
+    // Room
+    def room_version = '2.8.2'
     implementation "androidx.room:room-runtime:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
 
-    implementation 'com.github.bumptech.glide:glide:4.16.0'
-    implementation 'com.github.skydoves:landscapist-glide:2.4.1'
+    // Image loading
+    implementation 'com.github.bumptech.glide:glide:5.0.5'
+    implementation 'com.github.skydoves:landscapist-glide:2.6.1'
     implementation 'io.coil-kt:coil-compose:2.7.0'
 
-    def retrofit_version = '2.11.0'
+    // Networking
+    def retrofit_version = '3.0.0'
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:5.2.1"
 
+    // Calendar
     implementation 'com.applandeo:material-calendar-view:1.9.2'
+    implementation 'com.kizitonwose.calendar:compose:2.9.0'
 
+    // Coroutines
     def coroutines_version = '1.9.0'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
 
+    // Rainbow Cake + Hilt
     def rainbow_cake_version = "1.6.0"
     implementation "co.zsmb:rainbow-cake-core:$rainbow_cake_version"
     implementation "co.zsmb:rainbow-cake-navigation:$rainbow_cake_version"
     implementation "co.zsmb:rainbow-cake-hilt:$rainbow_cake_version"
     testImplementation "co.zsmb:rainbow-cake-test:$rainbow_cake_version"
 
-    def dagger_version = '2.52'
+    def dagger_version = '2.57.2'
     implementation "com.google.dagger:dagger:$dagger_version"
     ksp "com.google.dagger:dagger-compiler:$dagger_version"
     implementation "com.google.dagger:hilt-android:$dagger_version"
     ksp "com.google.dagger:hilt-android-compiler:$dagger_version"
 
-    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0'
-    testImplementation 'io.mockk:mockk:1.13.13'
-    testImplementation 'androidx.test:core:1.6.1'
-    testImplementation 'com.google.truth:truth:1.4.4'
+    // Testing
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2'
+    testImplementation 'io.mockk:mockk:1.14.6'
+    testImplementation 'androidx.test:core:1.7.0'
+    testImplementation 'com.google.truth:truth:1.4.5'
+    implementation 'androidx.test:monitor:1.8.0'
+    implementation 'androidx.test.ext:junit-ktx:1.3.0'
 
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.2'
-    implementation 'com.kizitonwose.calendar:compose:2.6.0'
+    // Misc
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+    implementation 'org.conscrypt:conscrypt-android:2.5.3'
+    implementation 'com.android.volley:volley:1.2.1'
 
-    implementation 'org.conscrypt:conscrypt-android:2.2.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3"
 }

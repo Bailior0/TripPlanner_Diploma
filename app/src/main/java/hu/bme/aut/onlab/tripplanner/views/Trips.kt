@@ -1,11 +1,14 @@
 package hu.bme.aut.onlab.tripplanner.views
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -15,9 +18,11 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import hu.bme.aut.onlab.tripplanner.R
@@ -35,30 +40,30 @@ fun Trips(
     onEditClicked: (TripListItem) -> Unit,
     onDeleteClicked: (TripListItem) -> Unit
 ) {
-    val data  = mutableListOf<TripListItem>()
-    data.addAll(trips)
-    data.sortBy { it.date }
     var switchState by remember { mutableIntStateOf(0) }
 
+    val sorted = remember(trips) {
+        trips.sortedBy { it.date }
+    }
+
     val calendar = java.util.Calendar.getInstance()
-    val calString = String.format(
+    val today = String.format(
         Locale.getDefault(), "%04d.%02d.%02d.",
-        calendar.get(java.util.Calendar.YEAR), calendar.get(java.util.Calendar.MONTH) + 1, calendar.get(
-            java.util.Calendar.DAY_OF_MONTH)
+        calendar.get(java.util.Calendar.YEAR),
+        calendar.get(java.util.Calendar.MONTH) + 1,
+        calendar.get(java.util.Calendar.DAY_OF_MONTH)
     )
 
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { onFabClicked() },
-                modifier = Modifier
-                    .padding(0.dp, 0.dp, 0.dp, 100.dp)
+                modifier = Modifier.padding(bottom = 90.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
-    ) {
-            innerPadding ->
+    ) { innerPadding ->
 
         Column(
             modifier = Modifier
@@ -71,39 +76,27 @@ fun Trips(
                 switchState
             ) { switchState = it }
 
-            if(switchState == 0)
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(5.dp, 5.dp, 5.dp, 70.dp)
-                ) {
-                    itemsIndexed(data.filter { it.date >= calString }) { _, item ->
-                        TripItem(
-                            item = item,
-                            onItemClicked = onItemClicked,
-                            onItemChanged = onItemChanged,
-                            onEditClicked = onEditClicked,
-                            onDeleteClicked = onDeleteClicked
-                        )
-                    }
+            val shown = if (switchState == 0)
+                sorted.filter { it.date >= today }
+            else
+                sorted.filter { it.date < today }
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 12.dp, end = 12.dp, bottom = 90.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(shown) { item ->
+                    TripItem(
+                        item = item,
+                        onItemClicked = onItemClicked,
+                        onItemChanged = onItemChanged,
+                        onEditClicked = onEditClicked,
+                        onDeleteClicked = onDeleteClicked
+                    )
                 }
-            
-            if(switchState == 1)
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(5.dp, 5.dp, 5.dp, 70.dp)
-                ) {
-                    itemsIndexed(data.filter { it.date < calString }) { _, item ->
-                        TripItem(
-                            item = item,
-                            onItemClicked = onItemClicked,
-                            onItemChanged = onItemChanged,
-                            onEditClicked = onEditClicked,
-                            onDeleteClicked = onDeleteClicked
-                        )
-                    }
-                }
+            }
         }
     }
 }
@@ -119,93 +112,125 @@ fun TripItem(
     var checkedState by remember { mutableStateOf(item.visited) }
     checkedState = item.visited
 
+    val categoryColor = when (item.category) {
+        TripListItem.Category.OUTDOORS -> Outdoors
+        TripListItem.Category.BEACHES -> Beaches
+        TripListItem.Category.SIGHTSEEING -> Sightseeing
+        TripListItem.Category.SKIING -> Skiing
+        TripListItem.Category.BUSINESS -> Business
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(1.dp)
-            .clickable(onClick = {
-                onItemClicked(item)
-            }),
-        shape = RoundedCornerShape(20),
-        elevation = 0.dp,
-        backgroundColor = when(item.category) {
-            TripListItem.Category.OUTDOORS -> Outdoors
-            TripListItem.Category.BEACHES -> Beaches
-            TripListItem.Category.SIGHTSEEING -> Sightseeing
-            TripListItem.Category.SKIING -> Skiing
-            TripListItem.Category.BUSINESS -> Business
-        }
+            .padding(8.dp)
+            .border(
+                width = 3.dp,
+                color = when(item.category) {
+                    TripListItem.Category.OUTDOORS -> Outdoors
+                    TripListItem.Category.BEACHES -> Beaches
+                    TripListItem.Category.SIGHTSEEING -> Sightseeing
+                    TripListItem.Category.SKIING -> Skiing
+                    TripListItem.Category.BUSINESS -> Business
+                },
+                shape = RoundedCornerShape(24.dp)
+            )
+            .clickable { onItemClicked(item) },
+        shape = RoundedCornerShape(24.dp),
+        elevation = 6.dp,
+        backgroundColor = Color.White
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(vertical = 5.dp)
+            verticalAlignment = Alignment.CenterVertically
         ) {
+
+            Box(
+                modifier = Modifier
+                    .width(10.dp)
+                    .fillMaxHeight()
+                    .background(categoryColor)
+            )
+
             Row(
-                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .padding(12.dp)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Checkbox(
-                    checked = checkedState,
-                    onCheckedChange = {
-                        checkedState = it
-                        item.visited = checkedState
-                        onItemChanged(item)
-                    },
-                    modifier = Modifier.offset(x = (-2).dp),
-                    colors = CheckboxDefaults.colors(
-                        checkmarkColor = Color.LightGray,
-                        checkedColor = Color.Black
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(end = 10.dp)
+                ) {
+                    Checkbox(
+                        checked = checkedState,
+                        onCheckedChange = {
+                            checkedState = it
+                            item.visited = checkedState
+                            onItemChanged(item)
+                        }
                     )
-                )
-                Text(
-                    text = stringResource(R.string.visited),
-                    Modifier.padding(end = 5.dp)
-                )
-            }
-            Image(
-                painter = painterResource(
-                    id = when(item.category) {
-                        TripListItem.Category.OUTDOORS -> R.drawable.outdoors
-                        TripListItem.Category.BEACHES -> R.drawable.beaches
-                        TripListItem.Category.SIGHTSEEING -> R.drawable.sightseeing
-                        TripListItem.Category.SKIING -> R.drawable.skiing
-                        TripListItem.Category.BUSINESS -> R.drawable.business
-                    }
-                ),
-                contentDescription = null,
-                modifier = Modifier.size(60.dp)
-            )
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 10.dp, vertical = 5.dp)
-                    .width(90.dp)
-            ) {
-                Text(
-                    text = item.country, color = Color.Black, fontSize = 14.sp, maxLines = 1
-                )
-                Text(
-                    text = item.place, color = Color.Black, fontSize = 14.sp, maxLines = 1
-                )
-                Text(
-                    text = item.date, color = Color.Black, fontSize = 14.sp, maxLines = 1
-                )
-                Text(
-                    text = item.category.name, color = Color.Black, fontSize = 14.sp, maxLines = 1
-                )
-            }
-            Row(
-                horizontalArrangement = Arrangement.End
-            ) {
-                IconButton(
-                    onClick = {onEditClicked(item)},
-                    modifier = Modifier.offset(x = 10.dp)
-                ) {
-                    Icon(imageVector  = Icons.Filled.Edit, "")
+
+                    Image(
+                        painter = painterResource(
+                            id = when (item.category) {
+                                TripListItem.Category.OUTDOORS -> R.drawable.outdoors
+                                TripListItem.Category.BEACHES -> R.drawable.beaches
+                                TripListItem.Category.SIGHTSEEING -> R.drawable.sightseeing
+                                TripListItem.Category.SKIING -> R.drawable.skiing
+                                TripListItem.Category.BUSINESS -> R.drawable.business
+                            }
+                        ),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .padding(top = 4.dp)
+                    )
                 }
-                IconButton(
-                    onClick = {onDeleteClicked(item)}
+
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Icon(imageVector  = Icons.Filled.Delete, "")
+                    Text(
+                        text = item.place,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = item.country,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                    Text(
+                        text = item.date,
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+
+                    Box(
+                        modifier = Modifier
+                            .padding(top = 6.dp)
+                            .background(Color(0x22000000), RoundedCornerShape(8.dp))
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = item.category.name,
+                            fontSize = 12.sp,
+                            color = Color.Black
+                        )
+                    }
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    IconButton(onClick = { onEditClicked(item) }) {
+                        Icon(Icons.Default.Edit, contentDescription = null)
+                    }
+                    IconButton(onClick = { onDeleteClicked(item) }) {
+                        Icon(Icons.Default.Delete, contentDescription = null)
+                    }
                 }
             }
         }

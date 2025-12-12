@@ -21,24 +21,22 @@ fun ComboBox(
 ) {
 
     Button(
-        content = {
-            if(list.isNotEmpty())
-                Row {
-                    Text(
-                        text = list[selectedIndex],
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .width(textWidth)
-                    )
-
-                    Icon(
-                        Icons.Outlined.ArrowDropDown, ""
-                    )
-                }
-        },
         onClick = { onExpandedChanged(true) },
-    )
+    ) {
+        if (list.isNotEmpty()) {
+            Row {
+                Text(
+                    text = list[selectedIndex],
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.width(textWidth)
+                )
+                Icon(Icons.Outlined.ArrowDropDown, contentDescription = null)
+            }
+        } else {
+            Text(text = "—")
+        }
+    }
 
     DropdownMenu(
         expanded = isExpanded,

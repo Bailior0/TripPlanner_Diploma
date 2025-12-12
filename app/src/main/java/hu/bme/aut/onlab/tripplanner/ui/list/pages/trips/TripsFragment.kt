@@ -38,20 +38,8 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //viewModel.load()
         viewModel.addListener()
     }
-
-    /*fun setAdapter() {
-        if(state != null)
-            tripListFragment.tripListPagerAdapter.restoreState(state!!)
-        if(isAdded)
-            viewModel.load()
-    }*/
-
-    /*fun setParent(tripListFragment: TripListFragment) {
-        this.tripListFragment = tripListFragment
-    }*/
 
     override fun render(viewState: TripsViewState) {
         (view as ComposeView).setContent {
@@ -72,7 +60,7 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
     }
 
     private fun onItemChanged(item: TripListItem) {
-        //viewModel.checkerChanged(item)
+
     }
 
     private fun onItemEdited(item: TripListItem) {
@@ -90,15 +78,10 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
     }
 
     private fun onItemRemoved(item: TripListItem) {
-        /*if(state != null)
-            tripListFragment.tripListPagerAdapter.restoreState(state!!)*/
-        //viewModel.remove(item)
-        //tripListFragment.onItemChanged()
         viewModel.deleteFB(item)
     }
 
     private fun onTripSelected(tripListItem: TripListItem) {
-        //state = tripListFragment.tripListPagerAdapter.saveState()
         navigator?.add(DetailsFragment.newInstance(tripListItem),
             enterAnim = 0,
             exitAnim = 0,
@@ -108,10 +91,6 @@ class TripsFragment: RainbowCakeFragment<TripsViewState, TripsViewModel>(),
     }
 
     override fun onTripListItemEdited(editedItem: TripListItem) {
-        /*if(state != null)
-            tripListFragment.tripListPagerAdapter.restoreState(state!!)*/
-        //viewModel.edit(editedItem)
-        //tripListFragment.onItemChanged()
         viewModel.editFB(editedItem)
     }
 

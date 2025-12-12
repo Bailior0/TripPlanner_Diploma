@@ -1,210 +1,160 @@
 package hu.bme.aut.onlab.tripplanner.views
 
-import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Cloud
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.skydoves.landscapist.glide.GlideImage
-import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
-import hu.bme.aut.onlab.tripplanner.data.network.ConnectivityChecker.isConnected
 import hu.bme.aut.onlab.tripplanner.data.network.model.WeatherData
+import hu.bme.aut.onlab.tripplanner.views.theme.BrandPrimary
+import hu.bme.aut.onlab.tripplanner.views.theme.OnSurface
 
 @Composable
 fun Information(
     trip: TripListItem?,
     weatherList: WeatherData?
 ) {
-    isConnected(LocalContext.current)
+    val scroll = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(5.dp, 10.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scroll)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
+
+        Card(
+            elevation = 8.dp,
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(stringResource(R.string.country), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(trip?.country != null)
-                Text(trip.country,
-                    Modifier
-                        .weight(1f)
-                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text(stringResource(R.string.place), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(trip?.place != null)
-                Text(trip.place,
-                    Modifier
-                        .weight(1f)
-                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text(stringResource(R.string.description), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(trip?.description != null)
-                Text(trip.description,
-                    Modifier
-                        .weight(1f)
-                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text(stringResource(R.string.date), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(trip?.date != null)
-                Text(trip.date,
-                    Modifier
-                        .weight(1f)
-                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text(stringResource(R.string.category), Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(trip?.category != null)
-                Text(trip.category.name,
-                    Modifier
-                        .weight(1f)
-                        .padding(start = 50.dp), textAlign = TextAlign.Justify)
-        }
-        Row(
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp, 10.dp)
-        ) {
-            Text("Visited", Modifier.weight(1f), textAlign = TextAlign.Justify)
-            if(trip?.visited != null) {
-                when(trip.visited) {
-                    true -> Text(stringResource(R.string.already_visited),
-                        Modifier
-                            .weight(1f)
-                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
-                    false -> Text(stringResource(R.string.not_visited),
-                        Modifier
-                            .weight(1f)
-                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text(
+                    text = trip?.place ?: "Ismeretlen hely",
+                    style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                    color = BrandPrimary
+                )
+                Spacer(Modifier.height(6.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Public, contentDescription = null, tint = OnSurface)
+                    Spacer(Modifier.width(8.dp))
+                    Text(text = trip?.country ?: "Ismeretlen ország", color = OnSurface)
+                }
+                if (!trip?.description.isNullOrBlank()) {
+                    Spacer(Modifier.height(10.dp))
+                    Text(
+                        text = trip!!.description,
+                        style = MaterialTheme.typography.body2,
+                        color = Color.DarkGray
+                    )
                 }
             }
         }
-        if(weatherList != null) {
-            val weather = weatherList.weather?.first()
 
-            Row(
-                horizontalArrangement = Arrangement.Start,
+        Card(
+            elevation = 4.dp,
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.CalendarToday, contentDescription = null, tint = BrandPrimary)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Dátum:", fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.width(8.dp))
+                    Text(trip?.date ?: "-")
+                }
+                Spacer(Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Category, contentDescription = null, tint = BrandPrimary)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Kategória:", fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.width(8.dp))
+                    Text(trip?.category?.name ?: "-")
+                }
+                Spacer(Modifier.height(8.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.CheckCircle, contentDescription = null, tint = BrandPrimary)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Státusz:", fontWeight = FontWeight.SemiBold)
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        if (trip?.visited == true) "Már meglátogatva" else "Még nem jártál itt",
+                        color = if (trip?.visited == true) Color(0xFF4CAF50) else Color(0xFFB0BEC5)
+                    )
+                }
+            }
+        }
+
+        if (weatherList != null && weatherList.weather?.isNotEmpty() == true) {
+            val weather = weatherList.weather!![0]
+            val bgColor = when (weather.main?.lowercase()) {
+                "clear" -> Color(0xFFFFF59D)
+                "clouds" -> Color(0xFFB0BEC5)
+                "rain" -> Color(0xFF90CAF9)
+                else -> Color(0xFFE0E0E0)
+            }
+
+            Card(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp, 10.dp)
+                    .background(bgColor)
             ) {
-                Text(stringResource(R.string.current_weather), Modifier.weight(1f), textAlign = TextAlign.Justify)
-                if(weather?.main != null)
-                    Text(weather.main,
-                        Modifier
-                            .weight(1f)
-                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
-            }
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp, 10.dp)
-            ) {
-                Text(stringResource(R.string.current_weather_description), Modifier.weight(1f), textAlign = TextAlign.Justify)
-                if(weather?.description != null)
-                    Text(weather.description,
-                        Modifier
-                            .weight(1f)
-                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
-            }
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(20.dp, 10.dp)
-            ) {
-                Text(stringResource(R.string.temperature), Modifier.weight(1f), textAlign = TextAlign.Justify)
-                if(weatherList.main?.temp != null)
-                    Text(weatherList.main?.temp.toString() + " °C",
-                        Modifier
-                            .weight(1f)
-                            .padding(start = 50.dp), textAlign = TextAlign.Justify)
-            }
-            if(weather != null) {
                 Column(
-                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxHeight(),
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .padding(top = 20.dp, bottom = 20.dp)
-                            .size(100.dp)
-                            .align(Alignment.CenterHorizontally)
-                    ) {
-                        val url = "https://openweathermap.org/img/w/${weather.icon}.png"
-                        AsyncImage(
-                            model = url,
-                            contentDescription = null,
-                            onLoading = {
-                                Log.i("dologl", it.toString())
-
-                            },
-                            onSuccess = {
-                                Log.i("dologs", it.toString())
-
-                            },
-                            onError = {
-                                Log.i("dologe", it.toString())
-
-                            }
-                        )
-                        //Log.i("dolog", "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Parliament_Building%2C_Budapest%2C_outside.jpg/1280px-Parliament_Building%2C_Budapest%2C_outside.jpg")
-                        /*GlideImage(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            imageModel = {"https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/PNG_transparency_demonstration_1.png/640px-PNG_transparency_demonstration_1.png"}
-                        )
-                        GlideImage(
-                            modifier = Modifier
-                                .fillMaxSize(),
-                            imageModel = {"https://openweathermap.org/img/wn/10d@2x.png"}
-                        )*/
-
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Cloud, contentDescription = null, tint = BrandPrimary)
+                        Spacer(Modifier.width(8.dp))
+                        Text("Időjárás", style = MaterialTheme.typography.h6, color = OnSurface)
                     }
+                    Spacer(Modifier.height(8.dp))
+                    AsyncImage(
+                        model = "https://openweathermap.org/img/wn/${weather.icon}@2x.png",
+                        contentDescription = "Weather icon",
+                        modifier = Modifier.size(100.dp),
+                        contentScale = ContentScale.Fit
+                    )
+                    Text(
+                        text = "${weather.main ?: ""} – ${weather.description ?: ""}",
+                        style = MaterialTheme.typography.body1,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = "${weatherList.main?.temp ?: "-"} °C",
+                        style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Bold),
+                        color = BrandPrimary
+                    )
                 }
             }
         }
-
     }
 }

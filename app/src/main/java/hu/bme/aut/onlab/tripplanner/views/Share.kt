@@ -5,6 +5,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -15,6 +16,7 @@ import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -26,9 +28,9 @@ import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.storage
 import hu.bme.aut.onlab.tripplanner.R
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 import kotlinx.coroutines.tasks.await
@@ -111,15 +113,14 @@ fun ListItem(
     var imageUrl by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(true) }
 
-    if(item.pic != null && item.pic != "") {
-        val storagePath = item.pic
-        val imageRef = storage.reference.child(item.pic!!)
+    if (item.pic != null && item.pic!!.isNotEmpty()) {
+        val path = item.pic!!
+        val imageRef = storage.reference.child(path)
 
-        LaunchedEffect(storagePath) {
+        LaunchedEffect(path) {
             try {
                 imageUrl = imageRef.downloadUrl.await().toString()
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } catch (_: Exception) {
             } finally {
                 isLoading = false
             }
@@ -129,83 +130,120 @@ fun ListItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
-        elevation = 10.dp
+            .padding(vertical = 8.dp)
+            .clip(MaterialTheme.shapes.medium),
+        elevation = 6.dp,
+        backgroundColor = MaterialTheme.colors.surface
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = 10.dp, vertical = 5.dp),
+                .padding(16.dp)
         ) {
-            Text(
-                text = item.nickname.toString(), color = Color.Black, fontSize = 18.sp
-            )
-            Text(
-                text = item.title.toString(), color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = item.body.toString(), color = Color.Black, fontSize = 18.sp
-            )
-            if(item.pic != null && item.pic != "")
+            Row(verticalAlignment = Alignment.CenterVertically) {
+
                 Box(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .size(42.dp)
+                        .background(Color(0xFFBEE3F8), shape = CircleShape),
+                    contentAlignment = Alignment.Center
                 ) {
-                    if (isLoading) {
-                        // Add a loading UI
-                    } else {
-                        imageUrl?.let {
-                            AsyncImage(
-                                model = it,
-                                contentDescription = "Image",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
-                    }
+                    Text(
+                        text = item.nickname?.take(1)?.uppercase() ?: "?",
+                        fontSize = 20.sp,
+                        color = Color(0xFF1A365D),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if(item.liked.contains(user)) {
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                Column {
                     Text(
-                        text = item.liked.size.toString(), color = Color.Blue, fontSize = 18.sp, fontWeight = FontWeight.Bold
+                        text = item.nickname ?: "Ismeretlen",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onSurface
                     )
-                    IconButton(
-                        onClick = {onLikeClicked(item)}
-                    ) {
-                        Icon(imageVector  = Icons.Filled.ThumbUp, "", tint = Color.Blue)
-                    }
+
                     Text(
-                        text = stringResource(R.string.useful), color = Color.Blue, fontSize = 18.sp, fontWeight = FontWeight.Bold
-                    )
-                } else {
-                    Text(
-                        text = item.liked.size.toString(), color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.Bold
-                    )
-                    IconButton(
-                        onClick = {onLikeClicked(item)}
-                    ) {
-                        Icon(imageVector  = Icons.Outlined.ThumbUp, "")
-                    }
-                    Text(
-                        text = stringResource(R.string.useful), color = Color.Black, fontSize = 18.sp, fontWeight = FontWeight.Bold
+                        text = item.title ?: "",
+                        fontSize = 15.sp,
+                        color = Color.Gray
                     )
                 }
             }
-        }
-        if(item.uid == user) {
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = item.body ?: "",
+                fontSize = 16.sp,
+                color = MaterialTheme.colors.onSurface
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (imageUrl != null && !isLoading) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 260.dp)
+                        .clip(MaterialTheme.shapes.medium),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
             Row(
-                horizontalArrangement = Arrangement.End
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start
             ) {
-                IconButton(
-                    onClick = {onEditClicked(item)}
-                ) {
-                    Icon(imageVector  = Icons.Filled.Edit, "")
+
+                IconButton(onClick = { onLikeClicked(item) }) {
+                    if (item.liked.contains(user)) {
+                        Icon(
+                            imageVector = Icons.Filled.ThumbUp,
+                            contentDescription = "Liked",
+                            tint = Color(0xFF1E88E5)
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Outlined.ThumbUp,
+                            contentDescription = "Like"
+                        )
+                    }
                 }
-                IconButton(
-                    onClick = {onDeleteClicked(item)}
+
+                Text(
+                    text = item.liked.size.toString(),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (item.liked.contains(user)) Color(0xFF1E88E5) else MaterialTheme.colors.onSurface
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = stringResource(R.string.useful),
+                    fontSize = 14.sp,
+                    color = if (item.liked.contains(user)) Color(0xFF1E88E5) else Color.Gray
+                )
+            }
+
+            if (item.uid == user) {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(imageVector  = Icons.Filled.Delete, "")
+                    IconButton(onClick = { onEditClicked(item) }) {
+                        Icon(Icons.Filled.Edit, contentDescription = "Edit")
+                    }
+                    IconButton(onClick = { onDeleteClicked(item) }) {
+                        Icon(Icons.Filled.Delete, contentDescription = "Delete", tint = Color.Red)
+                    }
                 }
             }
         }

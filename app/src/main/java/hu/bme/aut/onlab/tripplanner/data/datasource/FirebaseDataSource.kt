@@ -2,19 +2,21 @@ package hu.bme.aut.onlab.tripplanner.data.datasource
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.storage
 import hu.bme.aut.onlab.tripplanner.data.disk.model.TripListItem
 import hu.bme.aut.onlab.tripplanner.data.disk.model.User
 import hu.bme.aut.onlab.tripplanner.data.network.model.SharedData
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -28,7 +30,6 @@ class FirebaseDataSource @Inject constructor() {
 
     private val database = Firebase.firestore
     private val storageRef = Firebase.storage.reference
-    //private val uid = FirebaseAuth.getInstance().currentUser?.uid
 
     suspend fun getTrips(): Flow<List<TripListItem>> = callbackFlow {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -277,5 +278,44 @@ class FirebaseDataSource @Inject constructor() {
                 Log.d("failure", "Error getting documents: ", exception)
             }
             .await()
+    }
+
+    suspend fun getCurrentIdToken(): String {
+        val user = FirebaseAuth.getInstance().currentUser
+            ?: return ""
+
+        var lastError: Exception? = null
+
+        repeat(3) { attempt ->
+            try {
+                val tokenResult = user.getIdToken(true).await()
+                val token = tokenResult.token
+                if (!token.isNullOrEmpty()) {
+                    return token
+                }
+            } catch (e: Exception) {
+                lastError = e
+                Log.e("FirebaseAuth", "Token fetch failed (attempt $attempt): ${e.message}")
+                delay(500)
+            }
+        }
+
+        Log.e("FirebaseAuth", "Token fetch failed after retries: ${lastError?.message}")
+
+        return ""
+    }
+
+
+
+    suspend fun uploadImageForComments(bitmap: Bitmap): String {
+        val imageId = UUID.randomUUID().toString() + ".jpg"
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 90, baos)
+        val data = baos.toByteArray()
+
+        val imageRef = storageRef.child(imageId)
+        imageRef.putBytes(data).await()
+
+        return imageId
     }
 }
